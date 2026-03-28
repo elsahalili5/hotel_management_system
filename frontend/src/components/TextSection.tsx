@@ -1,13 +1,19 @@
+import { Button } from './Button'
+
 interface TextSectionProps {
   subtitle?: string
   paragraphs: string[]
   themeColor?: string
+  buttonLabel?: string
+  buttonTo?: string
 }
 
 export function TextSection({
   subtitle,
   paragraphs,
   themeColor = 'text-[#8b4513]',
+  buttonLabel,
+  buttonTo,
 }: TextSectionProps) {
   return (
     <section className="bg-[#fdf8f3] py-24 px-6">
@@ -24,6 +30,11 @@ export function TextSection({
             <p key={index}>{p}</p>
           ))}
         </div>
+        {buttonLabel && buttonTo && (
+          <div className="mt-10 flex justify-center">
+            <Button to={buttonTo} variant="outline">{buttonLabel}</Button>
+          </div>
+        )}
       </div>
     </section>
   )

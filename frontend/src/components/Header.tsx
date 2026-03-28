@@ -18,23 +18,12 @@ export default function Header() {
 
   return (
     <>
-      <header
-        className="sticky top-0 z-50 backdrop-blur-md font-light"
-        style={{ backgroundColor: 'var(--color-mansio-cream)' }}
-      >
+      <header className="sticky top-0 z-50 backdrop-blur-md font-light bg-mansio-cream">
         <Container className="relative py-3">
-          <div
-            className="flex items-center h-16"
-            style={{
-              borderTop: '1px solid var(--color-mansio-espresso)',
-              borderBottom: '1px solid var(--color-mansio-espresso)',
-            }}
-          >
+          <div className="flex items-center h-16 border-t border-b border-mansio-espresso">
+
             {/* Logo */}
-            <Link
-              to="/"
-              className="flex items-center no-underline flex-shrink-0"
-            >
+            <Link to="/" className="flex items-center no-underline flex-shrink-0">
               <Logo size={120} />
             </Link>
 
@@ -44,14 +33,8 @@ export default function Header() {
                 <Link
                   key={link.label}
                   to={link.to}
-                  className="text-sm no-underline transition-colors duration-200 whitespace-nowrap"
-                  style={{ color: 'var(--color-mansio-taupe)' }}
-                  activeProps={{
-                    style: {
-                      color: 'var(--color-mansio-espresso)',
-                      fontWeight: 600,
-                    },
-                  }}
+                  className="text-sm text-mansio-taupe no-underline transition-colors duration-200 whitespace-nowrap"
+                  activeProps={{ className: 'text-mansio-espresso font-semibold' }}
                 >
                   {link.label}
                 </Link>
@@ -63,48 +46,38 @@ export default function Header() {
               <Button to="/contact" className="hidden md:inline-flex">
                 BOOK NOW
               </Button>
-
               <button
-                className="md:hidden p-2 rounded-md transition-colors"
-                style={{ color: 'var(--color-mansio-espresso)' }}
+                className="md:hidden p-2 rounded-md text-mansio-espresso transition-colors"
                 onClick={() => setMenuOpen(!menuOpen)}
                 aria-label="Toggle menu"
               >
                 {menuOpen ? <X size={24} /> : <Menu size={24} />}
               </button>
             </div>
+
           </div>
         </Container>
       </header>
 
-      {/* Mobile menu - jashtë header-it */}
+      {/* Mobile menu */}
       <div
-        className={`md:hidden fixed inset-0 z-[60] flex flex-col px-8 py-10 gap-6 transition-all duration-500 ease-in-out ${
+        className={`md:hidden fixed inset-0 z-[60] flex flex-col px-8 py-10 gap-6 bg-mansio-cream transition-all duration-500 ease-in-out ${
           menuOpen
             ? 'opacity-100 translate-y-0 pointer-events-auto'
             : 'opacity-0 -translate-y-4 pointer-events-none'
         }`}
-        style={{ backgroundColor: '#F7F2EA' }}
       >
-        {/* Top row: logo + close */}
+        {/* Top row */}
         <div className="flex items-center justify-between mb-4">
           <Link to="/" onClick={() => setMenuOpen(false)}>
             <Logo size={120} />
           </Link>
-          <button
-            onClick={() => setMenuOpen(false)}
-            style={{ color: 'var(--color-mansio-espresso)' }}
-            aria-label="Close menu"
-          >
+          <button onClick={() => setMenuOpen(false)} className="text-mansio-espresso" aria-label="Close menu">
             <X size={28} />
           </button>
         </div>
 
-        {/* Divider */}
-        <div
-          className="h-px w-full"
-          style={{ backgroundColor: 'var(--color-mansio-espresso)' }}
-        />
+        <div className="h-px w-full bg-mansio-espresso" />
 
         {/* Links */}
         <nav className="flex flex-col gap-6 mt-4">
@@ -112,19 +85,13 @@ export default function Header() {
             <Link
               key={link.label}
               to={link.to}
-              className="text-2xl font-medium no-underline"
+              className="text-2xl font-medium no-underline text-mansio-taupe"
               style={{
-                color: 'var(--color-mansio-taupe)',
                 opacity: menuOpen ? 1 : 0,
                 transform: menuOpen ? 'translateY(0)' : 'translateY(10px)',
                 transition: `opacity 0.4s ease ${i * 60}ms, transform 0.4s ease ${i * 60}ms`,
               }}
-              activeProps={{
-                style: {
-                  color: 'var(--color-mansio-espresso)',
-                  fontWeight: 600,
-                },
-              }}
+              activeProps={{ className: 'text-mansio-espresso font-semibold' }}
               onClick={() => setMenuOpen(false)}
             >
               {link.label}
@@ -132,13 +99,8 @@ export default function Header() {
           ))}
         </nav>
 
-        {/* Divider */}
-        <div
-          className="h-px w-full mt-auto"
-          style={{ backgroundColor: 'var(--color-mansio-espresso)' }}
-        />
+        <div className="h-px w-full mt-auto bg-mansio-espresso" />
 
-        {/* Book Now */}
         <Button to="/contact" className="self-start" onClick={() => setMenuOpen(false)}>
           BOOK NOW
         </Button>

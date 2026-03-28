@@ -2,13 +2,15 @@ interface HeroSectionProps {
   image: string
   title: string
   subtitle?: string
+  height?: string
 }
 
-export function HeroSection({ image, title, subtitle }: HeroSectionProps) {
+export function HeroSection({ image, title, subtitle, height = '100vh' }: HeroSectionProps) {
   return (
     <section
-      className="relative h-screen w-full flex items-center justify-center"
+      className="relative w-full flex items-center justify-center"
       style={{
+        height,
         backgroundImage: `url(${image})`,
         backgroundSize: 'cover',
         backgroundPosition: 'center',
