@@ -1,15 +1,16 @@
-import Header from '#/components/Header'
-import Footer from '#/components/Footer'
 import { createFileRoute } from '@tanstack/react-router'
+import { HeroSection } from '../components/HeroSection'
 
 export const Route = createFileRoute('/')({ component: App })
 
 function App() {
   return (
     <main>
-      <Header />
-      <h1 className="text-center">Hello World</h1>
-      <Footer />
+      <HeroSection
+        image="https://epidamn.com/assets/images/recp.jpg"
+        title="Welcome to Mansio"
+        subtitle="Where Every Stay Feels Like Home"
+      />
     </main>
   )
 }

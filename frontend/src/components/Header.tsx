@@ -3,6 +3,7 @@ import { Link } from '@tanstack/react-router'
 import { Menu, X } from 'lucide-react'
 import { Logo } from './Logo'
 import { Container } from './Container'
+import { Button } from './Button'
 
 const navLinks = [
   { label: 'ABOUT', to: '/about' },
@@ -18,7 +19,7 @@ export default function Header() {
   return (
     <>
       <header
-        className="sticky top-0 z-50 backdrop-blur-md"
+        className="sticky top-0 z-50 backdrop-blur-md font-light"
         style={{ backgroundColor: 'var(--color-mansio-cream)' }}
       >
         <Container className="relative py-3">
@@ -59,16 +60,9 @@ export default function Header() {
 
             {/* Right side */}
             <div className="ml-auto flex items-center gap-3">
-              <Link
-                to="/contact"
-                className="hidden md:inline-flex rounded-full px-5 py-2 text-sm font-medium no-underline transition-opacity duration-200 hover:opacity-80"
-                style={{
-                  backgroundColor: 'var(--color-mansio-espresso)',
-                  color: 'var(--color-mansio-cream)',
-                }}
-              >
-                BOOK NOW →
-              </Link>
+              <Button to="/contact" className="hidden md:inline-flex">
+                BOOK NOW
+              </Button>
 
               <button
                 className="md:hidden p-2 rounded-md transition-colors"
@@ -145,17 +139,9 @@ export default function Header() {
         />
 
         {/* Book Now */}
-        <Link
-          to="/contact"
-          className="self-start rounded-full px-6 py-3 text-sm font-medium no-underline transition-opacity duration-200 hover:opacity-80"
-          style={{
-            backgroundColor: 'var(--color-mansio-espresso)',
-            color: 'var(--color-mansio-cream)',
-          }}
-          onClick={() => setMenuOpen(false)}
-        >
-          BOOK NOW →
-        </Link>
+        <Button to="/contact" className="self-start" onClick={() => setMenuOpen(false)}>
+          BOOK NOW
+        </Button>
       </div>
     </>
   )
