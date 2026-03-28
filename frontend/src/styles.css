@@ -7,89 +7,89 @@
   --font-serif: 'Bodoni Moda', Georgia, serif;
 
   /* Mansio Palette */
-  --color-mansio-cream:    #F7F2EA;
-  --color-mansio-ivory:    #EDE5D4;
-  --color-mansio-linen:    #D4C4A8;
-  --color-mansio-taupe:    #9C8D7A;
-  --color-mansio-mocha:    #6B5744;
-  --color-mansio-espresso: #463f3a;
-  --color-mansio-ink:      #241508;
-  --color-mansio-gold:     #C4A882;
+  --color-mansio-cream: #f7f2ea;
+  --color-mansio-ivory: #ede5d4;
+  --color-mansio-linen: #d4c4a8;
+  --color-mansio-taupe: #9c8d7a;
+  --color-mansio-mocha: #6b5744;
+  --color-mansio-espresso: #3a2718;
+  --color-mansio-ink: #241508;
+  --color-mansio-gold: #c4a882;
 }
 
 /* ── Light mode ─────────────────────────────────────────── */
 :root {
-  --text:         #241508;                  /* mansio-ink                  */
-  --text-muted:   #6B5744;                  /* mansio-mocha                */
-  --gold:         #C4A882;                  /* mansio-gold                 */
-  --gold-deep:    #9C8D7A;                  /* mansio-taupe                */
-  --bronze:       #9C8D7A;                  /* mansio-taupe                */
-  --ivory:        #EDE5D4;                  /* mansio-ivory                */
-  --cream:        #F7F2EA;                  /* mansio-cream                */
-  --surface:      rgba(247, 242, 234, 0.78);
+  --text: #241508; /* mansio-ink                  */
+  --text-muted: #6b5744; /* mansio-mocha                */
+  --gold: #c4a882; /* mansio-gold                 */
+  --gold-deep: #9c8d7a; /* mansio-taupe                */
+  --bronze: #9c8d7a; /* mansio-taupe                */
+  --ivory: #ede5d4; /* mansio-ivory                */
+  --cream: #f7f2ea; /* mansio-cream                */
+  --surface: rgba(247, 242, 234, 0.78);
   --surface-dark: rgba(36, 21, 8, 0.88);
-  --border:       rgba(36, 21, 8, 0.1);
-  --glint:        rgba(255, 250, 240, 0.9);
-  --kicker:       rgba(107, 87, 68, 0.9);
-  --bg:           #D4C4A8;                  /* mansio-linen                */
-  --header-bg:    rgba(247, 242, 234, 0.88);
-  --chip-bg:      rgba(247, 242, 234, 0.85);
-  --chip-border:  rgba(156, 141, 122, 0.25);
-  --hover-bg:     rgba(247, 242, 234, 0.95);
-  --hero-a:       rgba(196, 168, 130, 0.28);
-  --hero-b:       rgba(107, 87, 68, 0.15);
-  --line:         rgba(36, 21, 8, 0.12);
-  --chip-line:    rgba(36, 21, 8, 0.12);
+  --border: rgba(36, 21, 8, 0.1);
+  --glint: rgba(255, 250, 240, 0.9);
+  --kicker: rgba(107, 87, 68, 0.9);
+  --bg: #d4c4a8; /* mansio-linen                */
+  --header-bg: rgba(247, 242, 234, 0.88);
+  --chip-bg: rgba(247, 242, 234, 0.85);
+  --chip-border: rgba(156, 141, 122, 0.25);
+  --hover-bg: rgba(247, 242, 234, 0.95);
+  --hero-a: rgba(196, 168, 130, 0.28);
+  --hero-b: rgba(107, 87, 68, 0.15);
+  --line: rgba(36, 21, 8, 0.12);
+  --chip-line: rgba(36, 21, 8, 0.12);
 }
 
 /* ── Dark mode ──────────────────────────────────────────── */
 :root[data-theme='dark'] {
-  --text:         #EDE5D4;
-  --text-muted:   #9C8D7A;
-  --gold:         #C4A882;
-  --gold-deep:    #D4C4A8;
-  --bronze:       #9C8D7A;
-  --ivory:        #1C1008;
-  --cream:        #241508;
-  --surface:      rgba(36, 21, 8, 0.82);
+  --text: #ede5d4;
+  --text-muted: #9c8d7a;
+  --gold: #c4a882;
+  --gold-deep: #d4c4a8;
+  --bronze: #9c8d7a;
+  --ivory: #1c1008;
+  --cream: #241508;
+  --surface: rgba(36, 21, 8, 0.82);
   --surface-dark: rgba(20, 11, 4, 0.94);
-  --border:       rgba(196, 168, 130, 0.15);
-  --glint:        rgba(196, 168, 130, 0.08);
-  --kicker:       #D4C4A8;
-  --bg:           #120A04;
-  --header-bg:    rgba(20, 11, 4, 0.88);
-  --chip-bg:      rgba(28, 16, 8, 0.9);
-  --chip-border:  rgba(196, 168, 130, 0.2);
-  --hover-bg:     rgba(36, 21, 8, 0.9);
-  --hero-a:       rgba(196, 168, 130, 0.12);
-  --hero-b:       rgba(107, 87, 68, 0.1);
-  --line:         rgba(196, 168, 130, 0.2);
-  --chip-line:    rgba(196, 168, 130, 0.2);
+  --border: rgba(196, 168, 130, 0.15);
+  --glint: rgba(196, 168, 130, 0.08);
+  --kicker: #d4c4a8;
+  --bg: #120a04;
+  --header-bg: rgba(20, 11, 4, 0.88);
+  --chip-bg: rgba(28, 16, 8, 0.9);
+  --chip-border: rgba(196, 168, 130, 0.2);
+  --hover-bg: rgba(36, 21, 8, 0.9);
+  --hero-a: rgba(196, 168, 130, 0.12);
+  --hero-b: rgba(107, 87, 68, 0.1);
+  --line: rgba(196, 168, 130, 0.2);
+  --chip-line: rgba(196, 168, 130, 0.2);
 }
 
 @media (prefers-color-scheme: dark) {
   :root:not([data-theme='light']) {
-    --text:         #EDE5D4;
-    --text-muted:   #9C8D7A;
-    --gold:         #C4A882;
-    --gold-deep:    #D4C4A8;
-    --bronze:       #9C8D7A;
-    --ivory:        #1C1008;
-    --cream:        #241508;
-    --surface:      rgba(36, 21, 8, 0.82);
+    --text: #ede5d4;
+    --text-muted: #9c8d7a;
+    --gold: #c4a882;
+    --gold-deep: #d4c4a8;
+    --bronze: #9c8d7a;
+    --ivory: #1c1008;
+    --cream: #241508;
+    --surface: rgba(36, 21, 8, 0.82);
     --surface-dark: rgba(20, 11, 4, 0.94);
-    --border:       rgba(196, 168, 130, 0.15);
-    --glint:        rgba(196, 168, 130, 0.08);
-    --kicker:       #D4C4A8;
-    --bg:           #120A04;
-    --header-bg:    rgba(20, 11, 4, 0.88);
-    --chip-bg:      rgba(28, 16, 8, 0.9);
-    --chip-border:  rgba(196, 168, 130, 0.2);
-    --hover-bg:     rgba(36, 21, 8, 0.9);
-    --hero-a:       rgba(196, 168, 130, 0.12);
-    --hero-b:       rgba(107, 87, 68, 0.1);
-    --line:         rgba(196, 168, 130, 0.2);
-    --chip-line:    rgba(196, 168, 130, 0.2);
+    --border: rgba(196, 168, 130, 0.15);
+    --glint: rgba(196, 168, 130, 0.08);
+    --kicker: #d4c4a8;
+    --bg: #120a04;
+    --header-bg: rgba(20, 11, 4, 0.88);
+    --chip-bg: rgba(28, 16, 8, 0.9);
+    --chip-border: rgba(196, 168, 130, 0.2);
+    --hover-bg: rgba(36, 21, 8, 0.9);
+    --hero-a: rgba(196, 168, 130, 0.12);
+    --hero-b: rgba(107, 87, 68, 0.1);
+    --line: rgba(196, 168, 130, 0.2);
+    --chip-line: rgba(196, 168, 130, 0.2);
   }
 }
 
@@ -109,6 +109,11 @@ body {
   font-family: var(--font-sans);
 }
 
-h1, h2, h3, h4, h5, h6 {
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
   font-family: var(--font-serif);
 }
