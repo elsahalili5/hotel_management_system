@@ -5,11 +5,11 @@ import { Logo } from './Logo'
 import { Container } from './Container'
 
 const navLinks = [
-  { label: 'ABOUT', to: '/' },
-  { label: 'ROOMS', to: '/' },
-  { label: 'RESTAURANTS', to: '/about' },
-  { label: 'SPA & SPORTS', to: '/' },
-  { label: 'CONTACT', to: '/' },
+  { label: 'ABOUT', to: '/about' },
+  { label: 'ROOMS', to: '/rooms' },
+  { label: 'RESTAURANTS', to: '/restaurant' },
+  { label: 'SPA & SPORTS', to: '/spa' },
+  { label: 'CONTACT', to: '/contact' },
 ] as const
 
 export default function Header() {
@@ -30,7 +30,10 @@ export default function Header() {
             }}
           >
             {/* Logo */}
-            <Link to="/" className="flex items-center no-underline flex-shrink-0">
+            <Link
+              to="/"
+              className="flex items-center no-underline flex-shrink-0"
+            >
               <Logo size={120} />
             </Link>
 
@@ -43,7 +46,10 @@ export default function Header() {
                   className="text-sm no-underline transition-colors duration-200 whitespace-nowrap"
                   style={{ color: 'var(--color-mansio-taupe)' }}
                   activeProps={{
-                    style: { color: 'var(--color-mansio-espresso)', fontWeight: 600 },
+                    style: {
+                      color: 'var(--color-mansio-espresso)',
+                      fontWeight: 600,
+                    },
                   }}
                 >
                   {link.label}
@@ -101,7 +107,10 @@ export default function Header() {
         </div>
 
         {/* Divider */}
-        <div className="h-px w-full" style={{ backgroundColor: 'var(--color-mansio-espresso)' }} />
+        <div
+          className="h-px w-full"
+          style={{ backgroundColor: 'var(--color-mansio-espresso)' }}
+        />
 
         {/* Links */}
         <nav className="flex flex-col gap-6 mt-4">
@@ -117,7 +126,10 @@ export default function Header() {
                 transition: `opacity 0.4s ease ${i * 60}ms, transform 0.4s ease ${i * 60}ms`,
               }}
               activeProps={{
-                style: { color: 'var(--color-mansio-espresso)', fontWeight: 600 },
+                style: {
+                  color: 'var(--color-mansio-espresso)',
+                  fontWeight: 600,
+                },
               }}
               onClick={() => setMenuOpen(false)}
             >
@@ -127,7 +139,10 @@ export default function Header() {
         </nav>
 
         {/* Divider */}
-        <div className="h-px w-full mt-auto" style={{ backgroundColor: 'var(--color-mansio-espresso)' }} />
+        <div
+          className="h-px w-full mt-auto"
+          style={{ backgroundColor: 'var(--color-mansio-espresso)' }}
+        />
 
         {/* Book Now */}
         <Link

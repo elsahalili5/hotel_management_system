@@ -9,13 +9,37 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
+import { Route as SpaRouteImport } from './routes/spa'
+import { Route as RoomsRouteImport } from './routes/rooms'
+import { Route as RestaurantRouteImport } from './routes/restaurant'
 import { Route as ContactRouteImport } from './routes/contact'
+import { Route as BookingsRouteImport } from './routes/bookings'
 import { Route as AboutRouteImport } from './routes/about'
 import { Route as IndexRouteImport } from './routes/index'
 
+const SpaRoute = SpaRouteImport.update({
+  id: '/spa',
+  path: '/spa',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const RoomsRoute = RoomsRouteImport.update({
+  id: '/rooms',
+  path: '/rooms',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const RestaurantRoute = RestaurantRouteImport.update({
+  id: '/restaurant',
+  path: '/restaurant',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const ContactRoute = ContactRouteImport.update({
   id: '/contact',
   path: '/contact',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const BookingsRoute = BookingsRouteImport.update({
+  id: '/bookings',
+  path: '/bookings',
   getParentRoute: () => rootRouteImport,
 } as any)
 const AboutRoute = AboutRouteImport.update({
@@ -32,40 +56,106 @@ const IndexRoute = IndexRouteImport.update({
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/about': typeof AboutRoute
+  '/bookings': typeof BookingsRoute
   '/contact': typeof ContactRoute
+  '/restaurant': typeof RestaurantRoute
+  '/rooms': typeof RoomsRoute
+  '/spa': typeof SpaRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/about': typeof AboutRoute
+  '/bookings': typeof BookingsRoute
   '/contact': typeof ContactRoute
+  '/restaurant': typeof RestaurantRoute
+  '/rooms': typeof RoomsRoute
+  '/spa': typeof SpaRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/about': typeof AboutRoute
+  '/bookings': typeof BookingsRoute
   '/contact': typeof ContactRoute
+  '/restaurant': typeof RestaurantRoute
+  '/rooms': typeof RoomsRoute
+  '/spa': typeof SpaRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/about' | '/contact'
+  fullPaths:
+    | '/'
+    | '/about'
+    | '/bookings'
+    | '/contact'
+    | '/restaurant'
+    | '/rooms'
+    | '/spa'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/about' | '/contact'
-  id: '__root__' | '/' | '/about' | '/contact'
+  to:
+    | '/'
+    | '/about'
+    | '/bookings'
+    | '/contact'
+    | '/restaurant'
+    | '/rooms'
+    | '/spa'
+  id:
+    | '__root__'
+    | '/'
+    | '/about'
+    | '/bookings'
+    | '/contact'
+    | '/restaurant'
+    | '/rooms'
+    | '/spa'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   AboutRoute: typeof AboutRoute
+  BookingsRoute: typeof BookingsRoute
   ContactRoute: typeof ContactRoute
+  RestaurantRoute: typeof RestaurantRoute
+  RoomsRoute: typeof RoomsRoute
+  SpaRoute: typeof SpaRoute
 }
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
+    '/spa': {
+      id: '/spa'
+      path: '/spa'
+      fullPath: '/spa'
+      preLoaderRoute: typeof SpaRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/rooms': {
+      id: '/rooms'
+      path: '/rooms'
+      fullPath: '/rooms'
+      preLoaderRoute: typeof RoomsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/restaurant': {
+      id: '/restaurant'
+      path: '/restaurant'
+      fullPath: '/restaurant'
+      preLoaderRoute: typeof RestaurantRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/contact': {
       id: '/contact'
       path: '/contact'
       fullPath: '/contact'
       preLoaderRoute: typeof ContactRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/bookings': {
+      id: '/bookings'
+      path: '/bookings'
+      fullPath: '/bookings'
+      preLoaderRoute: typeof BookingsRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/about': {
@@ -88,7 +178,11 @@ declare module '@tanstack/react-router' {
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AboutRoute: AboutRoute,
+  BookingsRoute: BookingsRoute,
   ContactRoute: ContactRoute,
+  RestaurantRoute: RestaurantRoute,
+  RoomsRoute: RoomsRoute,
+  SpaRoute: SpaRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
