@@ -18,14 +18,14 @@ const faqs = [
       'Check-in begins at 3:00 PM and check-out is until 11:00 AM. Early check-in and late check-out may be arranged upon request, subject to availability.',
   },
   {
-    question: 'Can I modify or cancel my reservation?',
+    question: 'Do guests have access to the Spa and gym?',
     answer:
-      'Yes. Reservations may be modified or cancelled up to 48 hours before your arrival date at no charge. Cancellations made within 48 hours may be subject to a one-night fee.',
+      'All our guests enjoy unlimited access to the Spa & Sports area, which includes the heated indoor pool, saunas, and our state-of-the-art fitness center.',
   },
   {
     question: 'Is parking available?',
     answer:
-      'Yes. Mansio offers private parking for all guests. Please inform us upon booking if you require a parking space.',
+      'Yes. Mansio offers private parking for all guests.',
   },
   {
     question: 'Is Wi-Fi available throughout the hotel?',

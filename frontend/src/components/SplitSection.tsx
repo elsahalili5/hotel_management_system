@@ -56,14 +56,14 @@ export function SplitSection({
  
 
   const imageCol = (
-    <div className="w-full h-80 md:h-full min-h-[400px]">
+    <div className="w-full h-[300px] md:h-[500px]">
       <img src={image} alt={title} className="w-full h-full object-cover" />
     </div>
   )
 
   return (
     <Container className="py-16 md:py-24">
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-10 md:gap-16 items-center">
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-10 md:gap-16 items-stretch">
         {imageRight ? (
           <>
             {textCol}
