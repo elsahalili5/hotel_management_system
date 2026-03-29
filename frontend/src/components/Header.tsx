@@ -1,6 +1,6 @@
 import { useState } from 'react'
-import { Link } from '@tanstack/react-router'
-import { Menu, X } from 'lucide-react'
+import { Link, useNavigate } from '@tanstack/react-router'
+import { ArrowRight, Menu, X } from 'lucide-react'
 import { Logo } from './Logo'
 import { Container } from './Container'
 import { Button } from './Button'
@@ -14,6 +14,8 @@ const navLinks = [
 ] as const
 
 export default function Header() {
+  const navigate = useNavigate()
+
   const [menuOpen, setMenuOpen] = useState(false)
 
   return (
@@ -21,9 +23,11 @@ export default function Header() {
       <header className="sticky top-0 z-50 backdrop-blur-md font-light bg-mansio-cream">
         <Container className="relative py-3">
           <div className="flex items-center h-16 border-t border-b border-mansio-espresso">
-
             {/* Logo */}
-            <Link to="/" className="flex items-center no-underline flex-shrink-0">
+            <Link
+              to="/"
+              className="flex items-center no-underline flex-shrink-0"
+            >
               <Logo size={120} />
             </Link>
 
@@ -34,7 +38,9 @@ export default function Header() {
                   key={link.label}
                   to={link.to}
                   className="text-sm text-mansio-taupe no-underline transition-colors duration-200 whitespace-nowrap"
-                  activeProps={{ className: 'text-mansio-espresso font-semibold' }}
+                  activeProps={{
+                    className: 'text-mansio-espresso font-semibold',
+                  }}
                 >
                   {link.label}
                 </Link>
@@ -43,9 +49,19 @@ export default function Header() {
 
             {/* Right side */}
             <div className="ml-auto flex items-center gap-3">
-              <Button to="/contact" className="hidden md:inline-flex">
-                BOOK NOW
-              </Button>
+              <Link to="/contact">
+                <Button
+                  className="hidden md:inline-flex"
+                  endIcon={<ArrowRight size={20} />}
+                >
+                  BOOK NOW
+                </Button>
+
+                <Button variant="outline" className="">
+                  <Menu />
+                </Button>
+              </Link>
+
               <button
                 className="md:hidden p-2 rounded-md text-mansio-espresso transition-colors"
                 onClick={() => setMenuOpen(!menuOpen)}
@@ -54,7 +70,6 @@ export default function Header() {
                 {menuOpen ? <X size={24} /> : <Menu size={24} />}
               </button>
             </div>
-
           </div>
         </Container>
       </header>
@@ -72,7 +87,11 @@ export default function Header() {
           <Link to="/" onClick={() => setMenuOpen(false)}>
             <Logo size={120} />
           </Link>
-          <button onClick={() => setMenuOpen(false)} className="text-mansio-espresso" aria-label="Close menu">
+          <button
+            onClick={() => setMenuOpen(false)}
+            className="text-mansio-espresso"
+            aria-label="Close menu"
+          >
             <X size={28} />
           </button>
         </div>
@@ -101,7 +120,11 @@ export default function Header() {
 
         <div className="h-px w-full mt-auto bg-mansio-espresso" />
 
-        <Button to="/contact" className="self-start" onClick={() => setMenuOpen(false)}>
+        <Button
+          to="/contact"
+          className="self-start"
+          onClick={() => setMenuOpen(false)}
+        >
           BOOK NOW
         </Button>
       </div>

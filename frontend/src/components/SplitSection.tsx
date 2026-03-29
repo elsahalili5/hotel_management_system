@@ -9,43 +9,46 @@ interface SplitSectionProps {
   buttonTo?: string
   imageRight?: boolean
 }
-
 export function SplitSection({
   title,
   text,
   image,
-  buttonLabel = 'Discover More',
+  buttonLabel, // Hiqe = '' që të jetë undefined nëse nuk jepet
   buttonTo = '/about',
   imageRight = true,
 }: SplitSectionProps) {
   const textCol = (
     <div className="flex flex-col justify-center gap-6">
-      <h2
-        className="text-4xl md:text-5xl font-normal leading-tight"
-        style={{ fontFamily: 'var(--font-serif)', color: 'var(--color-mansio-espresso)' }}
-      >
+      <h2 className="text-4xl md:text-5xl font-normal font-serif leading-tight text-mansio-espresso">
         {title}
       </h2>
+
+      {/* Vija dekorative */}
       <div
-        className="w-px self-stretch hidden md:block"
-        style={{ backgroundColor: 'var(--color-mansio-gold)' }}
+        className="h-px w-20 md:block bg-mansio-gold" // E bëra horizontale si në foto që dërgove
       />
-      <p className="text-base leading-relaxed" style={{ color: 'var(--color-mansio-mocha)' }}>
+
+      <p
+        className="text-base leading-relaxed"
+        style={{ color: 'var(--color-mansio-mocha)' }}
+      >
         {text}
       </p>
-      <div>
-        <Button to={buttonTo}>{buttonLabel}</Button>
-      </div>
+
+      {/* BUTONI OPSIONAL: Shfaqet vetëm nëse buttonLabel ekziston */}
+      {buttonLabel && (
+        <div>
+          <Button to={buttonTo}>{buttonLabel}</Button>
+        </div>
+      )}
     </div>
   )
 
+  // ... rest of the code (imageCol and return)
+
   const imageCol = (
     <div className="w-full h-80 md:h-full min-h-[400px]">
-      <img
-        src={image}
-        alt={title}
-        className="w-full h-full object-cover"
-      />
+      <img src={image} alt={title} className="w-full h-full object-cover" />
     </div>
   )
 

@@ -1,5 +1,4 @@
 import type { ReactNode } from 'react'
-import { Link } from '@tanstack/react-router'
 
 const variants = {
   primary: {
@@ -19,26 +18,28 @@ const base =
 
 interface ButtonProps {
   children: ReactNode
-  to?: string
-  onClick?: () => void
   className?: string
   variant?: 'primary' | 'outline'
+  endIcon?: ReactNode
+  startIcon?: ReactNode
+  onClick?: () => void
 }
 
-export function Button({ children, to, onClick, className = '', variant = 'primary' }: ButtonProps) {
+export function Button({
+  children,
+  onClick,
+  className = '',
+  variant = 'primary',
+  endIcon,
+  startIcon,
+}: ButtonProps) {
   const style = variants[variant]
-
-  if (to) {
-    return (
-      <Link to={to} className={`${base} ${className}`} style={style} onClick={onClick}>
-        {children} <span aria-hidden>→</span>
-      </Link>
-    )
-  }
 
   return (
     <button onClick={onClick} className={`${base} ${className}`} style={style}>
-      {children} <span aria-hidden>→</span>
+      {startIcon}
+      {children}
+      {endIcon}
     </button>
   )
 }

@@ -5,6 +5,7 @@ interface DynamicImageProps {
   alt?: string
   className?: string
   containerClassName?: string
+
   objectFit?: 'cover' | 'contain' | 'fill' | 'none' | 'scale-down'
 }
 

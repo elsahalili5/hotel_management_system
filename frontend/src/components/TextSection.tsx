@@ -11,28 +11,30 @@ interface TextSectionProps {
 export function TextSection({
   subtitle,
   paragraphs,
-  themeColor = 'text-[#8b4513]',
+  themeColor = 'text-mansio-espresso',
   buttonLabel,
   buttonTo,
 }: TextSectionProps) {
   return (
-    <section className="bg-[#fdf8f3] py-24 px-6">
+    <section className=" bg-mansio-cream py-24 px-6">
       <div className="max-w-4xl mx-auto text-center">
         {subtitle && (
           <h2
-            className={`font-serif text-4xl md:text-5xl mb-10 italic font-medium ${themeColor}`}
+            className={`font-serif text-4xl md:text-5xl mb-10  font-medium ${themeColor}`}
           >
             {subtitle}
           </h2>
         )}
-        <div className="space-y-6 text-gray-700 font-light leading-relaxed text-lg md:text-xl">
+        <div className="space-y-6 text-mansio-mocha font-light leading-relaxed text-lg md:text-xl">
           {paragraphs.map((p, index) => (
             <p key={index}>{p}</p>
           ))}
         </div>
         {buttonLabel && buttonTo && (
           <div className="mt-10 flex justify-center">
-            <Button to={buttonTo} variant="outline">{buttonLabel}</Button>
+            <Button to={buttonTo} variant="outline">
+              {buttonLabel}
+            </Button>
           </div>
         )}
       </div>
