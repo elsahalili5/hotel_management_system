@@ -3,7 +3,8 @@ import { HeroSection } from '../components/HeroSection'
 import { TextSection } from '../components/TextSection'
 import { SplitSection } from '../components/SplitSection'
 import { useState } from 'react'
-import { AccordionItem } from '../components/AccordionItem' // Importo komponentin tënd të ri
+import { AccordionItem } from '../components/AccordionItem'
+import { ArrowRight } from 'lucide-react'
 
 const faqs = [
   {
@@ -36,7 +37,6 @@ const faqs = [
 export const Route = createFileRoute('/')({ component: App })
 
 function App() {
-  // Logjika për të mbajtur vetëm një FAQ të hapur
   const [openIndex, setOpenIndex] = useState<number | null>(null)
 
   return (
@@ -60,6 +60,7 @@ function App() {
         image="https://confident-health-b88439dafa.media.strapiapp.com/medium_spaa_ad561c7e11.jpg"
         buttonLabel="Discover More"
         buttonTo="/about"
+         buttonEndIcon={<ArrowRight size={20}/>}
       />
 
       <SplitSection
@@ -69,6 +70,7 @@ function App() {
         buttonLabel="Our Restaurants"
         buttonTo="/restaurant"
         imageRight={false}
+         buttonEndIcon={<ArrowRight size={20}/>}
       />
 
       <TextSection
@@ -78,11 +80,12 @@ function App() {
         ]}
         buttonLabel="Explore Wellness"
         buttonTo="/spa"
+        buttonEndIcon={<ArrowRight size={20}/>}
       />
 
-      {/* SEKSIONI FAQ DUKE PËRDORUR ACCORDIONITEM */}
-      <div className="max-w-3xl mx-auto px-6 pb-10">
-        <h2 className="text-4xl md:text-5xl font-serif text-center mb-16 text-mansio-espresso">
+      
+      <div className="w-full px-4 md:px-10 py-16 md:py-32">
+        <h2 className="font-serif md:text-5xl mb-10 text-4xl text-center text-mansio-espresso">
           Frequently Asked Questions
         </h2>
 

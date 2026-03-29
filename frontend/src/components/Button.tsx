@@ -11,18 +11,28 @@ const variants = {
     color: 'var(--color-mansio-espresso)',
     border: '1px solid var(--color-mansio-espresso)',
   },
+  ghost: {
+    backgroundColor: 'transparent',
+    color: 'var(--color-mansio-espresso)',
+    border: 'none',
+  },
 }
 
 const base =
   'inline-flex items-center gap-2 rounded-full px-6 py-2.5 text-sm font-medium no-underline transition-opacity duration-200 hover:opacity-80 cursor-pointer'
 
+const iconBase =
+  'inline-flex items-center justify-center rounded-full p-2 transition-opacity duration-200 hover:opacity-80 cursor-pointer'
+
 interface ButtonProps {
   children: ReactNode
   className?: string
-  variant?: 'primary' | 'outline'
+  variant?: 'primary' | 'outline' | 'ghost'
   endIcon?: ReactNode
   startIcon?: ReactNode
+  isIcon?: boolean
   onClick?: () => void
+  'aria-label'?: string
 }
 
 export function Button({
@@ -32,14 +42,17 @@ export function Button({
   variant = 'primary',
   endIcon,
   startIcon,
+  isIcon = false,
+  'aria-label': ariaLabel,
 }: ButtonProps) {
   const style = variants[variant]
+  const cls = isIcon ? `${iconBase} ${className}` : `${base} ${className}`
 
   return (
-    <button onClick={onClick} className={`${base} ${className}`} style={style}>
-      {startIcon}
+    <button onClick={onClick} className={cls} style={style} aria-label={ariaLabel}>
+      {!isIcon && startIcon}
       {children}
-      {endIcon}
+      {!isIcon && endIcon}
     </button>
   )
 }

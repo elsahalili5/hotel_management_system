@@ -1,5 +1,8 @@
+import { Link } from '@tanstack/react-router'
 import { Button } from './Button'
 import { Container } from './Container'
+
+import type { ReactNode } from 'react'
 
 interface SplitSectionProps {
   title: string
@@ -7,14 +10,18 @@ interface SplitSectionProps {
   image: string
   buttonLabel?: string
   buttonTo?: string
+  buttonStartIcon?: ReactNode
+  buttonEndIcon?: ReactNode
   imageRight?: boolean
 }
 export function SplitSection({
   title,
   text,
   image,
-  buttonLabel, // Hiqe = '' që të jetë undefined nëse nuk jepet
-  buttonTo = '/about',
+  buttonLabel,
+  buttonTo,
+  buttonStartIcon,
+  buttonEndIcon,
   imageRight = true,
 }: SplitSectionProps) {
   const textCol = (
@@ -23,9 +30,9 @@ export function SplitSection({
         {title}
       </h2>
 
-      {/* Vija dekorative */}
+     
       <div
-        className="h-px w-20 md:block bg-mansio-gold" // E bëra horizontale si në foto që dërgove
+        className="h-px w-20 md:block bg-mansio-gold" 
       />
 
       <p
@@ -35,16 +42,18 @@ export function SplitSection({
         {text}
       </p>
 
-      {/* BUTONI OPSIONAL: Shfaqet vetëm nëse buttonLabel ekziston */}
-      {buttonLabel && (
+     
+      {buttonLabel && buttonTo && (
         <div>
-          <Button to={buttonTo}>{buttonLabel}</Button>
+          <Link to={buttonTo} className="no-underline">
+            <Button startIcon={buttonStartIcon} endIcon={buttonEndIcon}>{buttonLabel}</Button>
+          </Link>
         </div>
       )}
     </div>
   )
 
-  // ... rest of the code (imageCol and return)
+ 
 
   const imageCol = (
     <div className="w-full h-80 md:h-full min-h-[400px]">

@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { Link, useNavigate } from '@tanstack/react-router'
+import { Link } from '@tanstack/react-router'
 import { ArrowRight, Menu, X } from 'lucide-react'
 import { Logo } from './Logo'
 import { Container } from './Container'
@@ -14,8 +14,6 @@ const navLinks = [
 ] as const
 
 export default function Header() {
-  const navigate = useNavigate()
-
   const [menuOpen, setMenuOpen] = useState(false)
 
   return (
@@ -23,83 +21,68 @@ export default function Header() {
       <header className="sticky top-0 z-50 backdrop-blur-md font-light bg-mansio-cream">
         <Container className="relative py-3">
           <div className="flex items-center h-16 border-t border-b border-mansio-espresso">
-            {/* Logo */}
-            <Link
-              to="/"
-              className="flex items-center no-underline flex-shrink-0"
-            >
+
+           
+            <Link to="/" className="flex items-center no-underline flex-shrink-0">
               <Logo size={120} />
             </Link>
 
-            {/* Nav Links - desktop */}
-            <nav className="hidden md:flex items-center gap-5 absolute left-1/2 -translate-x-1/2">
+           
+            <nav className="hidden lg:flex items-center gap-5 absolute left-1/2 -translate-x-1/2">
               {navLinks.map((link) => (
                 <Link
                   key={link.label}
                   to={link.to}
                   className="text-sm text-mansio-taupe no-underline transition-colors duration-200 whitespace-nowrap"
-                  activeProps={{
-                    className: 'text-mansio-espresso font-semibold',
-                  }}
+                  activeProps={{ className: 'text-mansio-espresso font-semibold' }}
                 >
                   {link.label}
                 </Link>
               ))}
             </nav>
 
-            {/* Right side */}
+           
             <div className="ml-auto flex items-center gap-3">
-              <Link to="/contact">
-                <Button
-                  className="hidden md:inline-flex"
-                  endIcon={<ArrowRight size={20} />}
-                >
-                  BOOK NOW
-                </Button>
-
-                <Button variant="outline" className="">
-                  <Menu />
-                </Button>
+              <Link to="/contact" className="hidden lg:inline-flex no-underline">
+                <Button endIcon={<ArrowRight size={16} />}>BOOK NOW</Button>
               </Link>
 
-              <button
-                className="md:hidden p-2 rounded-md text-mansio-espresso transition-colors"
-                onClick={() => setMenuOpen(!menuOpen)}
+              <Button
+                isIcon
+                variant="ghost"
+                className="lg:hidden"
                 aria-label="Toggle menu"
+                onClick={() => setMenuOpen(!menuOpen)}
               >
-                {menuOpen ? <X size={24} /> : <Menu size={24} />}
-              </button>
+                {menuOpen ? <X size={20} /> : <Menu size={20} />}
+              </Button>
             </div>
+
           </div>
         </Container>
       </header>
 
-      {/* Mobile menu */}
+     
       <div
-        className={`md:hidden fixed inset-0 z-[60] flex flex-col px-8 py-10 gap-6 bg-mansio-cream transition-all duration-500 ease-in-out ${
+        className={`lg:hidden fixed inset-0 z-[60] flex flex-col px-8 py-10 gap-6 bg-mansio-cream transition-all duration-500 ease-in-out ${
           menuOpen
             ? 'opacity-100 translate-y-0 pointer-events-auto'
             : 'opacity-0 -translate-y-4 pointer-events-none'
         }`}
       >
-        {/* Top row */}
+       
         <div className="flex items-center justify-between mb-4">
           <Link to="/" onClick={() => setMenuOpen(false)}>
             <Logo size={120} />
           </Link>
-          <button
-            onClick={() => setMenuOpen(false)}
-            className="text-mansio-espresso"
-            aria-label="Close menu"
-          >
-            <X size={28} />
-          </button>
+          <Button isIcon variant="ghost" aria-label="Close menu" onClick={() => setMenuOpen(false)}>
+            <X size={22} />
+          </Button>
         </div>
 
         <div className="h-px w-full bg-mansio-espresso" />
 
-        {/* Links */}
-        <nav className="flex flex-col gap-6 mt-4">
+        <nav className="flex flex-col items-center justify-center gap-6 flex-1">
           {navLinks.map((link, i) => (
             <Link
               key={link.label}
@@ -118,15 +101,13 @@ export default function Header() {
           ))}
         </nav>
 
-        <div className="h-px w-full mt-auto bg-mansio-espresso" />
+        <div className="h-px w-full bg-mansio-espresso" />
 
-        <Button
-          to="/contact"
-          className="self-start"
-          onClick={() => setMenuOpen(false)}
-        >
-          BOOK NOW
-        </Button>
+        <div className="flex justify-center">
+          <Link to="/contact" className="no-underline" onClick={() => setMenuOpen(false)}>
+            <Button endIcon={<ArrowRight size={16} />}>BOOK NOW</Button>
+          </Link>
+        </div>
       </div>
     </>
   )
