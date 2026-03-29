@@ -21,15 +21,13 @@ function Restaurant() {
   const allInclusiveDescription =
     'Savor the essence of local cuisine at our All-Inclusive restaurant, perched on the first floor with sweeping sea views. From a daily reinvented buffet featuring live cooking to our poolside bar serving classic cocktails and genuine spirits, we offer the pinnacle of leisure. Experience a place where every flavor tells a story and every sip is a toast to relaxation.'
   return (
-    <main className="bg-[#fdf8f3]">
+    <main>
       <HeroSection
         height="500px"
         title="EAT & DRINK"
         image="https://epidamn.com/assets/images/food.jpg"
       />
-      <div className="py-12">
-        <TextSection subtitle="Food & Drinks" paragraphs={foodDescription} />
-      </div>
+      <TextSection subtitle="Food & Drinks" paragraphs={foodDescription} />
       <SplitSection
         title="Restaurant & Lounge"
         text={restaurantText}

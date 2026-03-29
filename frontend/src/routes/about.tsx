@@ -42,7 +42,7 @@ function About() {
   )
 
   return (
-    <main className="bg-mansio-cream min-h-screen">
+    <main className=" min-h-screen">
       <HeroSection
         height="500px"
         title="About Us"

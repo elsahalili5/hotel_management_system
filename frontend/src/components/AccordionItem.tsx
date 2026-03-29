@@ -14,9 +14,9 @@ export function AccordionItem({
   onClick,
 }: AccordionItemProps) {
   return (
-    <div className="rounded-4xl border  text-mansio-espresso border-mansio-gold overflow-hidden bg-mansio-cream transition-colors duration-300">
+    <div className="rounded-4xl border  text-mansio-espresso border-mansio-gold overflow-hidden transition-colors duration-300">
       <button
-        className="w-full flex items-center justify-between px-8 py-6 text-left hover:bg-mansio-ivory  transition-colors"
+        className="w-full flex items-center justify-between px-8 py-6 text-left hover:bg-mansio-cream  transition-colors"
         onClick={onClick}
       >
         <span className="font-serif text-2xl tracking-wide">{title}</span>

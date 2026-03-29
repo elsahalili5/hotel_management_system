@@ -5,13 +5,12 @@ export default function Footer() {
   const year = new Date().getFullYear()
 
   return (
-    <footer className="bg-mansio-espresso px-4 py-4 text-[#d1ccc0]">
+    <footer className="bg-mansio-espresso py-4 text-mansio-linen">
       <Container className="relative py-1">
-        <div className="mx-auto max-w-7xl">
-          <div className="border-t border-[--color-mansio-espresso] opacity-50 mb-5"></div>
+        <div className="mx-auto ">
+          <div className="border-t border-mansio-mocha opacity-50 mb-5"></div>
 
           <div className="flex flex-col items-center justify-between gap-6 sm:flex-row">
-            {/* Copyright Text */}
             <p className="text-sm font-light tracking-widest uppercase">
               Copyright © {year} MANSIO RESORT. All Rights Reserved.
             </p>
@@ -40,8 +39,7 @@ export default function Footer() {
             </div>
           </div>
 
-          {/* Vija ndarëse e hollë poshtë */}
-          <div className="border-b border-[#5d564f] opacity-50 mt-5"></div>
+          <div className="border-b border-mansio-mocha opacity-50 mt-5"></div>
         </div>
       </Container>
     </footer>
@@ -63,7 +61,7 @@ function SocialIcon({
       target="_blank"
       rel="noreferrer"
       aria-label={label}
-      className="flex h-10 w-10 items-center justify-center rounded-full border border-[#d1ccc0]/40 text-[#d1ccc0] transition-all duration-300 hover:bg-[#d1ccc0] hover:text-[#4a443e] hover:border-[#d1ccc0]"
+      className="flex h-10 w-10 items-center justify-center rounded-full border border-mansio-mocha text-mansio-linen transition-all duration-300 hover:bg-[#d1ccc0] hover:text-[#4a443e] hover:border-[#d1ccc0]"
     >
       {icon}
     </a>
