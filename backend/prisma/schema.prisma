@@ -8,21 +8,108 @@ datasource db {
   provider = "mysql"
 }
 
-model User {
-  id        Int      @id @default(autoincrement())
-  name      String
-  email     String   @unique
-  address   String
-  birthday  String?
-  posts     Post[]
-  createdAt DateTime @default(now())
+enum UserStatus {
+  PENDING
+  ACTIVE
+  LOCKED
+  DISABLED
 }
 
-model Post {
-  id        Int      @id @default(autoincrement())
-  title     String
-  content   String?
-  authorId  Int
-  author    User     @relation(fields: [authorId], references: [id])
-  createdAt DateTime @default(now())
+enum TokenType {
+  REFRESH
+  PASSWORD_RESET
+  EMAIL_VERIFICATION
+}
+
+enum AuthProvider {
+  LOCAL
+  GOOGLE
+}
+
+enum Shift {
+  MORNING
+  AFTERNOON
+  NIGHT
+}
+
+model User {
+  id                  Int        @id @default(autoincrement())
+  first_name          String
+  last_name           String
+  email               String     @unique
+  password_hash       String
+  status              UserStatus @default(PENDING)
+
+  // Security Logic
+  lockout_enabled     Boolean    @default(true)
+  access_failed_count Int        @default(0)
+  email_confirmed     Boolean    @default(false)
+
+  created_at          DateTime   @default(now())
+
+  // Relations
+  staff_profile       Staff?
+  guest_profile       Guest?
+  user_roles          UserRole[]
+  user_tokens         UserToken[]
+}
+
+model UserToken {
+  id        Int          @id @default(autoincrement())
+  token     String       @unique @db.VarChar(500)
+  type      TokenType
+  provider  AuthProvider @default(LOCAL)
+  expiresAt DateTime
+  createdAt DateTime     @default(now())
+
+  user_id   Int
+  user      User         @relation(fields: [user_id], references: [id], onDelete: Cascade)
+}
+
+model Role {
+  id              Int        @id @default(autoincrement())
+  name            String     @unique
+  normalized_name String
+  description     String?
+  user_roles      UserRole[]
+}
+
+model UserRole {
+  user_id Int
+  role_id Int
+  user    User @relation(fields: [user_id], references: [id])
+  role    Role @relation(fields: [role_id], references: [id])
+
+  @@id([user_id, role_id])
+}
+
+model Staff {
+  id           Int     @id @default(autoincrement())
+  phone_number String?
+  shift        Shift   @default(MORNING)
+  is_active    Boolean @default(true)
+
+  user_id      Int     @unique
+  user         User    @relation(fields: [user_id], references: [id])
+}
+
+model Guest {
+  id              Int       @id @default(autoincrement())
+  phone_number    String?
+  address         String?
+  city            String?
+  country         String?
+  passport_number String?   @unique
+  date_of_birth   DateTime?
+
+  user_id         Int       @unique
+  user            User      @relation(fields: [user_id], references: [id])
+
+  reservations    Reservation[]
+}
+
+model Reservation {
+  id       Int   @id @default(autoincrement())
+  guest_id Int
+  guest    Guest @relation(fields: [guest_id], references: [id])
 }
