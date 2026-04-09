@@ -90,7 +90,7 @@ model Staff {
   is_active    Boolean @default(true)
 
   user_id      Int     @unique
-  user         User    @relation(fields: [user_id], references: [id])
+  user         User    @relation(fields: [user_id], references: [id], onDelete: Cascade)
 }
 
 model Guest {
@@ -103,7 +103,7 @@ model Guest {
   date_of_birth   DateTime?
 
   user_id         Int       @unique
-  user            User      @relation(fields: [user_id], references: [id])
+  user            User      @relation(fields: [user_id], references: [id], onDelete: Cascade)
 
   reservations    Reservation[]
 }

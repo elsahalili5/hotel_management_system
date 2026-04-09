@@ -4,6 +4,7 @@ import dotenv from "dotenv";
 
 import userRoutes from "./routes/userRoutes.ts";
 import postRoutes from "./routes/postRoutes.ts";
+import authRoutes from "./routes/authRoutes.ts";
 
 dotenv.config();
 const app = express();
@@ -11,9 +12,9 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 
-// Routes
 app.use("/api/users", userRoutes);
 app.use("/api/posts", postRoutes);
+app.use("/api/auth", authRoutes);
 
 const PORT = process.env.PORT || 5000;
 

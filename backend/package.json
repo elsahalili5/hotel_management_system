@@ -10,6 +10,7 @@
     "db:push": "prisma db push && prisma generate",
     "db:seed": "prisma db seed",
     "db:studio": "prisma studio",
+    "db:prisma:reset": "npx prisma migrate reset",
     "db:reset": "rm -rf prisma/migrations && prisma db push --force-reset --accept-data-loss && prisma generate && prisma db seed"
   },
   "keywords": [],
