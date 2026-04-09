@@ -12,7 +12,10 @@ interface FAQSectionProps {
   items: FAQItem[]
 }
 
-export function FAQSection({ title = 'Frequently Asked Questions', items }: FAQSectionProps) {
+export function FAQSection({
+  title = 'Frequently Asked Questions',
+  items,
+}: FAQSectionProps) {
   const [openIndex, setOpenIndex] = useState<number | null>(null)
 
   return (
@@ -38,7 +41,10 @@ export function FAQSection({ title = 'Frequently Asked Questions', items }: FAQS
                   className="w-full flex items-center justify-between gap-4 py-5 text-left"
                   onClick={() => setOpenIndex(isOpen ? null : i)}
                 >
-                  <span className="text-base font-medium text-mansio-espresso" style={{ fontFamily: 'var(--font-serif)' }}>
+                  <span
+                    className="text-base font-medium text-mansio-espresso"
+                    style={{ fontFamily: 'var(--font-serif)' }}
+                  >
                     {item.question}
                   </span>
                   <span className="flex-shrink-0 text-mansio-gold">

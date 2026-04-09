@@ -10,14 +10,12 @@ export const Route = createFileRoute('/contact')({
 function ContactPage() {
   return (
     <main className="min-h-screen">
-      {/* Banneri kryesor */}
       <HeroSection
         height="500px"
         title="CONTACT"
         image="https://epidamn.com/assets/images/pamjedhoma.jpg"
       />
 
-      {/* Seksioni i kartave të kontaktit */}
       <section className="bg-white py-16  ">
         <div className="max-w-6xl mx-auto px-6">
           <div className="grid grid-cols-1 md:grid-cols-3 divide-y md:divide-y-0 md:divide-x divide-mansio-gold/20">

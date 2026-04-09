@@ -17,21 +17,16 @@ export const ContactItem: React.FC<ContactItemProps> = ({
 }) => {
   return (
     <div className="flex flex-col items-center text-center p-8 group">
-      {/* Icon Container */}
       <div className="mb-4 text-mansio-gold transform transition-transform group-hover:scale-110 duration-300">
-        {/* Renderon ikonën që i dërgojmë si prop */}
         {icon}
       </div>
 
-      {/* Title */}
       <h3 className="font-serif text-2xl text-mansio-espresso mb-2">{title}</h3>
 
-      {/* Description */}
       <p className="text-sm text-mansio-mocha font-light mb-4 max-w-[200px] leading-relaxed">
         {description}
       </p>
 
-      {/* Contact Value (Link ose Text) */}
       {href ? (
         <a
           href={href}
