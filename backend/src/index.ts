@@ -5,6 +5,9 @@ import dotenv from "dotenv";
 import userRoutes from "./routes/userRoutes.ts";
 import postRoutes from "./routes/postRoutes.ts";
 import authRoutes from "./routes/authRoutes.ts";
+import amenityRoutes from "./routes/rooms/amenityRoutes";
+import roomTypeRoutes from "./routes/rooms/roomTypeRoutes";
+import bedRoutes from "./routes/rooms/bedRoutes.ts";
 
 dotenv.config();
 const app = express();
@@ -15,6 +18,9 @@ app.use(express.json());
 app.use("/api/users", userRoutes);
 app.use("/api/posts", postRoutes);
 app.use("/api/auth", authRoutes);
+app.use("/api/amenities", amenityRoutes);
+app.use("/api/room-types", roomTypeRoutes);
+app.use("/api/beds", bedRoutes);
 
 const PORT = process.env.PORT || 5000;
 

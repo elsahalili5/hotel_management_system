@@ -113,3 +113,83 @@ model Reservation {
   guest_id Int
   guest    Guest @relation(fields: [guest_id], references: [id])
 }
+// --- LLOJI I DHOMËS ---
+model RoomType {
+  id            Int               @id @default(autoincrement())
+  name          String            @unique
+  description   String?           @db.Text
+  base_price    Decimal           @db.Decimal(10, 2)
+  max_occupancy Int
+  size_m2       Int?
+  
+  rooms         Room[]
+  amenities     RoomTypeAmenity[]
+  beds          RoomTypeBed[]
+  images        RoomImage[]
+}
+
+// --- DHOMA FIZIKE ---
+model Room {
+  id           Int        @id @default(autoincrement())
+  room_number  String     @unique
+  floor        Int
+  status       RoomStatus @default(AVAILABLE)
+  
+  room_type_id Int
+  room_type    RoomType   @relation(fields: [room_type_id], references: [id], onDelete: Cascade, onUpdate: Cascade)
+}
+
+enum RoomStatus {
+  AVAILABLE
+  OCCUPIED
+  CLEANING
+}
+
+model RoomImage {
+  id           Int      @id @default(autoincrement())
+  url          String   @db.Text
+  is_primary   Boolean  @default(false)
+  alt_text     String?
+  
+  room_type_id Int
+  room_type    RoomType @relation(fields: [room_type_id], references: [id], onDelete: Cascade)
+}
+
+// --- PAJISJET (Amenities) ---
+model Amenity {
+  id         Int               @id @default(autoincrement())
+  name       String            @unique
+  icon       String?
+  room_types RoomTypeAmenity[]
+}
+
+// Tabela ndërmjetëse për Pajisjet
+model RoomTypeAmenity {
+  room_type_id Int
+  amenity_id   Int
+  
+  room_type    RoomType @relation(fields: [room_type_id], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  amenity      Amenity  @relation(fields: [amenity_id], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  
+  @@id([room_type_id, amenity_id])
+}
+
+// --- SHTRETËRIT (Beds) ---
+model Bed {
+  id         Int           @id @default(autoincrement())
+  name       String        @unique
+  capacity   Int
+  room_types RoomTypeBed[]
+}
+
+// Tabela ndërmjetëse për Shtretërit
+model RoomTypeBed {
+  room_type_id Int
+  bed_id       Int
+  quantity     Int         @default(1)
+  
+  room_type    RoomType @relation(fields: [room_type_id], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  bed          Bed      @relation(fields: [bed_id], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  
+  @@id([room_type_id, bed_id])
+}
