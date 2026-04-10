@@ -1,18 +1,12 @@
 import { Router } from "express";
-import {
-  getRoomTypes,
-  getRoomType,
-  createRoomType,
-  editRoomType,
-  deleteRoomType,
-} from "../../controllers/rooms/roomTypeController.ts";
+import { RoomTypeController } from "../../controllers/rooms/roomTypeController.ts";
 
 const router = Router();
 
-router.get("/", getRoomTypes);
-router.get("/detail", getRoomType);
-router.post("/", createRoomType);
-router.put("/", editRoomType);
-router.delete("/", deleteRoomType);
+router.get("/", RoomTypeController.getRoomTypes);
+router.get("/detail", RoomTypeController.getRoomType);
+router.post("/", RoomTypeController.createRoomType);
+router.put("/", RoomTypeController.editRoomType);
+router.delete("/", RoomTypeController.deleteRoomType);
 
 export default router;

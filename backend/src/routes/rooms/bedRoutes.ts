@@ -1,11 +1,11 @@
 import { Router } from "express";
-import { getBeds, createBed, editBed, deleteBed } from "../../controllers/rooms/bedController.ts";
+import { BedController } from "../../controllers/rooms/bedController.ts";
 
 const router = Router();
 
-router.get("/", getBeds);
-router.post("/", createBed);
-router.put("/", editBed); // Shtohet kjo linjë
-router.delete("/", deleteBed);
+router.get("/", BedController.getBeds);
+router.post("/", BedController.createBed);
+router.put("/", BedController.editBed);
+router.delete("/", BedController.deleteBed);
 
 export default router;

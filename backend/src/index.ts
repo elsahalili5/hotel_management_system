@@ -7,6 +7,7 @@ import postRoutes from "./routes/postRoutes.ts";
 import authRoutes from "./routes/auth/authRoutes.ts";
 import amenityRoutes from "./routes/rooms/amenityRoutes";
 import roomTypeRoutes from "./routes/rooms/roomTypeRoutes";
+import roomRoutes from "./routes/rooms/roomRoutes.ts";
 import bedRoutes from "./routes/rooms/bedRoutes.ts";
 import guestRouter from "./routes/guestRoutes.ts";
 import staffRouter from "./routes/staffRoutes.ts";
@@ -25,6 +26,7 @@ app.use("/api/room-types", roomTypeRoutes);
 app.use("/api/beds", bedRoutes);
 app.use("/api/guests", guestRouter);
 app.use("/api/staff", staffRouter);
+app.use("/api/rooms",roomRoutes);
 
 const PORT = process.env.PORT || 5000;
 
