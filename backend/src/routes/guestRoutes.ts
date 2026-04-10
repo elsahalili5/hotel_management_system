@@ -1,15 +1,10 @@
-// routes/guestRoutes.ts
 import { Router } from "express";
-import {
-  getGuests,
-  getGuestById,
-  updateGuest, // Shto këtë import
-} from "../controllers/guestController.ts";
+import { GuestController } from "../controllers/guestController.ts";
 
 const router = Router();
 
-router.get("/", getGuests);
-router.get("/:id", getGuestById);
-router.put("/:id", updateGuest);
+router.get("/", GuestController.getGuests);
+router.get("/:id", GuestController.getGuestById);
+router.put("/:id", GuestController.updateGuest);
 
 export default router;

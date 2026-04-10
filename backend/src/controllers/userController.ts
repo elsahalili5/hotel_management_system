@@ -1,117 +1,120 @@
 import { Request, Response } from "express";
-import {
-  getAllUsersService,
-  getUserByIdService,
-  updateUserService,
-  deleteUserService,
-  createGuest,
-  createStaff,
-} from "../services/userService.ts";
+import { UserService } from "../services/userService.ts";
 
-export const createGuestC = async (req: Request, res: Response) => {
-  try {
-    const user = await createGuest(req.body);
+export const UserController = {
+  createGuest: async (req: Request, res: Response) => {
+    try {
+      const user = await UserService.createGuest(req.body);
 
-    res.status(201).json({
-      message: "Guest created successfully",
-      data: user,
-    });
-  } catch (error: any) {
-    console.error(error);
+      return res.status(201).json({
+        message: "Guest created successfully",
+        data: user,
+      });
+    } catch (error: any) {
+      console.error(error);
 
-    res.status(error.status || 500).json({
-      message: error.message || "Failed to create guest",
-    });
-  }
-};
-
-export const createStaffC = async (req: Request, res: Response) => {
-  try {
-    const user = await createStaff(req.body);
-
-    res.status(201).json({
-      message: "User created successfully",
-      data: user,
-    });
-  } catch (error: any) {
-    console.error(error);
-
-    res.status(error.status || 500).json({
-      message: error.message || "Failed to create user",
-    });
-  }
-};
-// ---------------- GET ALL USERS ----------------
-export const getUsers = async (req: Request, res: Response) => {
-  try {
-    const users = await getAllUsersService();
-    res.status(200).json(users);
-  } catch (error) {
-    console.error(error);
-    res.status(500).json({ error: "Failed to fetch users" });
-  }
-};
-
-// ---------------- GET USER BY ID ----------------
-export const getUserById = async (req: Request, res: Response) => {
-  try {
-    const userId = Number(req.params.userId);
-
-    if (!userId || isNaN(userId)) {
-      return res.status(400).json({ error: "Invalid userId" });
+      return res.status(error.status || 500).json({
+        message: error.message || "Failed to create guest",
+      });
     }
+  },
 
-    const user = await getUserByIdService(userId);
+  createStaff: async (req: Request, res: Response) => {
+    try {
+      const user = await UserService.createStaff(req.body);
 
-    res.status(200).json(user);
-  } catch (error: any) {
-    console.error(error);
+      return res.status(201).json({
+        message: "Staff created successfully",
+        data: user,
+      });
+    } catch (error: any) {
+      console.error(error);
 
-    res.status(error.status || 500).json({
-      error: error.message || "Failed to fetch user",
-    });
-  }
-};
-
-// ---------------- UPDATE USER ----------------
-export const updateUser = async (req: Request, res: Response) => {
-  try {
-    const userId = Number(req.params.userId);
-
-    if (!userId || isNaN(userId)) {
-      return res.status(400).json({ error: "Invalid userId" });
+      return res.status(error.status || 500).json({
+        message: error.message || "Failed to create staff",
+      });
     }
+  },
 
-    const updatedUser = await updateUserService(userId, req.body);
+  getUsers: async (req: Request, res: Response) => {
+    try {
+      const users = await UserService.getAllUsers();
 
-    res.status(200).json(updatedUser);
-  } catch (error: any) {
-    console.error(error);
+      return res.status(200).json(users);
+    } catch (error) {
+      console.error(error);
 
-    res.status(error.status || 500).json({
-      error: error.message || "Update failed",
-    });
-  }
-};
-
-export const deleteUser = async (req: Request, res: Response) => {
-  try {
-    const userId = Number(req.params.userId);
-
-    if (!userId || isNaN(userId)) {
-      return res.status(400).json({ error: "Invalid userId" });
+      return res.status(500).json({
+        error: "Failed to fetch users",
+      });
     }
+  },
 
-    await deleteUserService(userId);
+  getUserById: async (req: Request, res: Response) => {
+    try {
+      const userId = Number(req.params.userId);
 
-    res.status(200).json({
-      message: "User deleted successfully",
-    });
-  } catch (error: any) {
-    console.error(error);
+      if (!userId || isNaN(userId)) {
+        return res.status(400).json({
+          error: "Invalid userId",
+        });
+      }
 
-    res.status(error.status || 500).json({
-      error: error.message || "Delete failed",
-    });
-  }
+      const user = await UserService.getUserById(userId);
+
+      return res.status(200).json(user);
+    } catch (error: any) {
+      console.error(error);
+
+      return res.status(error.status || 500).json({
+        error: error.message || "Failed to fetch user",
+      });
+    }
+  },
+
+  updateUser: async (req: Request, res: Response) => {
+    try {
+      const userId = Number(req.params.userId);
+
+      if (!userId || isNaN(userId)) {
+        return res.status(400).json({
+          error: "Invalid userId",
+        });
+      }
+
+      const updatedUser = await UserService.updateUser(userId, req.body);
+
+      return res.status(200).json(updatedUser);
+    } catch (error: any) {
+      console.error(error);
+
+      return res.status(error.status || 500).json({
+        error: error.message || "Update failed",
+      });
+    }
+  },
+
+  deleteUser: async (req: Request, res: Response) => {
+    try {
+      const userId = Number(req.params.userId);
+
+      if (!userId || isNaN(userId)) {
+        return res.status(400).json({
+          error: "Invalid userId",
+        });
+      }
+
+      await UserService.deleteUser(userId);
+
+      return res.status(200).json({
+        message: "User deleted successfully",
+      });
+    } catch (error: any) {
+      console.error(error);
+
+      return res.status(error.status || 500).json({
+        error: error.message || "Delete failed",
+      });
+    }
+  },
 };

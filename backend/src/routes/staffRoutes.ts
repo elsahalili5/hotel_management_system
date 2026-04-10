@@ -1,16 +1,10 @@
-// routes/staffRoutes.ts
 import { Router } from "express";
-import {
-  getStaff,
-  getStaffById,
-  updateStaff,
-} from "../controllers/staffController.ts";
+import { StaffController } from "../controllers/staffController.ts";
 
 const router = Router();
-router.get("/", getStaff);
 
-router.get("/:id", getStaffById);
-
-router.put("/:id", updateStaff);
+router.get("/", StaffController.getStaff);
+router.get("/:id", StaffController.getStaffById);
+router.put("/:id", StaffController.updateStaff);
 
 export default router;
