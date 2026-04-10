@@ -11,8 +11,10 @@
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as UsersRouteImport } from './routes/users'
 import { Route as SpaRouteImport } from './routes/spa'
+import { Route as SignupRouteImport } from './routes/signup'
 import { Route as RoomsRouteImport } from './routes/rooms'
 import { Route as RestaurantRouteImport } from './routes/restaurant'
+import { Route as LoginRouteImport } from './routes/login'
 import { Route as ContactRouteImport } from './routes/contact'
 import { Route as BookingsRouteImport } from './routes/bookings'
 import { Route as AboutRouteImport } from './routes/about'
@@ -28,6 +30,11 @@ const SpaRoute = SpaRouteImport.update({
   path: '/spa',
   getParentRoute: () => rootRouteImport,
 } as any)
+const SignupRoute = SignupRouteImport.update({
+  id: '/signup',
+  path: '/signup',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const RoomsRoute = RoomsRouteImport.update({
   id: '/rooms',
   path: '/rooms',
@@ -36,6 +43,11 @@ const RoomsRoute = RoomsRouteImport.update({
 const RestaurantRoute = RestaurantRouteImport.update({
   id: '/restaurant',
   path: '/restaurant',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const LoginRoute = LoginRouteImport.update({
+  id: '/login',
+  path: '/login',
   getParentRoute: () => rootRouteImport,
 } as any)
 const ContactRoute = ContactRouteImport.update({
@@ -64,8 +76,10 @@ export interface FileRoutesByFullPath {
   '/about': typeof AboutRoute
   '/bookings': typeof BookingsRoute
   '/contact': typeof ContactRoute
+  '/login': typeof LoginRoute
   '/restaurant': typeof RestaurantRoute
   '/rooms': typeof RoomsRoute
+  '/signup': typeof SignupRoute
   '/spa': typeof SpaRoute
   '/users': typeof UsersRoute
 }
@@ -74,8 +88,10 @@ export interface FileRoutesByTo {
   '/about': typeof AboutRoute
   '/bookings': typeof BookingsRoute
   '/contact': typeof ContactRoute
+  '/login': typeof LoginRoute
   '/restaurant': typeof RestaurantRoute
   '/rooms': typeof RoomsRoute
+  '/signup': typeof SignupRoute
   '/spa': typeof SpaRoute
   '/users': typeof UsersRoute
 }
@@ -85,8 +101,10 @@ export interface FileRoutesById {
   '/about': typeof AboutRoute
   '/bookings': typeof BookingsRoute
   '/contact': typeof ContactRoute
+  '/login': typeof LoginRoute
   '/restaurant': typeof RestaurantRoute
   '/rooms': typeof RoomsRoute
+  '/signup': typeof SignupRoute
   '/spa': typeof SpaRoute
   '/users': typeof UsersRoute
 }
@@ -97,8 +115,10 @@ export interface FileRouteTypes {
     | '/about'
     | '/bookings'
     | '/contact'
+    | '/login'
     | '/restaurant'
     | '/rooms'
+    | '/signup'
     | '/spa'
     | '/users'
   fileRoutesByTo: FileRoutesByTo
@@ -107,8 +127,10 @@ export interface FileRouteTypes {
     | '/about'
     | '/bookings'
     | '/contact'
+    | '/login'
     | '/restaurant'
     | '/rooms'
+    | '/signup'
     | '/spa'
     | '/users'
   id:
@@ -117,8 +139,10 @@ export interface FileRouteTypes {
     | '/about'
     | '/bookings'
     | '/contact'
+    | '/login'
     | '/restaurant'
     | '/rooms'
+    | '/signup'
     | '/spa'
     | '/users'
   fileRoutesById: FileRoutesById
@@ -128,8 +152,10 @@ export interface RootRouteChildren {
   AboutRoute: typeof AboutRoute
   BookingsRoute: typeof BookingsRoute
   ContactRoute: typeof ContactRoute
+  LoginRoute: typeof LoginRoute
   RestaurantRoute: typeof RestaurantRoute
   RoomsRoute: typeof RoomsRoute
+  SignupRoute: typeof SignupRoute
   SpaRoute: typeof SpaRoute
   UsersRoute: typeof UsersRoute
 }
@@ -150,6 +176,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof SpaRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/signup': {
+      id: '/signup'
+      path: '/signup'
+      fullPath: '/signup'
+      preLoaderRoute: typeof SignupRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/rooms': {
       id: '/rooms'
       path: '/rooms'
@@ -162,6 +195,13 @@ declare module '@tanstack/react-router' {
       path: '/restaurant'
       fullPath: '/restaurant'
       preLoaderRoute: typeof RestaurantRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/login': {
+      id: '/login'
+      path: '/login'
+      fullPath: '/login'
+      preLoaderRoute: typeof LoginRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/contact': {
@@ -200,8 +240,10 @@ const rootRouteChildren: RootRouteChildren = {
   AboutRoute: AboutRoute,
   BookingsRoute: BookingsRoute,
   ContactRoute: ContactRoute,
+  LoginRoute: LoginRoute,
   RestaurantRoute: RestaurantRoute,
   RoomsRoute: RoomsRoute,
+  SignupRoute: SignupRoute,
   SpaRoute: SpaRoute,
   UsersRoute: UsersRoute,
 }
