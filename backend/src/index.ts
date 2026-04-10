@@ -4,7 +4,7 @@ import dotenv from "dotenv";
 
 import userRoutes from "./routes/userRoutes.ts";
 import postRoutes from "./routes/postRoutes.ts";
-import authRoutes from "./routes/authRoutes.ts";
+import authRoutes from "./routes/auth/authRoutes.ts";
 import amenityRoutes from "./routes/rooms/amenityRoutes";
 import roomTypeRoutes from "./routes/rooms/roomTypeRoutes";
 import bedRoutes from "./routes/rooms/bedRoutes.ts";
