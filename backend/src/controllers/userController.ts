@@ -1,71 +1,50 @@
-// import { User } from "../generated/prisma/client.ts";3
-// import { prisma } from "../lib/prisma.ts";
-// import { Request, Response } from "express";
-
-// export const getUsers = async (req, res) => {
-//   const users: User[] = await prisma.user.findMany();
-//   res.json(users);
-// };
-
-// export const getUserById = async (req: Request, res: Response) => {
-//   const userIdParam = req.query.userId;
-
-//   if (!userIdParam) {
-//     return res.json({
-//       error: "No id was given!",
-//       status: 400,
-//     });
-//   }
-//   const userId = Number(userIdParam);
-//   const user = await prisma.user.findUnique({
-//     where: {
-//       id: userId,
-//     },
-//   });
-
-//   if (user) {
-//     res.json(user);
-//   } else {
-//     res.json({
-//       error: "User not found!",
-//       status: 400,
-//     });
-//   }
-// };
-
-// export const createUser = async (req: Request, res: Response) => {
-//   const { first_name, last_name, email, password_hash } = req.body;
-//   const user = await prisma.user.create({ data: { first_name, last_name, email, password_hash } });
-//   res.json(user);
-// };
-
-// export const deleteUserById = async (req: Request, res: Response) => {
-//   const userIdParam = req.query.userId;
-
-//   if (!userIdParam) {
-//     return res.json({
-//       error: "No id was given!",
-//       status: 400,
-//     });
-//   }
-
-//   const userId = Number(userIdParam);
-//   const User = await prisma.user.delete({
-//     where: {
-//       id: userId,
-//     },
-//   });
-
-//   res.json(User);
-// };
-// userController.ts
-import { prisma } from "../lib/prisma.ts";
 import { Request, Response } from "express";
+import {
+  getAllUsersService,
+  getUserByIdService,
+  updateUserService,
+  deleteUserService,
+  createGuest,
+  createStaff,
+} from "../services/userService.ts";
 
-// ---- GET ALL USERS ----
+export const createGuestC = async (req: Request, res: Response) => {
+  try {
+    const user = await createGuest(req.body);
+
+    res.status(201).json({
+      message: "Guest created successfully",
+      data: user,
+    });
+  } catch (error: any) {
+    console.error(error);
+
+    res.status(error.status || 500).json({
+      message: error.message || "Failed to create guest",
+    });
+  }
+};
+
+export const createStaffC = async (req: Request, res: Response) => {
+  try {
+    const user = await createStaff(req.body);
+
+    res.status(201).json({
+      message: "User created successfully",
+      data: user,
+    });
+  } catch (error: any) {
+    console.error(error);
+
+    res.status(error.status || 500).json({
+      message: error.message || "Failed to create user",
+    });
+  }
+};
+// ---------------- GET ALL USERS ----------------
 export const getUsers = async (req: Request, res: Response) => {
   try {
-    const users = await prisma.user.findMany();
+    const users = await getAllUsersService();
     res.status(200).json(users);
   } catch (error) {
     console.error(error);
@@ -73,20 +52,66 @@ export const getUsers = async (req: Request, res: Response) => {
   }
 };
 
-// ---- GET USER BY ID ----
+// ---------------- GET USER BY ID ----------------
 export const getUserById = async (req: Request, res: Response) => {
   try {
-    const userIdParam = req.query.userId;
-    if (!userIdParam) return res.status(400).json({ error: "No userId given" });
+    const userId = Number(req.params.userId);
 
-    const userId = Number(userIdParam);
-    const user = await prisma.user.findUnique({ where: { id: userId } });
+    if (!userId || isNaN(userId)) {
+      return res.status(400).json({ error: "Invalid userId" });
+    }
 
-    if (!user) return res.status(404).json({ error: "User not found" });
+    const user = await getUserByIdService(userId);
 
     res.status(200).json(user);
-  } catch (error) {
+  } catch (error: any) {
     console.error(error);
-    res.status(500).json({ error: "Failed to fetch user" });
+
+    res.status(error.status || 500).json({
+      error: error.message || "Failed to fetch user",
+    });
+  }
+};
+
+// ---------------- UPDATE USER ----------------
+export const updateUser = async (req: Request, res: Response) => {
+  try {
+    const userId = Number(req.params.userId);
+
+    if (!userId || isNaN(userId)) {
+      return res.status(400).json({ error: "Invalid userId" });
+    }
+
+    const updatedUser = await updateUserService(userId, req.body);
+
+    res.status(200).json(updatedUser);
+  } catch (error: any) {
+    console.error(error);
+
+    res.status(error.status || 500).json({
+      error: error.message || "Update failed",
+    });
+  }
+};
+
+export const deleteUser = async (req: Request, res: Response) => {
+  try {
+    const userId = Number(req.params.userId);
+
+    if (!userId || isNaN(userId)) {
+      return res.status(400).json({ error: "Invalid userId" });
+    }
+
+    await deleteUserService(userId);
+
+    res.status(200).json({
+      message: "User deleted successfully",
+    });
+  } catch (error: any) {
+    console.error(error);
+
+    res.status(error.status || 500).json({
+      error: error.message || "Delete failed",
+    });
   }
 };

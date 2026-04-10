@@ -1,11 +1,9 @@
-import { User } from "../generated/prisma/client.ts"; // for typing only
-import { prisma } from "../lib/prisma.ts";
 import { Request, Response } from "express";
-import bcrypt from "bcrypt";
+import {
+  registerUserService,
+  loginUserService,
+} from "../services/authService.ts";
 
-const SALT_ROUNDS = 10;
-
-// ---- REGISTER ----
 export const registerUser = async (req: Request, res: Response) => {
   try {
     const { first_name, last_name, email, password } = req.body;
@@ -14,56 +12,39 @@ export const registerUser = async (req: Request, res: Response) => {
       return res.status(400).json({ error: "Missing required fields" });
     }
 
-    // Check if user already exists
-    const existingUser = await prisma.user.findUnique({ where: { email } });
-    if (existingUser) {
-      return res.status(400).json({ error: "User already exists" });
-    }
-
-    // Hash password
-    const password_hash = await bcrypt.hash(password, SALT_ROUNDS);
-
-    // Create user
-    const user = await prisma.user.create({
-      data: {
-        first_name,
-        last_name,
-        email,
-        password_hash,
-        status: "ACTIVE", // optional default
-      },
+    const user = await registerUserService({
+      first_name,
+      last_name,
+      email,
+      password,
     });
 
-    res.status(201).json(user as User);
-  } catch (error) {
+    res.status(201).json({ message: "User registered as GUEST", user });
+  } catch (error: any) {
     console.error(error);
-    res.status(500).json({ error: "Registration failed" });
+    const status = error.status ?? 500;
+    const message = error.message ?? "Registration failed";
+    res.status(status).json({ error: message });
   }
 };
 
-// ---- LOGIN ----
 export const loginUser = async (req: Request, res: Response) => {
   try {
     const { email, password } = req.body;
 
     if (!email || !password) {
-      return res.status(400).json({ error: "Email and password are required" });
+      return res.status(400).json({ error: "Email and password required" });
     }
 
-    // Find user
-    const user = await prisma.user.findUnique({ where: { email } });
-    if (!user) return res.status(404).json({ error: "User not found" });
+    const userLoginResponse = await loginUserService({ email, password });
 
-    // Compare password
-    const passwordMatch = await bcrypt.compare(password, user.password_hash);
-    if (!passwordMatch)
-      return res.status(401).json({ error: "Invalid credentials" });
-
-    // Optional: generate JWT here if needed
-
-    res.status(200).json({ message: "Login successful", userId: user.id });
-  } catch (error) {
+    res
+      .status(200)
+      .json({ message: "Login successful", data: userLoginResponse });
+  } catch (error: any) {
     console.error(error);
-    res.status(500).json({ error: "Login failed" });
+    const status = error.status ?? 500;
+    const message = error.message ?? "Login failed";
+    res.status(status).json({ error: message });
   }
 };

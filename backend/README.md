@@ -45,7 +45,7 @@ Express API with Prisma and MySQL/MariaDB.
 5. **Seed (optional)**
 
    ```bash
-   npm run db:seed
+
    ```
 
    Seeding is configured in `prisma.config.ts` to run `tsx prisma/seed.ts`.
