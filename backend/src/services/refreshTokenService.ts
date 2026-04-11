@@ -2,7 +2,11 @@ import jwt from "jsonwebtoken";
 import { prisma } from "../lib/prisma.ts";
 import { generateAccessToken } from "../utils/jwt.ts";
 
-const REFRESH_SECRET = process.env.JWT_REFRESH_SECRET!;
+if (!process.env.JWT_REFRESH_SECRET) {
+  throw new Error("JWT_REFRESH_SECRET is missing in .env file");
+}
+
+const REFRESH_SECRET = process.env.JWT_REFRESH_SECRET;
 
 export const refreshAccessToken = async (refreshToken: string) => {
   if (!refreshToken) {

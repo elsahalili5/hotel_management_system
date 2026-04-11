@@ -1,9 +1,5 @@
 import { prisma } from "../lib/prisma.ts";
 
-/* =========================
-   TYPES / DTO
-========================= */
-
 export interface UpdateGuestProfileDTO {
   phone_number?: string;
   address?: string;
@@ -12,10 +8,6 @@ export interface UpdateGuestProfileDTO {
   passport_number?: string;
   date_of_birth?: Date;
 }
-
-/* =========================
-   SERVICE OBJECT
-========================= */
 
 export const GuestService = {
   getAllGuests: async () => {
@@ -46,28 +38,13 @@ export const GuestService = {
       throw { status: 404, message: "Guest not found" };
     }
 
+    const cleanData = Object.fromEntries(
+      Object.entries(data).filter(([_, v]) => v !== undefined),
+    );
+
     return prisma.guest.update({
       where: { id },
-      data: {
-        ...(data.phone_number !== undefined && {
-          phone_number: data.phone_number,
-        }),
-        ...(data.address !== undefined && {
-          address: data.address,
-        }),
-        ...(data.city !== undefined && {
-          city: data.city,
-        }),
-        ...(data.country !== undefined && {
-          country: data.country,
-        }),
-        ...(data.passport_number !== undefined && {
-          passport_number: data.passport_number,
-        }),
-        ...(data.date_of_birth !== undefined && {
-          date_of_birth: data.date_of_birth,
-        }),
-      },
+      data: cleanData,
     });
   },
 };

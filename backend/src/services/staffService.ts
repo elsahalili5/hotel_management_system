@@ -9,26 +9,19 @@ interface UpdateStaffProfilePayload {
 
 export const StaffService = {
   getAllStaff: async () => {
-    return await prisma.staff.findMany({
-      include: {
-        user: true,
-      },
+    return prisma.staff.findMany({
+      include: { user: true },
     });
   },
 
   getStaffById: async (id: number) => {
     const staff = await prisma.staff.findUnique({
       where: { id },
-      include: {
-        user: true,
-      },
+      include: { user: true },
     });
 
     if (!staff) {
-      throw {
-        status: 404,
-        message: "Staff not found",
-      };
+      throw { status: 404, message: "Staff not found" };
     }
 
     return staff;
@@ -43,27 +36,28 @@ export const StaffService = {
     });
 
     if (!staff) {
-      throw {
-        status: 404,
-        message: "Staff not found",
-      };
+      throw { status: 404, message: "Staff not found" };
     }
 
-    return await prisma.staff.update({
+    if (!payload || Object.keys(payload).length === 0) {
+      throw { status: 400, message: "No fields provided to update" };
+    }
+
+    const cleanData = Object.fromEntries(
+      Object.entries(payload).filter(([_, v]) => v !== undefined && v !== null),
+    );
+
+    if (
+      cleanData.shift &&
+      !Object.values(Shift).includes(cleanData.shift as Shift)
+    ) {
+      throw { status: 400, message: "Invalid shift value" };
+    }
+
+    return prisma.staff.update({
       where: { id },
-      data: {
-        ...(payload.phone_number !== undefined && {
-          phone_number: payload.phone_number,
-        }),
-
-        ...(payload.shift !== undefined && {
-          shift: payload.shift,
-        }),
-
-        ...(payload.is_active !== undefined && {
-          is_active: payload.is_active,
-        }),
-      },
+      data: cleanData,
+      include: { user: true },
     });
   },
 };

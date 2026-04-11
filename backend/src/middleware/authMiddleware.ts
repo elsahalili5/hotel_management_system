@@ -2,7 +2,11 @@ import { Request, Response, NextFunction } from "express";
 import jwt from "jsonwebtoken";
 import { prisma } from "../lib/prisma.ts";
 
-const ACCESS_SECRET = process.env.JWT_ACCESS_SECRET!;
+if (!process.env.JWT_ACCESS_SECRET) {
+  throw new Error("JWT_ACCESS_SECRET is missing in .env file");
+}
+
+const ACCESS_SECRET = process.env.JWT_ACCESS_SECRET;
 
 export interface AuthRequest extends Request {
   user?: any;
