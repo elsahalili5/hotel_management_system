@@ -3,6 +3,7 @@ import { prisma } from "../../lib/prisma.ts";
 export const RoomTypeService = {
   getAllRoomTypes: async () => {
     return await prisma.roomType.findMany({
+      orderBy: { name: 'asc' },
       include: {
         amenities: {
           include: { amenity: true },
@@ -39,6 +40,29 @@ export const RoomTypeService = {
     beds?: { bed_id: number; quantity: number }[];
     images?: { url: string; is_primary?: boolean; alt_text?: string }[];
   }) => {
+    const existingName = await prisma.roomType.findUnique({ where: { name: data.name } });
+    if (existingName) {
+      throw { status: 409, message: `A Room Type with the name '${data.name}' already exists` };
+    }
+
+    if (data.beds && data.beds.length > 0) {
+      const bedDetails = await prisma.bed.findMany({
+        where: { id: { in: data.beds.map((b) => b.bed_id) } },
+      });
+
+      const totalBedCapacity = data.beds.reduce((sum, b) => {
+        const bedInfo = bedDetails.find((bd) => bd.id === b.bed_id);
+        return sum + (bedInfo ? bedInfo.capacity * (b.quantity || 1) : 0);
+      }, 0);
+
+      if (totalBedCapacity < data.max_occupancy) {
+        throw {
+          status: 400,
+          message: `Total bed capacity (${totalBedCapacity}) is insufficient for the room's max occupancy (${data.max_occupancy}).`,
+        };
+      }
+    }
+
     return await prisma.roomType.create({
       data: {
         name: data.name,
@@ -74,6 +98,13 @@ export const RoomTypeService = {
   },
 
   updateRoomType: async (id: number, data: any) => {
+    if (data.name) {
+      const existingName = await prisma.roomType.findUnique({ where: { name: data.name } });
+      if (existingName && existingName.id !== id) {
+        throw { status: 409, message: `A Room Type with the name '${data.name}' already exists` };
+      }
+    }
+
     return await prisma.$transaction(async (tx) => {
       if (data.amenities) {
         await tx.roomTypeAmenity.deleteMany({ where: { room_type_id: id } });

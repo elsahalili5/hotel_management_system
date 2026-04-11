@@ -1,5 +1,4 @@
 import { Request, Response } from "express";
-import { prisma } from "../../lib/prisma.ts";
 import { RoomTypeService } from "../../services/rooms/roomTypeService.ts";
 
 export const RoomTypeController = {
@@ -16,7 +15,7 @@ export const RoomTypeController = {
   getRoomType: async (req: Request, res: Response) => {
     try {
       const id = Number(req.query.id);
-      if (!id) return res.status(400).json({ error: "Room Type ID is required" });
+      if (!id || isNaN(id)) return res.status(400).json({ error: "Room Type ID is required" });
 
       const type = await RoomTypeService.getRoomTypeById(id);
       if (!type) return res.status(404).json({ error: "Room type not found" });
@@ -34,35 +33,11 @@ export const RoomTypeController = {
       if (!name || name.trim() === "") {
         return res.status(400).json({ error: "Name is required and cannot be empty" });
       }
-      if (!base_price || base_price <= 0) {
+      if (!base_price || Number(base_price) <= 0) {
         return res.status(400).json({ error: "Base price must be a positive number" });
       }
-      if (!max_occupancy || max_occupancy <= 0) {
+      if (!max_occupancy || Number(max_occupancy) <= 0) {
         return res.status(400).json({ error: "Max occupancy must be at least 1 person" });
-      }
-
-      const existingName = await prisma.roomType.findUnique({
-        where: { name: name.trim() },
-      });
-      if (existingName) {
-        return res.status(409).json({ error: `A Room Type with the name '${name}' already exists` });
-      }
-
-      if (beds && beds.length > 0) {
-        const bedDetails = await prisma.bed.findMany({
-          where: { id: { in: beds.map((b: any) => b.bed_id) } },
-        });
-
-        const totalBedCapacity = beds.reduce((sum: number, b: any) => {
-          const bedInfo = bedDetails.find((bd) => bd.id === b.bed_id);
-          return sum + (bedInfo ? bedInfo.capacity * (b.quantity || 1) : 0);
-        }, 0);
-
-        if (totalBedCapacity < max_occupancy) {
-          return res.status(400).json({
-            error: `Total bed capacity (${totalBedCapacity}) is insufficient for the room's max occupancy (${max_occupancy}).`,
-          });
-        }
       }
 
       const newType = await RoomTypeService.createRoomType({
@@ -79,37 +54,60 @@ export const RoomTypeController = {
       res.status(201).json({ message: "Room Type created successfully", data: newType });
     } catch (error: any) {
       console.error("Create error:", error);
-      res.status(500).json({ error: "An error occurred while creating the Room Type. Please check your data." });
+      const status = error.status ?? 500;
+      const message = error.message ?? "An error occurred while creating the Room Type.";
+      res.status(status).json({ error: message });
     }
   },
 
   editRoomType: async (req: Request, res: Response) => {
     try {
       const id = Number(req.query.id);
-      if (!id) return res.status(400).json({ error: "ID is required for update" });
+      if (!id || isNaN(id)) return res.status(400).json({ error: "ID is required for update" });
 
-      const exists = await prisma.roomType.findUnique({ where: { id } });
+      const { name, base_price, max_occupancy } = req.body;
+
+      if (name !== undefined && name.trim() === "") {
+        return res.status(400).json({ error: "Name cannot be empty" });
+      }
+      if (base_price !== undefined && Number(base_price) <= 0) {
+        return res.status(400).json({ error: "Base price must be a positive number" });
+      }
+      if (max_occupancy !== undefined && Number(max_occupancy) <= 0) {
+        return res.status(400).json({ error: "Max occupancy must be at least 1 person" });
+      }
+
+      const exists = await RoomTypeService.getRoomTypeById(id);
       if (!exists) return res.status(404).json({ error: "Room Type not found" });
 
-      const updated = await RoomTypeService.updateRoomType(id, req.body);
+      const updated = await RoomTypeService.updateRoomType(id, {
+        ...req.body,
+        name: name !== undefined ? name.trim() : undefined,
+      });
       res.status(200).json({ message: "Room Type updated successfully", data: updated });
-    } catch (error) {
-      res.status(500).json({ error: "Failed to update Room Type" });
+    } catch (error: any) {
+      console.error("Edit error:", error);
+      const status = error.status ?? 500;
+      const message = error.message ?? "Failed to update Room Type";
+      res.status(status).json({ error: message });
     }
   },
 
   deleteRoomType: async (req: Request, res: Response) => {
     try {
       const id = Number(req.query.id);
-      if (!id) return res.status(400).json({ error: "ID is required" });
+      if (!id || isNaN(id)) return res.status(400).json({ error: "ID is required" });
 
-      const exists = await prisma.roomType.findUnique({ where: { id } });
+      const exists = await RoomTypeService.getRoomTypeById(id);
       if (!exists) return res.status(404).json({ error: "Room Type not found" });
 
       await RoomTypeService.removeRoomType(id);
       res.status(200).json({ message: `Room type '${exists.name}' deleted successfully` });
-    } catch (error) {
-      res.status(500).json({ error: "Cannot delete this Room Type because it is linked to existing rooms." });
+    } catch (error: any) {
+      console.error("Delete error:", error);
+      const status = error.status ?? 500;
+      const message = error.message ?? "Cannot delete this Room Type.";
+      res.status(status).json({ error: message });
     }
   },
 };

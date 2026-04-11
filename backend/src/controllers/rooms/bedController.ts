@@ -1,5 +1,4 @@
 import { Request, Response } from "express";
-import { prisma } from "../../lib/prisma.ts";
 import { BedService } from "../../services/rooms/bedService.ts";
 
 export const BedController = {
@@ -20,26 +19,17 @@ export const BedController = {
       if (!name || name.trim() === "") {
         return res.status(400).json({ error: "Bed name is required" });
       }
-      if (!capacity || capacity <= 0) {
-        return res.status(400).json({ error: "Valid capacity is required" });
-      }
-
-      const existingBed = await prisma.bed.findUnique({
-        where: { name: name.trim() }
-      });
-
-      if (existingBed) {
-        return res.status(409).json({
-          error: "A bed with this name already exists",
-          suggestion: "Use a different name or update the existing one"
-        });
+      if (!capacity || isNaN(Number(capacity)) || Number(capacity) <= 0 || !Number.isInteger(Number(capacity))) {
+        return res.status(400).json({ error: "Capacity must be a positive whole number" });
       }
 
       const newBed = await BedService.createNewBed(name.trim(), Number(capacity));
       res.status(201).json(newBed);
-    } catch (error) {
+    } catch (error: any) {
       console.error("Error creating bed:", error);
-      res.status(500).json({ error: "Internal server error while creating bed" });
+      const status = error.status ?? 500;
+      const message = error.message ?? "Internal server error while creating bed";
+      res.status(status).json({ error: message });
     }
   },
 
@@ -53,24 +43,29 @@ export const BedController = {
       }
 
       const bedId = Number(idParam);
-
-      const existing = await prisma.bed.findUnique({ where: { id: bedId } });
-      if (!existing) {
-        return res.status(404).json({ error: "Bed type not found" });
+      if (isNaN(bedId)) {
+        return res.status(400).json({ error: "ID must be a valid number" });
       }
 
       if (!name || name.trim() === "") {
         return res.status(400).json({ error: "Name cannot be empty" });
       }
-      if (!capacity || capacity <= 0) {
-        return res.status(400).json({ error: "Capacity must be a positive number" });
+      if (!capacity || isNaN(Number(capacity)) || Number(capacity) <= 0 || !Number.isInteger(Number(capacity))) {
+        return res.status(400).json({ error: "Capacity must be a positive whole number" });
       }
 
-      const updatedBed = await BedService.updateBed(bedId, name, Number(capacity));
+      const existing = await BedService.getBedById(bedId);
+      if (!existing) {
+        return res.status(404).json({ error: "Bed type not found" });
+      }
+
+      const updatedBed = await BedService.updateBed(bedId, name.trim(), Number(capacity));
       res.status(200).json(updatedBed);
-    } catch (error) {
+    } catch (error: any) {
       console.error("Error updating bed:", error);
-      res.status(500).json({ error: "Internal server error while updating bed" });
+      const status = error.status ?? 500;
+      const message = error.message ?? "Internal server error while updating bed";
+      res.status(status).json({ error: message });
     }
   },
 
@@ -83,17 +78,22 @@ export const BedController = {
       }
 
       const bedId = Number(idParam);
+      if (isNaN(bedId)) {
+        return res.status(400).json({ error: "ID must be a valid number" });
+      }
 
-      const existing = await prisma.bed.findUnique({ where: { id: bedId } });
+      const existing = await BedService.getBedById(bedId);
       if (!existing) {
         return res.status(404).json({ error: "Bed not found" });
       }
 
       await BedService.removeBed(bedId);
       res.status(200).json({ message: "Bed deleted successfully", deletedBed: existing.name });
-    } catch (error) {
+    } catch (error: any) {
       console.error("Error deleting bed:", error);
-      res.status(500).json({ error: "Internal server error while deleting bed" });
+      const status = error.status ?? 500;
+      const message = error.message ?? "Internal server error while deleting bed";
+      res.status(status).json({ error: message });
     }
   },
 };

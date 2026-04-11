@@ -1,5 +1,4 @@
 import { Request, Response } from "express";
-import { prisma } from "../../lib/prisma.ts";
 import { AmenityService } from "../../services/rooms/amenityService.ts";
 
 export const AmenityController = {
@@ -17,15 +16,17 @@ export const AmenityController = {
     try {
       const { name, icon } = req.body;
 
-      if (!name) {
+      if (!name || name.trim() === "") {
         return res.status(400).json({ error: "Amenity name is required" });
       }
 
-      const newAmenity = await AmenityService.createNewAmenity(name, icon);
+      const newAmenity = await AmenityService.createNewAmenity(name.trim(), icon?.trim());
       res.status(201).json(newAmenity);
-    } catch (error) {
+    } catch (error: any) {
       console.error("Error creating amenity:", error);
-      res.status(500).json({ error: "Internal server error while creating amenity" });
+      const status = error.status ?? 500;
+      const message = error.message ?? "Internal server error while creating amenity";
+      res.status(status).json({ error: message });
     }
   },
 
@@ -39,17 +40,26 @@ export const AmenityController = {
       }
 
       const amenityId = Number(idParam);
+      if (isNaN(amenityId)) {
+        return res.status(400).json({ error: "ID must be a valid number" });
+      }
 
-      const existing = await prisma.amenity.findUnique({ where: { id: amenityId } });
+      if (!name || name.trim() === "") {
+        return res.status(400).json({ error: "Amenity name cannot be empty" });
+      }
+
+      const existing = await AmenityService.getAmenityById(amenityId);
       if (!existing) {
         return res.status(404).json({ error: "Amenity not found" });
       }
 
-      const updated = await AmenityService.updateAmenity(amenityId, name, icon);
+      const updated = await AmenityService.updateAmenity(amenityId, name.trim(), icon?.trim());
       res.status(200).json(updated);
-    } catch (error) {
+    } catch (error: any) {
       console.error("Error updating amenity:", error);
-      res.status(500).json({ error: "Internal server error while updating amenity" });
+      const status = error.status ?? 500;
+      const message = error.message ?? "Internal server error while updating amenity";
+      res.status(status).json({ error: message });
     }
   },
 
@@ -62,12 +72,12 @@ export const AmenityController = {
       }
 
       const amenityId = Number(idParam);
+      if (isNaN(amenityId)) {
+        return res.status(400).json({ error: "ID must be a valid number" });
+      }
 
-      const existingAmenity = await prisma.amenity.findUnique({
-        where: { id: amenityId },
-      });
-
-      if (!existingAmenity) {
+      const existing = await AmenityService.getAmenityById(amenityId);
+      if (!existing) {
         return res.status(404).json({ error: "Amenity not found" });
       }
 
@@ -75,7 +85,7 @@ export const AmenityController = {
 
       res.status(200).json({
         message: "Amenity deleted successfully",
-        deletedAmenity: existingAmenity.name
+        deletedAmenity: existing.name
       });
     } catch (error) {
       console.error("Error deleting amenity:", error);
