@@ -1,5 +1,6 @@
 import { Request, Response } from "express";
 import { AuthService } from "../services/authService.ts";
+import { refreshAccessToken } from "../services/refreshTokenService.ts";
 
 export const AuthController = {
   registerUser: async (req: Request, res: Response) => {
@@ -17,12 +18,15 @@ export const AuthController = {
         password,
       });
 
-      res.status(201).json({ message: "User registered as GUEST", user });
+      res.status(201).json({
+        message: "User registered as GUEST",
+        user,
+      });
     } catch (error: any) {
       console.error(error);
-      const status = error.status ?? 500;
-      const message = error.message ?? "Registration failed";
-      res.status(status).json({ error: message });
+      res.status(error.status ?? 500).json({
+        error: error.message ?? "Registration failed",
+      });
     }
   },
 
@@ -34,19 +38,63 @@ export const AuthController = {
         return res.status(400).json({ error: "Email and password required" });
       }
 
-      const userLoginResponse = await AuthService.loginUser({
-        email,
-        password,
-      });
+      const result = await AuthService.loginUser({ email, password });
 
-      res
-        .status(200)
-        .json({ message: "Login successful", data: userLoginResponse });
+      res.status(200).json({
+        message: "Login successful",
+        data: result,
+      });
     } catch (error: any) {
       console.error(error);
-      const status = error.status ?? 500;
-      const message = error.message ?? "Login failed";
-      res.status(status).json({ error: message });
+      res.status(error.status ?? 500).json({
+        error: error.message ?? "Login failed",
+      });
+    }
+  },
+
+  // 🔁 REFRESH TOKEN
+  refreshToken: async (req: Request, res: Response) => {
+    try {
+      const { refreshToken } = req.body;
+
+      if (!refreshToken) {
+        return res.status(400).json({ error: "Refresh token required" });
+      }
+
+      const result = await refreshAccessToken(refreshToken);
+
+      res.status(200).json({
+        message: "Token refreshed",
+        data: result,
+      });
+    } catch (error: any) {
+      console.error(error);
+      res.status(error.status ?? 500).json({
+        error: error.message ?? "Token refresh failed",
+      });
+    }
+  },
+
+  // 🚪 LOGOUT
+  logoutUser: async (req: Request, res: Response) => {
+    try {
+      const { refreshToken } = req.body;
+
+      if (!refreshToken) {
+        return res.status(400).json({ error: "Refresh token required" });
+      }
+
+      const result = await AuthService.logoutUser(refreshToken);
+
+      res.status(200).json({
+        message: "Logged out successfully",
+        data: result,
+      });
+    } catch (error: any) {
+      console.error(error);
+      res.status(error.status ?? 500).json({
+        error: error.message ?? "Logout failed",
+      });
     }
   },
 };

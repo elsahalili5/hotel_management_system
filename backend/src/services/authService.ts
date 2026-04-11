@@ -1,7 +1,7 @@
 import { prisma } from "../lib/prisma.ts";
 import bcrypt from "bcrypt";
 import { UserStatus } from "../generated/prisma/enums.ts";
-import { User } from "@prisma/client";
+import { generateAccessToken, generateRefreshToken } from "../utils/jwt.ts";
 
 const SALT_ROUNDS = 10;
 
@@ -21,7 +21,10 @@ export const AuthService = {
   registerUser: async (data: UserRegisterPayload) => {
     const { first_name, last_name, email, password } = data;
 
-    const existingUser = await prisma.user.findUnique({ where: { email } });
+    const existingUser = await prisma.user.findUnique({
+      where: { email },
+    });
+
     if (existingUser) {
       throw { status: 400, message: "User already exists" };
     }
@@ -31,6 +34,7 @@ export const AuthService = {
     const guestRole = await prisma.role.findUnique({
       where: { name: "GUEST" },
     });
+
     if (!guestRole) {
       throw { status: 500, message: "Guest role not found" };
     }
@@ -55,7 +59,9 @@ export const AuthService = {
       },
     });
 
-    return user;
+    const { password_hash: _, ...safeUser } = user;
+
+    return safeUser;
   },
 
   loginUser: async (payload: UserLoginPayload) => {
@@ -80,18 +86,48 @@ export const AuthService = {
       throw { status: 401, message: "Invalid credentials" };
     }
 
-    // generate token and return the token and refresh token to the user
+    const accessToken = generateAccessToken(user.id);
+    const refreshToken = generateRefreshToken(user.id);
 
-    // const roles = user.user_roles.map((ur) => ur.role.name);
+    await prisma.refreshTokens.create({
+      data: {
+        user_id: user.id,
+        token: refreshToken,
+        expires: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000),
+        revoked: false,
+      },
+    });
+
+    const { password_hash, ...safeUser } = user;
 
     return {
-      // id: user.id,
-      // email: user.email,
-      // roles,
-      // guest: user.guest_profile,
-      // staff: user.staff_profile,
+      user: safeUser,
+      accessToken,
+      refreshToken,
+    };
+  },
+  logoutUser: async (refreshToken: string) => {
+    if (!refreshToken) {
+      throw { status: 400, message: "Refresh token is required" };
+    }
 
-      user,
+    const tokenRecord = await prisma.refreshTokens.findUnique({
+      where: { token: refreshToken },
+    });
+
+    if (!tokenRecord) {
+      throw { status: 404, message: "Token not found" };
+    }
+
+    await prisma.refreshTokens.update({
+      where: { token: refreshToken },
+      data: {
+        revoked: true,
+      },
+    });
+
+    return {
+      message: "Logged out successfully",
     };
   },
 };
