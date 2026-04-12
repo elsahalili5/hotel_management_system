@@ -10,7 +10,7 @@ import userRoutes from "./modules/users/user.routes.ts";
 import guestRoutes from "./modules/guest/guest.routes.ts";
 import staffRoutes from "./modules/staff/staff.routes.ts";
 
-import amenityRoutes from "./routes/rooms/amenityRoutes";
+import amenityRoutes from "@modules/rooms/amenity/amenity.routes.ts";
 import roomTypeRoutes from "./routes/rooms/roomTypeRoutes";
 import roomRoutes from "./routes/rooms/roomRoutes.ts";
 import bedRoutes from "./routes/rooms/bedRoutes.ts";
