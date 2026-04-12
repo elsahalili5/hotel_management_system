@@ -4,8 +4,9 @@ dotenv.config(); // 🔥 MUST BE FIRST
 import express from "express";
 import cors from "cors";
 
+import authRoutes from "./modules/auth/auth.routes.ts";
+
 import userRoutes from "./routes/users/userRoutes.ts";
-import authRoutes from "./routes/auth/authRoutes.ts";
 import amenityRoutes from "./routes/rooms/amenityRoutes";
 import roomTypeRoutes from "./routes/rooms/roomTypeRoutes";
 import roomRoutes from "./routes/rooms/roomRoutes.ts";

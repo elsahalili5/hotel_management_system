@@ -2,30 +2,17 @@ import { prisma } from "../../lib/prisma.ts";
 import bcrypt from "bcrypt";
 import { UserStatus } from "../../generated/prisma/enums.ts";
 import { generateAccessToken, generateRefreshToken } from "../../utils/jwt.ts";
+import { LoginUserInput, RegisterUserInput } from "./auth.types.ts";
 
 const SALT_ROUNDS = 10;
 const MAX_FAILED_ATTEMPTS = 5;
 
-interface UserRegisterPayload {
-  first_name: string;
-  last_name: string;
-  email: string;
-  password: string;
-}
-
-interface UserLoginPayload {
-  email: string;
-  password: string;
-}
-
 export const AuthService = {
-  registerUser: async (data: UserRegisterPayload) => {
+  registerUser: async (data: RegisterUserInput) => {
     const { first_name, last_name, email, password } = data;
 
-    const normalizedEmail = email.trim().toLowerCase();
-
     const existingUser = await prisma.user.findUnique({
-      where: { email: normalizedEmail },
+      where: { email: email },
     });
 
     if (existingUser) {
@@ -46,7 +33,7 @@ export const AuthService = {
       data: {
         first_name: first_name.trim(),
         last_name: last_name.trim(),
-        email: normalizedEmail,
+        email: email,
         password_hash,
         status: UserStatus.ACTIVE,
         user_roles: {
@@ -71,13 +58,11 @@ export const AuthService = {
     return user;
   },
 
-  loginUser: async (payload: UserLoginPayload) => {
+  loginUser: async (payload: LoginUserInput) => {
     const { email, password } = payload;
 
-    const normalizedEmail = email.trim().toLowerCase();
-
     const user = await prisma.user.findUnique({
-      where: { email: normalizedEmail },
+      where: { email: email },
       include: {
         user_roles: { include: { role: true } },
         guest_profile: true,

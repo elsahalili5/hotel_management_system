@@ -12,3 +12,5 @@ export interface AuthRequest extends Request {
     };
   }>;
 }
+
+export type TypedRequestBody<T> = Request<{}, {}, T>;

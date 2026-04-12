@@ -1,51 +1,17 @@
 import { Request, Response } from "express";
-import { AuthService } from "../../services/auth/authService.ts";
+import { AuthService } from "./auth.service.ts";
 import { refreshAccessToken } from "../../services/refreshTokenService.ts";
 import { isValidEmail } from "../../utils/validations.ts";
+import { LoginUserInput, RegisterUserInput } from "./auth.types.ts";
+import { TypedRequestBody } from "../../utils/types.ts";
 
 export const AuthController = {
-  registerUser: async (req: Request, res: Response) => {
+  registerUser: async (
+    req: TypedRequestBody<RegisterUserInput>,
+    res: Response,
+  ) => {
     try {
-      const { first_name, last_name, email, password } = req.body;
-
-      console.log({ first_name, last_name, email, password });
-
-      if (
-        typeof first_name !== "string" ||
-        typeof last_name !== "string" ||
-        typeof email !== "string" ||
-        typeof password !== "string"
-      ) {
-        return res
-          .status(400)
-          .json({ error: "Invalid input, one of the fields is missing" });
-      }
-
-      if (
-        !first_name.trim() ||
-        !last_name.trim() ||
-        !email.trim() ||
-        !password.trim()
-      ) {
-        return res.status(400).json({ error: "Missing required fields" });
-      }
-
-      if (!isValidEmail(email)) {
-        return res.status(400).json({ error: "Invalid email format" });
-      }
-
-      if (password.trim().length < 8 || password.trim().length > 72) {
-        return res
-          .status(400)
-          .json({ error: "Password must be between 8 and 72 characters" });
-      }
-
-      const user = await AuthService.registerUser({
-        first_name: first_name.trim(),
-        last_name: last_name.trim(),
-        email: email.trim(),
-        password: password.trim(),
-      });
+      const user = await AuthService.registerUser(req.body);
 
       res.status(201).json({
         message: "User registered as GUEST",
@@ -60,21 +26,13 @@ export const AuthController = {
     }
   },
 
-  loginUser: async (req: Request, res: Response) => {
+  loginUser: async (req: TypedRequestBody<LoginUserInput>, res: Response) => {
     try {
       const { email, password } = req.body;
 
-      if (typeof email !== "string" || typeof password !== "string") {
-        return res.status(400).json({ error: "Invalid input" });
-      }
-
-      if (!email.trim() || !password.trim()) {
-        return res.status(400).json({ error: "Email and password required" });
-      }
-
       const result = await AuthService.loginUser({
-        email: email.trim(),
-        password: password.trim(),
+        email: email,
+        password: password,
       });
 
       res.status(200).json({
