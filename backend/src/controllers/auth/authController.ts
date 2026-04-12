@@ -1,11 +1,14 @@
 import { Request, Response } from "express";
-import { AuthService } from "../../services/authService.ts";
+import { AuthService } from "../../services/auth/authService.ts";
 import { refreshAccessToken } from "../../services/refreshTokenService.ts";
+import { isValidEmail } from "../../utils/validations.ts";
 
 export const AuthController = {
   registerUser: async (req: Request, res: Response) => {
     try {
       const { first_name, last_name, email, password } = req.body;
+
+      console.log({ first_name, last_name, email, password });
 
       if (
         typeof first_name !== "string" ||
@@ -13,7 +16,9 @@ export const AuthController = {
         typeof email !== "string" ||
         typeof password !== "string"
       ) {
-        return res.status(400).json({ error: "Invalid input" });
+        return res
+          .status(400)
+          .json({ error: "Invalid input, one of the fields is missing" });
       }
 
       if (
@@ -25,8 +30,7 @@ export const AuthController = {
         return res.status(400).json({ error: "Missing required fields" });
       }
 
-      const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-      if (!emailRegex.test(email.trim())) {
+      if (!isValidEmail(email)) {
         return res.status(400).json({ error: "Invalid email format" });
       }
 

@@ -1,16 +1,14 @@
-import { Request, Response, NextFunction } from "express";
+import { Response, NextFunction } from "express";
 import jwt from "jsonwebtoken";
 import { prisma } from "../lib/prisma.ts";
+import { UserStatus } from "../generated/prisma/enums.ts";
+import { AuthRequest } from "../utils/types.ts";
 
 if (!process.env.JWT_ACCESS_SECRET) {
   throw new Error("JWT_ACCESS_SECRET is missing in .env file");
 }
 
 const ACCESS_SECRET = process.env.JWT_ACCESS_SECRET;
-
-export interface AuthRequest extends Request {
-  user?: any;
-}
 
 export const authMiddleware = async (
   req: AuthRequest,
@@ -48,6 +46,24 @@ export const authMiddleware = async (
     if (!user) {
       return res.status(401).json({
         message: "Unauthorized: User not found",
+      });
+    }
+
+    if (user.status === UserStatus.LOCKED) {
+      return res.status(403).json({
+        message: "Forbidden: Account is locked",
+      });
+    }
+
+    if (user.status === UserStatus.DISABLED) {
+      return res.status(403).json({
+        message: "Forbidden: Account is disabled",
+      });
+    }
+
+    if (user.status === UserStatus.PENDING) {
+      return res.status(403).json({
+        message: "Forbidden: Account not activated",
       });
     }
 

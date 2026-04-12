@@ -1,5 +1,5 @@
 import { Response, NextFunction } from "express";
-import { AuthRequest } from "./authMiddleware";
+import { AuthRequest } from "../utils/types.ts";
 
 export const roleMiddleware = (roles: string[]) => {
   return (req: AuthRequest, res: Response, next: NextFunction) => {
@@ -9,9 +9,7 @@ export const roleMiddleware = (roles: string[]) => {
       });
     }
 
-    const userRoles =
-      req.user.user_roles?.map((ur: any) => ur.role?.name) || [];
-
+    const userRoles = req.user.user_roles?.map((ur) => ur.role?.name) || [];
     const hasRole = roles.some((role) => userRoles.includes(role));
 
     if (!hasRole) {

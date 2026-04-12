@@ -1,6 +1,7 @@
 import jwt from "jsonwebtoken";
 import { prisma } from "../lib/prisma.ts";
 import { generateAccessToken } from "../utils/jwt.ts";
+import { UserStatus } from "../generated/prisma/enums.ts";
 
 if (!process.env.JWT_REFRESH_SECRET) {
   throw new Error("JWT_REFRESH_SECRET is missing in .env file");
@@ -29,7 +30,26 @@ export const refreshAccessToken = async (refreshToken: string) => {
     userId: number;
   };
 
-  const newAccessToken = generateAccessToken(decoded.userId);
+  const user = await prisma.user.findUnique({
+    where: { id: decoded.userId },
+  });
+
+  if (!user) {
+    throw { status: 401, message: "User not found" };
+  }
+
+  if (
+    user.status === UserStatus.LOCKED ||
+    user.status === UserStatus.DISABLED ||
+    user.status === UserStatus.PENDING
+  ) {
+    throw {
+      status: 403,
+      message: "Account not allowed to refresh token",
+    };
+  }
+
+  const newAccessToken = generateAccessToken(user.id);
 
   return {
     accessToken: newAccessToken,

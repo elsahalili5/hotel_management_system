@@ -1,5 +1,5 @@
 import { Response } from "express";
-import { AuthRequest } from "../middleware/authMiddleware.ts";
+import { AuthRequest } from "../utils/types.ts";
 import { GuestService } from "../services/guestService.ts";
 
 const isAdminOrStaff = (req: AuthRequest): boolean => {
@@ -65,9 +65,14 @@ export const GuestController = {
       } = req.body;
 
       if (
-        [phone_number, address, city, country, passport_number, date_of_birth].every(
-          (f) => f === undefined,
-        )
+        [
+          phone_number,
+          address,
+          city,
+          country,
+          passport_number,
+          date_of_birth,
+        ].every((f) => f === undefined)
       ) {
         return res.status(400).json({ error: "No fields provided to update" });
       }

@@ -40,14 +40,12 @@ model User {
   password_hash       String
   status              UserStatus @default(PENDING)
 
-  // Security Logic
   lockout_enabled     Boolean    @default(true)
   access_failed_count Int        @default(0)
   email_confirmed     Boolean    @default(false)
 
   created_at          DateTime   @default(now())
 
-  // Relations
   staff_profile       Staff?
   guest_profile       Guest?
   user_roles          UserRole[]
@@ -103,7 +101,6 @@ model Reservation {
   guest_id Int
   guest    Guest @relation(fields: [guest_id], references: [id])
 }
-// --- LLOJI I DHOMËS ---
 model RoomType {
   id            Int               @id @default(autoincrement())
   name          String            @unique
@@ -118,7 +115,6 @@ model RoomType {
   images        RoomImage[]
 }
 
-// --- DHOMA FIZIKE ---
 model Room {
   id           Int        @id @default(autoincrement())
   room_number  String     @unique
@@ -145,7 +141,6 @@ model RoomImage {
   room_type    RoomType @relation(fields: [room_type_id], references: [id], onDelete: Cascade)
 }
 
-// --- PAJISJET (Amenities) ---
 model Amenity {
   id         Int               @id @default(autoincrement())
   name       String            @unique
@@ -153,7 +148,6 @@ model Amenity {
   room_types RoomTypeAmenity[]
 }
 
-// Tabela ndërmjetëse për Pajisjet
 model RoomTypeAmenity {
   room_type_id Int
   amenity_id   Int
@@ -164,7 +158,6 @@ model RoomTypeAmenity {
   @@id([room_type_id, amenity_id])
 }
 
-// --- SHTRETËRIT (Beds) ---
 model Bed {
   id         Int           @id @default(autoincrement())
   name       String        @unique
@@ -172,7 +165,6 @@ model Bed {
   room_types RoomTypeBed[]
 }
 
-// Tabela ndërmjetëse për Shtretërit
 model RoomTypeBed {
   room_type_id Int
   bed_id       Int

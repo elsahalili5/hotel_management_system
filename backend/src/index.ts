@@ -4,8 +4,7 @@ dotenv.config(); // 🔥 MUST BE FIRST
 import express from "express";
 import cors from "cors";
 
-import userRoutes from "./routes/userRoutes.ts";
-import postRoutes from "./routes/postRoutes.ts";
+import userRoutes from "./routes/users/userRoutes.ts";
 import authRoutes from "./routes/auth/authRoutes.ts";
 import amenityRoutes from "./routes/rooms/amenityRoutes";
 import roomTypeRoutes from "./routes/rooms/roomTypeRoutes";
@@ -20,7 +19,6 @@ app.use(cors());
 app.use(express.json());
 
 app.use("/api/users", userRoutes);
-app.use("/api/posts", postRoutes);
 app.use("/api/auth", authRoutes);
 app.use("/api/amenities", amenityRoutes);
 app.use("/api/room-types", roomTypeRoutes);

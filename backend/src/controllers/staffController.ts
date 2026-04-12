@@ -1,5 +1,5 @@
 import { Response } from "express";
-import { AuthRequest } from "../middleware/authMiddleware.ts";
+import { AuthRequest } from "../utils/types.ts";
 import { StaffService } from "../services/staffService.ts";
 import { Shift } from "../generated/prisma/client.ts";
 

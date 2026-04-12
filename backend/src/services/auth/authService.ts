@@ -1,7 +1,7 @@
-import { prisma } from "../lib/prisma.ts";
+import { prisma } from "../../lib/prisma.ts";
 import bcrypt from "bcrypt";
-import { UserStatus } from "../generated/prisma/enums.ts";
-import { generateAccessToken, generateRefreshToken } from "../utils/jwt.ts";
+import { UserStatus } from "../../generated/prisma/enums.ts";
+import { generateAccessToken, generateRefreshToken } from "../../utils/jwt.ts";
 
 const SALT_ROUNDS = 10;
 const MAX_FAILED_ATTEMPTS = 5;
@@ -89,21 +89,20 @@ export const AuthService = {
       throw { status: 401, message: "Invalid credentials" };
     }
 
-    if (user.status === UserStatus.LOCKED) {
-      throw { status: 403, message: "Account is locked" };
-    }
-
-    if (user.status === UserStatus.DISABLED) {
-      throw { status: 403, message: "Account has been disabled" };
-    }
-
-    if (user.status === UserStatus.PENDING) {
-      throw { status: 403, message: "Account is not yet activated" };
+    // 🔒 INITIAL STATUS CHECK
+    if (
+      user.status === UserStatus.LOCKED ||
+      user.status === UserStatus.DISABLED ||
+      user.status === UserStatus.PENDING
+    ) {
+      throw {
+        status: 403,
+        message: `Account not allowed: ${user.status}`,
+      };
     }
 
     const isMatch = await bcrypt.compare(password, user.password_hash);
 
-    // ❌ FAILED LOGIN FLOW
     if (!isMatch) {
       if (user.lockout_enabled) {
         const newCount = user.access_failed_count + 1;
@@ -121,7 +120,22 @@ export const AuthService = {
       throw { status: 401, message: "Invalid credentials" };
     }
 
-    // ✅ SUCCESS LOGIN → reset counter
+    const freshUser = await prisma.user.findUnique({
+      where: { id: user.id },
+    });
+
+    if (
+      !freshUser ||
+      freshUser.status === UserStatus.LOCKED ||
+      freshUser.status === UserStatus.DISABLED ||
+      freshUser.status === UserStatus.PENDING
+    ) {
+      throw {
+        status: 403,
+        message: "Account is not allowed to login",
+      };
+    }
+
     if (user.access_failed_count !== 0) {
       await prisma.user.update({
         where: { id: user.id },
