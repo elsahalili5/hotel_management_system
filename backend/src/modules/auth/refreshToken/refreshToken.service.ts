@@ -1,6 +1,6 @@
 import jwt from "jsonwebtoken";
 import { prisma } from "../lib/prisma.ts";
-import { generateAccessToken } from "../utils/jwt.ts";
+import { generateAccessToken } from "../lib/jwt.ts";
 import { UserStatus } from "../generated/prisma/enums.ts";
 
 if (!process.env.JWT_REFRESH_SECRET) {

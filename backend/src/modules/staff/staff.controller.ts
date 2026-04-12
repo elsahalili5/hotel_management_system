@@ -1,25 +1,11 @@
 import { Response } from "express";
-import { AuthRequest } from "../lib/types.ts";
-import { StaffService } from "../services/staffService.ts";
-import { Shift } from "../generated/prisma/client.ts";
-
-const isAdmin = (req: AuthRequest) =>
-  req.user?.user_roles?.some((r: any) => r.role?.name === "ADMIN");
-
-const isAdminOrStaff = (req: AuthRequest) =>
-  req.user?.user_roles?.some((r: any) =>
-    ["ADMIN", "STAFF"].includes(r.role?.name),
-  );
+import { StaffService } from "./staff.services";
+import { AuthRequest } from "@lib/types.ts";
 
 export const StaffController = {
   getStaff: async (req: AuthRequest, res: Response) => {
     try {
-      if (!isAdminOrStaff(req)) {
-        return res.status(403).json({ error: "Forbidden" });
-      }
-
       const staff = await StaffService.getAllStaff();
-
       return res.status(200).json({ data: staff });
     } catch (error) {
       console.error(error);
@@ -40,12 +26,6 @@ export const StaffController = {
       }
 
       const staff = await StaffService.getStaffById(id);
-
-      if (!isAdmin(req) && staff.user_id !== req.user?.id) {
-        return res.status(403).json({
-          error: "Forbidden",
-        });
-      }
 
       return res.status(200).json({ data: staff });
     } catch (error: any) {

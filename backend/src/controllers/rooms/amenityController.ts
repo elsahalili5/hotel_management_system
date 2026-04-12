@@ -8,7 +8,9 @@ export const AmenityController = {
       res.status(200).json(data);
     } catch (error) {
       console.error("Error fetching amenities:", error);
-      res.status(500).json({ error: "Internal server error while fetching amenities" });
+      res
+        .status(500)
+        .json({ error: "Internal server error while fetching amenities" });
     }
   },
 
@@ -20,12 +22,16 @@ export const AmenityController = {
         return res.status(400).json({ error: "Amenity name is required" });
       }
 
-      const newAmenity = await AmenityService.createNewAmenity(name.trim(), icon?.trim());
+      const newAmenity = await AmenityService.createNewAmenity(
+        name.trim(),
+        icon?.trim(),
+      );
       res.status(201).json(newAmenity);
     } catch (error: any) {
       console.error("Error creating amenity:", error);
       const status = error.status ?? 500;
-      const message = error.message ?? "Internal server error while creating amenity";
+      const message =
+        error.message ?? "Internal server error while creating amenity";
       res.status(status).json({ error: message });
     }
   },
@@ -36,7 +42,9 @@ export const AmenityController = {
       const { name, icon } = req.body;
 
       if (!idParam) {
-        return res.status(400).json({ error: "Missing amenity ID in query parameters" });
+        return res
+          .status(400)
+          .json({ error: "Missing amenity ID in query parameters" });
       }
 
       const amenityId = Number(idParam);
@@ -53,12 +61,17 @@ export const AmenityController = {
         return res.status(404).json({ error: "Amenity not found" });
       }
 
-      const updated = await AmenityService.updateAmenity(amenityId, name.trim(), icon?.trim());
+      const updated = await AmenityService.updateAmenity(
+        amenityId,
+        name.trim(),
+        icon?.trim(),
+      );
       res.status(200).json(updated);
     } catch (error: any) {
       console.error("Error updating amenity:", error);
       const status = error.status ?? 500;
-      const message = error.message ?? "Internal server error while updating amenity";
+      const message =
+        error.message ?? "Internal server error while updating amenity";
       res.status(status).json({ error: message });
     }
   },
@@ -68,7 +81,9 @@ export const AmenityController = {
       const idParam = req.query.id;
 
       if (!idParam) {
-        return res.status(400).json({ error: "Missing amenity ID in query parameters" });
+        return res
+          .status(400)
+          .json({ error: "Missing amenity ID in query parameters" });
       }
 
       const amenityId = Number(idParam);
@@ -85,11 +100,13 @@ export const AmenityController = {
 
       res.status(200).json({
         message: "Amenity deleted successfully",
-        deletedAmenity: existing.name
+        deletedAmenity: existing.name,
       });
     } catch (error) {
       console.error("Error deleting amenity:", error);
-      res.status(500).json({ error: "Internal server error while deleting amenity" });
+      res
+        .status(500)
+        .json({ error: "Internal server error while deleting amenity" });
     }
   },
 };

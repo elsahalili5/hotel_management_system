@@ -1,7 +1,7 @@
 import { Router } from "express";
-import { GuestController } from "../controllers/guestController.ts";
-import { authMiddleware } from "../middleware/authMiddleware.ts";
-import { roleMiddleware } from "../middleware/roleMiddleware.ts";
+import { GuestController } from "./guest.controller.ts";
+import { authMiddleware } from "@shared/middleware/authMiddleware.ts";
+import { roleMiddleware } from "@shared/middleware/roleMiddleware.ts";
 
 const router = Router();
 

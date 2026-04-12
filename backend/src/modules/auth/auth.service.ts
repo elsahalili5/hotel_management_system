@@ -1,7 +1,7 @@
 import { prisma } from "../../lib/prisma.ts";
 import bcrypt from "bcrypt";
 import { UserStatus } from "../../generated/prisma/enums.ts";
-import { generateAccessToken, generateRefreshToken } from "../../utils/jwt.ts";
+import { generateAccessToken, generateRefreshToken } from "../../lib/jwt.ts";
 import { LoginUserInput, RegisterUserInput } from "./auth.types.ts";
 
 const SALT_ROUNDS = 10;

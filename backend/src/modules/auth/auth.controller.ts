@@ -1,9 +1,8 @@
 import { Request, Response } from "express";
 import { AuthService } from "./auth.service.ts";
 import { refreshAccessToken } from "../../services/refreshTokenService.ts";
-import { isValidEmail } from "../../utils/validations.ts";
 import { LoginUserInput, RegisterUserInput } from "./auth.types.ts";
-import { TypedRequestBody } from "../../utils/types.ts";
+import { TypedRequestBody } from "../../lib/types.ts";
 
 export const AuthController = {
   registerUser: async (

@@ -1,5 +1,5 @@
 import { Response } from "express";
-import { AuthRequest } from "../../utils/types.ts";
+import { AuthRequest } from "../../lib/types.ts";
 import { UserService } from "../../services/users/userService.ts";
 
 export const UserController = {

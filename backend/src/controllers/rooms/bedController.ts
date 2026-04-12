@@ -8,7 +8,9 @@ export const BedController = {
       res.status(200).json(beds);
     } catch (error) {
       console.error("Error fetching beds:", error);
-      res.status(500).json({ error: "Internal server error while fetching beds" });
+      res
+        .status(500)
+        .json({ error: "Internal server error while fetching beds" });
     }
   },
 
@@ -19,16 +21,27 @@ export const BedController = {
       if (!name || name.trim() === "") {
         return res.status(400).json({ error: "Bed name is required" });
       }
-      if (!capacity || isNaN(Number(capacity)) || Number(capacity) <= 0 || !Number.isInteger(Number(capacity))) {
-        return res.status(400).json({ error: "Capacity must be a positive whole number" });
+      if (
+        !capacity ||
+        isNaN(Number(capacity)) ||
+        Number(capacity) <= 0 ||
+        !Number.isInteger(Number(capacity))
+      ) {
+        return res
+          .status(400)
+          .json({ error: "Capacity must be a positive whole number" });
       }
 
-      const newBed = await BedService.createNewBed(name.trim(), Number(capacity));
+      const newBed = await BedService.createNewBed(
+        name.trim(),
+        Number(capacity),
+      );
       res.status(201).json(newBed);
     } catch (error: any) {
       console.error("Error creating bed:", error);
       const status = error.status ?? 500;
-      const message = error.message ?? "Internal server error while creating bed";
+      const message =
+        error.message ?? "Internal server error while creating bed";
       res.status(status).json({ error: message });
     }
   },
@@ -39,7 +52,9 @@ export const BedController = {
       const { name, capacity } = req.body;
 
       if (!idParam) {
-        return res.status(400).json({ error: "Bed ID is required in query parameters" });
+        return res
+          .status(400)
+          .json({ error: "Bed ID is required in query parameters" });
       }
 
       const bedId = Number(idParam);
@@ -50,8 +65,15 @@ export const BedController = {
       if (!name || name.trim() === "") {
         return res.status(400).json({ error: "Name cannot be empty" });
       }
-      if (!capacity || isNaN(Number(capacity)) || Number(capacity) <= 0 || !Number.isInteger(Number(capacity))) {
-        return res.status(400).json({ error: "Capacity must be a positive whole number" });
+      if (
+        !capacity ||
+        isNaN(Number(capacity)) ||
+        Number(capacity) <= 0 ||
+        !Number.isInteger(Number(capacity))
+      ) {
+        return res
+          .status(400)
+          .json({ error: "Capacity must be a positive whole number" });
       }
 
       const existing = await BedService.getBedById(bedId);
@@ -59,12 +81,17 @@ export const BedController = {
         return res.status(404).json({ error: "Bed type not found" });
       }
 
-      const updatedBed = await BedService.updateBed(bedId, name.trim(), Number(capacity));
+      const updatedBed = await BedService.updateBed(
+        bedId,
+        name.trim(),
+        Number(capacity),
+      );
       res.status(200).json(updatedBed);
     } catch (error: any) {
       console.error("Error updating bed:", error);
       const status = error.status ?? 500;
-      const message = error.message ?? "Internal server error while updating bed";
+      const message =
+        error.message ?? "Internal server error while updating bed";
       res.status(status).json({ error: message });
     }
   },
@@ -74,7 +101,9 @@ export const BedController = {
       const idParam = req.query.id;
 
       if (!idParam) {
-        return res.status(400).json({ error: "Bed ID is required for deletion" });
+        return res
+          .status(400)
+          .json({ error: "Bed ID is required for deletion" });
       }
 
       const bedId = Number(idParam);
@@ -88,11 +117,17 @@ export const BedController = {
       }
 
       await BedService.removeBed(bedId);
-      res.status(200).json({ message: "Bed deleted successfully", deletedBed: existing.name });
+      res
+        .status(200)
+        .json({
+          message: "Bed deleted successfully",
+          deletedBed: existing.name,
+        });
     } catch (error: any) {
       console.error("Error deleting bed:", error);
       const status = error.status ?? 500;
-      const message = error.message ?? "Internal server error while deleting bed";
+      const message =
+        error.message ?? "Internal server error while deleting bed";
       res.status(status).json({ error: message });
     }
   },

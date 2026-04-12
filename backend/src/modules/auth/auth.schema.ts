@@ -1,4 +1,4 @@
-import { email, z } from "zod";
+import { z } from "zod";
 
 export const userRegisterSchema = z.object({
   first_name: z.string().trim().min(1, "First name is required"),

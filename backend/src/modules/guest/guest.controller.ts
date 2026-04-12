@@ -1,6 +1,6 @@
 import { Response } from "express";
-import { AuthRequest } from "../utils/types.ts";
-import { GuestService } from "../services/guestService.ts";
+import { AuthRequest } from "../../lib/types.ts";
+import { GuestService } from "./guest.service.ts";
 
 const isAdminOrStaff = (req: AuthRequest): boolean => {
   const userRoles = req.user?.user_roles?.map((ur: any) => ur.role?.name) || [];

@@ -1,14 +1,15 @@
 import { Router } from "express";
-import { StaffController } from "../controllers/staffController.ts";
-import { authMiddleware } from "../middleware/authMiddleware.ts";
-import { roleMiddleware } from "../middleware/roleMiddleware.ts";
+import { authMiddleware } from "@shared/middleware/authMiddleware";
+import { roleMiddleware } from "@shared/middleware/roleMiddleware";
+import { StaffController } from "@modules/staff/staff.controller";
+import { ROLES } from "@lib/roles";
 
 const router = Router();
 
 router.get(
   "/",
   authMiddleware,
-  roleMiddleware(["ADMIN"]),
+  roleMiddleware([ROLES.ADMIN, ROLES.MANAGER]),
   StaffController.getStaff,
 );
 

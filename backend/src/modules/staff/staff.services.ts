@@ -1,5 +1,5 @@
-import { prisma } from "../lib/prisma.ts";
-import { Shift } from "../generated/prisma/client.ts";
+import { prisma } from "@lib/prisma.ts";
+import { Shift } from "@generated/prisma/client.ts";
 
 interface UpdateStaffProfilePayload {
   phone_number?: string;

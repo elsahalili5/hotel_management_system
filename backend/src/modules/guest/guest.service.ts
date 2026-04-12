@@ -1,4 +1,4 @@
-import { prisma } from "../lib/prisma.ts";
+import { prisma } from "../../lib/prisma.ts";
 import { Prisma } from "@prisma/client";
 
 export interface UpdateGuestProfileDTO {

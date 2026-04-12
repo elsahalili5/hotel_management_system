@@ -1,11 +1,12 @@
-// middlewares/validate.ts
 import { ZodSchema } from "zod";
 import { Request, Response, NextFunction } from "express";
 
-export const validateRequest =
-  <T>(schema: ZodSchema<T>) =>
+type RequestPart = "body" | "params" | "query";
+
+export const validateRequestMiddleware =
+  <T>(schema: ZodSchema<T>, source: RequestPart = "body") =>
   (req: Request, res: Response, next: NextFunction) => {
-    const result = schema.safeParse(req.body);
+    const result = schema.safeParse(req[source]);
 
     if (!result.success) {
       return res.status(400).json({
@@ -14,8 +15,8 @@ export const validateRequest =
       });
     }
 
-    // overwrite req.body with validated + typed data
-    req.body = result.data;
+    // replace validated data
+    req[source] = result.data;
 
     next();
   };

@@ -1,5 +1,5 @@
 import { Response, NextFunction } from "express";
-import { AuthRequest } from "../utils/types.ts";
+import { AuthRequest } from "@lib/types";
 
 export const roleMiddleware = (roles: string[]) => {
   return (req: AuthRequest, res: Response, next: NextFunction) => {

@@ -1,19 +1,19 @@
 import { Router } from "express";
 import { AuthController } from "./auth.controller.ts";
-import { validateRequest } from "../../shared/middleware/validateRequest.ts";
 import { userLoginSchema, userRegisterSchema } from "./auth.schema.ts";
+import { validateRequestMiddleware } from "@shared/middleware/validateRequest.middleware.ts";
 
 const router = Router();
 
 router.post(
   "/login",
-  validateRequest(userLoginSchema),
+  validateRequestMiddleware(userLoginSchema),
   AuthController.loginUser,
 );
 
 router.post(
   "/register",
-  validateRequest(userRegisterSchema),
+  validateRequestMiddleware(userRegisterSchema),
   AuthController.registerUser,
 );
 
