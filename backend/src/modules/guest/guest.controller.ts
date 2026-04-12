@@ -1,19 +1,21 @@
 import { Response } from "express";
-import { AuthRequest } from "../../lib/types.ts";
+import { AuthRequest, TypedRequestBody } from "@lib/types.ts";
 import { GuestService } from "./guest.service.ts";
-
-const isAdminOrStaff = (req: AuthRequest): boolean => {
-  const userRoles = req.user?.user_roles?.map((ur: any) => ur.role?.name) || [];
-  return userRoles.some((role: string) => ["ADMIN", "STAFF"].includes(role));
-};
+import { UpdateGuestInput } from "./guest.types.ts";
 
 export const GuestController = {
-  getGuests: async (req: AuthRequest, res: Response) => {
+  getGuests: async (_req: AuthRequest, res: Response) => {
     try {
       const guests = await GuestService.getAllGuests();
+
       return res.status(200).json(guests);
-    } catch (error) {
+    } catch (error: any) {
       console.error(error);
+
+      if (error.status) {
+        return res.status(error.status).json({ error: error.message });
+      }
+
       return res.status(500).json({
         error: "Failed to fetch guests",
       });
@@ -25,34 +27,34 @@ export const GuestController = {
       const id = Number(req.params.id);
 
       if (Number.isNaN(id)) {
-        return res.status(400).json({
-          error: "Invalid guest id",
-        });
+        return res.status(400).json({ error: "Invalid guest id" });
       }
 
       const guest = await GuestService.getGuestById(id);
 
-      if (!isAdminOrStaff(req) && guest.user_id !== req.user?.id) {
-        return res.status(403).json({ error: "Forbidden" });
-      }
-
       return res.status(200).json(guest);
     } catch (error: any) {
       console.error(error);
-      return res.status(error.status || 500).json({
-        error: error.message || "Failed to fetch guest",
+
+      if (error.status) {
+        return res.status(error.status).json({ error: error.message });
+      }
+
+      return res.status(500).json({
+        error: "Failed to fetch guest",
       });
     }
   },
 
-  updateGuest: async (req: AuthRequest, res: Response) => {
+  updateGuest: async (
+    req: TypedRequestBody<UpdateGuestInput>,
+    res: Response,
+  ) => {
     try {
       const id = Number(req.params.id);
 
       if (Number.isNaN(id)) {
-        return res.status(400).json({
-          error: "Invalid guest id",
-        });
+        return res.status(400).json({ error: "Invalid guest id" });
       }
 
       const {
@@ -64,17 +66,19 @@ export const GuestController = {
         date_of_birth,
       } = req.body;
 
-      if (
-        [
-          phone_number,
-          address,
-          city,
-          country,
-          passport_number,
-          date_of_birth,
-        ].every((f) => f === undefined)
-      ) {
-        return res.status(400).json({ error: "No fields provided to update" });
+      const isEmpty = [
+        phone_number,
+        address,
+        city,
+        country,
+        passport_number,
+        date_of_birth,
+      ].every((f) => f === undefined);
+
+      if (isEmpty) {
+        return res.status(400).json({
+          error: "No fields provided to update",
+        });
       }
 
       const dob = date_of_birth ? new Date(date_of_birth) : undefined;
@@ -82,14 +86,6 @@ export const GuestController = {
       if (dob && isNaN(dob.getTime())) {
         return res.status(400).json({
           error: "Invalid date_of_birth",
-        });
-      }
-
-      const guest = await GuestService.getGuestById(id);
-
-      if (!isAdminOrStaff(req) && guest.user_id !== req.user?.id) {
-        return res.status(403).json({
-          error: "Forbidden: You can only update your own profile",
         });
       }
 
@@ -105,8 +101,13 @@ export const GuestController = {
       return res.status(200).json(updatedGuest);
     } catch (error: any) {
       console.error(error);
-      return res.status(error.status || 500).json({
-        error: error.message || "Error updating guest",
+
+      if (error.status) {
+        return res.status(error.status).json({ error: error.message });
+      }
+
+      return res.status(500).json({
+        error: "Error updating guest",
       });
     }
   },

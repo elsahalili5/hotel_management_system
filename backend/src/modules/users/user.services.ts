@@ -1,53 +1,18 @@
 import { prisma } from "@lib/prisma.ts";
 import bcrypt from "bcrypt";
 import { Shift, UserStatus } from "@generated/prisma/client.ts";
-import { isValidEmail } from "@lib/validations.ts";
+import { ROLES } from "@lib/roles.ts";
+import {
+  CreateGuestInput,
+  CreateStaffInput,
+  UpdateUserInput,
+} from "./user.types.ts";
 
 const SALT_ROUNDS = 10;
-
-const ALLOWED_STAFF_ROLES = [
-  "MANAGER",
-  "RECEPTIONIST",
-  "HOUSEKEEPING",
-] as const;
-
-export interface CreateGuestPayload {
-  first_name: string;
-  last_name: string;
-  email: string;
-  password: string;
-  phone_number?: string;
-  address?: string;
-  city?: string;
-  country?: string;
-  passport_number?: string;
-  date_of_birth?: Date;
-}
-
-export interface CreateStaffPayload {
-  first_name: string;
-  last_name: string;
-  email: string;
-  password: string;
-  role: (typeof ALLOWED_STAFF_ROLES)[number];
-  phone_number?: string;
-  shift?: Shift;
-}
-
-export interface UpdateUserPayload {
-  first_name?: string;
-  last_name?: string;
-  email?: string;
-  password?: string;
-}
 
 const throwError = (status: number, message: string): never => {
   throw { status, message };
 };
-
-const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-
-const normalizeEmail = (email: string) => email.toLowerCase();
 
 const safeUserSelect = {
   id: true,
@@ -59,37 +24,28 @@ const safeUserSelect = {
 };
 
 export const UserService = {
-  createGuest: async (data: CreateGuestPayload) => {
-    const email = normalizeEmail(data.email);
+  createGuest: async (data: CreateGuestInput) => {
+    const { first_name, last_name, email, password } = data;
 
-    if (!emailRegex.test(email)) {
-      throwError(400, "Invalid email format");
-    }
-
-    if (data.password.length < 8) {
-      throwError(400, "Password must be at least 8 characters");
-    }
-
-    const exists = await prisma.user.findUnique({
+    const existingUser = await prisma.user.findUnique({
       where: { email },
     });
 
-    if (exists) {
+    if (existingUser) {
       throwError(409, "Email already in use");
     }
 
     const role = await prisma.role.findUnique({
-      where: { name: "GUEST" },
+      where: { name: ROLES.GUEST },
     });
 
     if (!role) {
       throwError(404, "GUEST role not found");
-      return;
     }
 
-    const password_hash = await bcrypt.hash(data.password, SALT_ROUNDS);
+    const password_hash = await bcrypt.hash(password, SALT_ROUNDS);
 
-    const guest = await prisma.guest.create({
+    return prisma.guest.create({
       data: {
         phone_number: data.phone_number ?? null,
         address: data.address ?? null,
@@ -100,8 +56,8 @@ export const UserService = {
 
         user: {
           create: {
-            first_name: data.first_name,
-            last_name: data.last_name,
+            first_name: first_name.trim(),
+            last_name: last_name.trim(),
             email,
             password_hash,
             status: UserStatus.ACTIVE,
@@ -114,7 +70,6 @@ export const UserService = {
           },
         },
       },
-
       select: {
         id: true,
         phone_number: true,
@@ -128,56 +83,41 @@ export const UserService = {
         },
       },
     });
-
-    return guest;
   },
 
   // ---------------- CREATE STAFF ----------------
-  createStaff: async (data: CreateStaffPayload) => {
-    const email = normalizeEmail(data.email);
+  createStaff: async (data: CreateStaffInput) => {
+    const { first_name, last_name, email, password, role } = data;
 
-    if (!isValidEmail(email)) {
-      throwError(400, "Invalid email format");
-    }
-
-    if (data.password.length < 8) {
-      throwError(400, "Password must be at least 8 characters");
-    }
-
-    if (!ALLOWED_STAFF_ROLES.includes(data.role)) {
-      throwError(400, "Invalid staff role");
-    }
-
-    const exists = await prisma.user.findUnique({
+    const existingUser = await prisma.user.findUnique({
       where: { email },
     });
 
-    if (exists) {
+    if (existingUser) {
       throwError(409, "Email already in use");
     }
 
-    const role = await prisma.role.findUnique({
-      where: { name: data.role },
+    const roleRecord = await prisma.role.findUnique({
+      where: { name: role },
     });
 
-    if (!role) {
+    if (!roleRecord) {
       throwError(404, "Role not found");
-      return;
     }
 
-    const password_hash = await bcrypt.hash(data.password, SALT_ROUNDS);
+    const password_hash = await bcrypt.hash(password, SALT_ROUNDS);
 
-    const user = await prisma.user.create({
+    return prisma.user.create({
       data: {
-        first_name: data.first_name,
-        last_name: data.last_name,
+        first_name: first_name.trim(),
+        last_name: last_name.trim(),
         email,
         password_hash,
         status: UserStatus.ACTIVE,
 
         user_roles: {
           create: {
-            role_id: role.id,
+            role_id: roleRecord.id,
           },
         },
 
@@ -188,18 +128,14 @@ export const UserService = {
           },
         },
       },
-
       select: {
         ...safeUserSelect,
         user_roles: { include: { role: true } },
         staff_profile: true,
       },
     });
-
-    return user;
   },
 
-  // ---------------- GET ALL USERS ----------------
   getUsers: async () => {
     return prisma.user.findMany({
       select: {
@@ -211,7 +147,6 @@ export const UserService = {
     });
   },
 
-  // ---------------- GET USER BY ID ----------------
   getUserById: async (userId: number) => {
     const user = await prisma.user.findUnique({
       where: { id: userId },
@@ -230,8 +165,7 @@ export const UserService = {
     return user;
   },
 
-  // ---------------- UPDATE USER ----------------
-  updateUser: async (userId: number, updateData: UpdateUserPayload) => {
+  updateUser: async (userId: number, updateData: UpdateUserInput) => {
     const existingUser = await prisma.user.findUnique({
       where: { id: userId },
     });
@@ -244,32 +178,9 @@ export const UserService = {
 
     if (updateData.first_name) data.first_name = updateData.first_name;
     if (updateData.last_name) data.last_name = updateData.last_name;
-
-    if (updateData.email) {
-      const email = normalizeEmail(updateData.email);
-
-      if (!emailRegex.test(email)) {
-        throwError(400, "Invalid email format");
-      }
-
-      if (email !== existingUser?.email) {
-        const exists = await prisma.user.findUnique({
-          where: { email },
-        });
-
-        if (exists) {
-          throwError(409, "Email already in use");
-        }
-
-        data.email = email;
-      }
-    }
+    if (updateData.email) data.email = updateData.email;
 
     if (updateData.password) {
-      if (updateData.password.length < 8) {
-        throwError(400, "Password must be at least 8 characters");
-      }
-
       data.password_hash = await bcrypt.hash(updateData.password, SALT_ROUNDS);
     }
 
@@ -284,7 +195,6 @@ export const UserService = {
     });
   },
 
-  // ---------------- DELETE USER ----------------
   deleteUser: async (userId: number) => {
     const user = await prisma.user.findUnique({
       where: { id: userId },

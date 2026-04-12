@@ -1,14 +1,10 @@
 import { prisma } from "../../lib/prisma.ts";
 import { Prisma } from "@prisma/client";
+import { UpdateGuestInput } from "./guest.types";
 
-export interface UpdateGuestProfileDTO {
-  phone_number?: string;
-  address?: string;
-  city?: string;
-  country?: string;
-  passport_number?: string;
-  date_of_birth?: Date;
-}
+const throwError = (status: number, message: string): never => {
+  throw { status, message };
+};
 
 const safeUserSelect = {
   id: true,
@@ -31,6 +27,7 @@ export const GuestService = {
     });
   },
 
+  // ---------------- GET BY ID ----------------
   getGuestById: async (id: number) => {
     const guest = await prisma.guest.findUnique({
       where: { id },
@@ -42,45 +39,43 @@ export const GuestService = {
     });
 
     if (!guest) {
-      throw { status: 404, message: "Guest not found" };
+      throwError(404, "Guest not found");
     }
 
     return guest;
   },
 
-  updateGuestProfile: async (id: number, data: UpdateGuestProfileDTO) => {
+  updateGuestProfile: async (id: number, data: UpdateGuestInput) => {
     const guest = await prisma.guest.findUnique({
       where: { id },
     });
 
     if (!guest) {
-      throw { status: 404, message: "Guest not found" };
+      throwError(404, "Guest not found");
     }
 
     const cleanData = Object.fromEntries(
       Object.entries(data).filter(([_, v]) => v !== undefined),
     );
 
+    if (Object.keys(cleanData).length === 0) {
+      throwError(400, "No fields provided to update");
+    }
+
     try {
-      const updatedGuest = await prisma.guest.update({
+      return await prisma.guest.update({
         where: { id },
         data: cleanData,
         include: {
           user: {
-            select: safeUserSelect, // ❌ konsistent response
+            select: safeUserSelect,
           },
         },
       });
-
-      return updatedGuest;
     } catch (error: any) {
-      // ❌ handle Prisma unique constraint error
       if (error instanceof Prisma.PrismaClientKnownRequestError) {
         if (error.code === "P2002") {
-          throw {
-            status: 409,
-            message: `Duplicate value for: ${error.meta?.target}`,
-          };
+          throwError(409, `Duplicate value for: ${error.meta?.target}`);
         }
       }
 
