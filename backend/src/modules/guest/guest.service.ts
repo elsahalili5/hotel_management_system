@@ -25,7 +25,7 @@ export const GuestService = {
     return prisma.guest.findMany({
       include: {
         user: {
-          select: safeUserSelect, // ❌ fsheh password_hash
+          select: safeUserSelect,
         },
       },
     });
@@ -36,7 +36,7 @@ export const GuestService = {
       where: { id },
       include: {
         user: {
-          select: safeUserSelect, // ❌ fsheh password_hash
+          select: safeUserSelect,
         },
       },
     });

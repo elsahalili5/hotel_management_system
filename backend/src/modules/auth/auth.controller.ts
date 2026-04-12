@@ -1,8 +1,8 @@
 import { Request, Response } from "express";
 import { AuthService } from "./auth.service.ts";
-import { refreshAccessToken } from "../../services/refreshTokenService.ts";
+import { refreshAccessToken } from "./refreshToken/refreshToken.service.ts";
 import { LoginUserInput, RegisterUserInput } from "./auth.types.ts";
-import { TypedRequestBody } from "../../lib/types.ts";
+import { TypedRequestBody } from "@lib/types.ts";
 
 export const AuthController = {
   registerUser: async (
@@ -70,7 +70,6 @@ export const AuthController = {
     }
   },
 
-  // 🚪 LOGOUT
   logoutUser: async (req: Request, res: Response) => {
     try {
       const { refreshToken } = req.body;

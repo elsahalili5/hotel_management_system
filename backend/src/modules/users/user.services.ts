@@ -1,7 +1,7 @@
-import { prisma } from "../../lib/prisma.ts";
+import { prisma } from "@lib/prisma.ts";
 import bcrypt from "bcrypt";
-import { Shift, UserStatus } from "../../generated/prisma/client.ts";
-import { isValidEmail } from "../../lib/validations.ts";
+import { Shift, UserStatus } from "@generated/prisma/client.ts";
+import { isValidEmail } from "@lib/validations.ts";
 
 const SALT_ROUNDS = 10;
 

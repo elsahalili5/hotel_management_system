@@ -1,6 +1,6 @@
 import { Router } from "express";
-import { UserController } from "../../controllers/users/userController.ts";
-import { ROLES } from "../../lib/roles.ts";
+import { UserController } from "./user.controller.ts";
+import { ROLES } from "@lib/roles.ts";
 import { authMiddleware } from "@shared/middleware/authMiddleware.ts";
 import { roleMiddleware } from "@shared/middleware/roleMiddleware.ts";
 

@@ -1,7 +1,7 @@
 import jwt from "jsonwebtoken";
-import { prisma } from "../lib/prisma.ts";
-import { generateAccessToken } from "../lib/jwt.ts";
-import { UserStatus } from "../generated/prisma/enums.ts";
+import { prisma } from "@lib/prisma.ts";
+import { generateAccessToken } from "@lib/jwt.ts";
+import { UserStatus } from "@generated/prisma/enums.ts";
 
 if (!process.env.JWT_REFRESH_SECRET) {
   throw new Error("JWT_REFRESH_SECRET is missing in .env file");
