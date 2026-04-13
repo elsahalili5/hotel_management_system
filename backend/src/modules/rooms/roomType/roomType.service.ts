@@ -9,10 +9,19 @@ const roomTypeInclude = {
 };
 
 const ROOM_TYPE_ERRORS = {
-  NOT_FOUND: "Room Type not found",
-  DUPLICATE_NAME: (name: string) => `A Room Type with the name '${name}' already exists`,
-  INSUFFICIENT_CAPACITY: (bedCap: number, maxOcc: number) => 
-    `Total bed capacity (${bedCap}) is insufficient for max occupancy (${maxOcc}).`,
+  NOT_FOUND: { status: 404, message: "Room Type not found" },
+  DUPLICATE_NAME: (name: string) => ({
+    status: 409,
+    message: `A Room Type with the name '${name}' already exists`,
+  }),
+  INSUFFICIENT_CAPACITY: (bedCap: number, maxOcc: number) => ({
+    status: 400,
+    message: `Total bed capacity (${bedCap}) is insufficient for max occupancy (${maxOcc})`,
+  }),
+  HAS_ROOMS: (count: number) => ({
+    status: 409,
+    message: `Cannot delete Room Type. There are ${count} rooms associated with it. Please delete or reassign the rooms first`,
+  }),
 };
 
 export const RoomTypeService = {
@@ -28,24 +37,15 @@ export const RoomTypeService = {
       where: { id },
       include: roomTypeInclude,
     });
-    if (!roomType) {
-      const error: any = new Error(ROOM_TYPE_ERRORS.NOT_FOUND);
-      error.status = 404;
-      throw error;
-    }
+
+    if (!roomType) throw ROOM_TYPE_ERRORS.NOT_FOUND;
     return roomType;
   },
 
   create: async (data: CreateRoomTypeInput) => {
-    
     const existing = await prisma.roomType.findUnique({ where: { name: data.name } });
-    if (existing) {
-      const error: any = new Error(ROOM_TYPE_ERRORS.DUPLICATE_NAME(data.name));
-      error.status = 409;
-      throw error;
-    }
+    if (existing) throw ROOM_TYPE_ERRORS.DUPLICATE_NAME(data.name);
 
-    
     if (data.beds && data.beds.length > 0) {
       const bedDetails = await prisma.bed.findMany({
         where: { id: { in: data.beds.map((b) => b.bed_id) } },
@@ -57,21 +57,18 @@ export const RoomTypeService = {
       }, 0);
 
       if (totalCap < data.max_occupancy) {
-        const error: any = new Error(ROOM_TYPE_ERRORS.INSUFFICIENT_CAPACITY(totalCap, data.max_occupancy));
-        error.status = 400;
-        throw error;
+        throw ROOM_TYPE_ERRORS.INSUFFICIENT_CAPACITY(totalCap, data.max_occupancy);
       }
     }
 
-    
     return await prisma.roomType.create({
       data: {
         name: data.name,
-        description: data.description ?? null, 
+        description: data.description ?? null,
         base_price: data.base_price,
         max_occupancy: data.max_occupancy,
-        size_m2: data.size_m2 ?? null,      
-        
+        size_m2: data.size_m2 ?? null,
+
         amenities: data.amenities ? {
           create: data.amenities.map((id) => ({
             amenity: { connect: { id } },
@@ -98,24 +95,17 @@ export const RoomTypeService = {
   },
 
   update: async (id: RoomTypeId, data: UpdateRoomTypeInput) => {
-    
     const current = await RoomTypeService.getById(id);
 
-    
     if (data.name && data.name !== current.name) {
       const existing = await prisma.roomType.findUnique({ where: { name: data.name } });
-      if (existing) {
-        const error: any = new Error(ROOM_TYPE_ERRORS.DUPLICATE_NAME(data.name));
-        error.status = 409;
-        throw error;
-      }
+      if (existing) throw ROOM_TYPE_ERRORS.DUPLICATE_NAME(data.name);
     }
 
-   
     const finalMaxOccupancy = data.max_occupancy ?? current.max_occupancy;
-    const finalBeds = data.beds ?? current.beds.map(b => ({ 
-      bed_id: b.bed.id, 
-      quantity: b.quantity 
+    const finalBeds = data.beds ?? current.beds.map((b) => ({
+      bed_id: b.bed.id,
+      quantity: b.quantity,
     }));
 
     if (data.beds || data.max_occupancy) {
@@ -129,15 +119,11 @@ export const RoomTypeService = {
       }, 0);
 
       if (totalCap < finalMaxOccupancy) {
-        const error: any = new Error(ROOM_TYPE_ERRORS.INSUFFICIENT_CAPACITY(totalCap, finalMaxOccupancy));
-        error.status = 400;
-        throw error;
+        throw ROOM_TYPE_ERRORS.INSUFFICIENT_CAPACITY(totalCap, finalMaxOccupancy);
       }
     }
 
-   
     return await prisma.$transaction(async (tx) => {
-      
       if (data.amenities) await tx.roomTypeAmenity.deleteMany({ where: { room_type_id: id } });
       if (data.beds) await tx.roomTypeBed.deleteMany({ where: { room_type_id: id } });
       if (data.images) await tx.roomImage.deleteMany({ where: { room_type_id: id } });
@@ -150,44 +136,40 @@ export const RoomTypeService = {
           base_price: data.base_price,
           max_occupancy: data.max_occupancy,
           size_m2: data.size_m2,
-          
+
           amenities: data.amenities ? {
             create: data.amenities.map((aId) => ({
-              amenity: { connect: { id: aId } }
-            }))
+              amenity: { connect: { id: aId } },
+            })),
           } : undefined,
 
           beds: data.beds ? {
             create: data.beds.map((b) => ({
               bed: { connect: { id: b.bed_id } },
-              quantity: b.quantity
-            }))
+              quantity: b.quantity,
+            })),
           } : undefined,
 
           images: data.images ? {
             create: data.images.map((img) => ({
               url: img.url,
               is_primary: img.is_primary,
-              alt_text: img.alt_text
-            }))
+              alt_text: img.alt_text,
+            })),
           } : undefined,
         },
-        include: roomTypeInclude
+        include: roomTypeInclude,
       });
     });
   },
 
   delete: async (id: RoomTypeId) => {
-    const roomType =await RoomTypeService.getById(id);
+    const roomType = await RoomTypeService.getById(id);
 
     if (roomType._count.rooms > 0) {
-    const error: any = new Error(
-      `Cannot delete Room Type. There are ${roomType._count.rooms} rooms associated with this category. Please delete or reassign the rooms first.`
-    );
-    error.status = 400;
-    throw error;
-  }
+      throw ROOM_TYPE_ERRORS.HAS_ROOMS(roomType._count.rooms);
+    }
+
     await prisma.roomType.delete({ where: { id } });
-    return { success: true, message: "Room Type deleted successfully" };
   },
 };
