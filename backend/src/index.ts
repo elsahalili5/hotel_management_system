@@ -11,7 +11,7 @@ import guestRoutes from "./modules/guest/guest.routes.ts";
 import staffRoutes from "./modules/staff/staff.routes.ts";
 
 import amenityRoutes from "@modules/rooms/amenity/amenity.routes.ts";
-import roomTypeRoutes from "./routes/rooms/roomTypeRoutes";
+import roomTypeRoutes from "@modules/rooms/roomType/roomType.routes.ts";
 import roomRoutes from "./routes/rooms/roomRoutes.ts";
 import bedRoutes from "@modules/rooms/bed/bed.routes.ts";
 
