@@ -1,7 +1,8 @@
 import { prisma } from "@lib/prisma.ts";
 import { 
   CreateAmenityInput, 
-  UpdateAmenityInput 
+  UpdateAmenityInput,
+  AmenityId 
 } from "./amenity.types";
 
 
@@ -22,13 +23,17 @@ export const AmenityService = {
   },
 
  
-  getById: async (id: number) => {
+  getById: async (id: AmenityId) => {
     const amenity = await prisma.amenity.findUnique({
       where: { id },
       select: amenitySelect,
     });
 
-    if (!amenity) throw new Error(AMENITY_ERRORS.NOT_FOUND);
+   if (!amenity) {
+      const error: any = new Error(AMENITY_ERRORS.NOT_FOUND);
+      error.status = 404;
+      throw error;
+    }
     return amenity;
   },
 
@@ -38,7 +43,11 @@ export const AmenityService = {
       where: { name: data.name } 
     });
     
-    if (existing) throw new Error(AMENITY_ERRORS.DUPLICATE_NAME(data.name));
+   if (existing) {
+      const error: any = new Error(AMENITY_ERRORS.DUPLICATE_NAME(data.name));
+      error.status = 409; 
+      throw error;
+    }
 
     return await prisma.amenity.create({
       data,
@@ -46,7 +55,7 @@ export const AmenityService = {
     });
   },
 
-  update: async (id: number, data: UpdateAmenityInput) => {
+  update: async (id: AmenityId, data: UpdateAmenityInput) => {
    
     await AmenityService.getById(id);
 
@@ -58,7 +67,11 @@ export const AmenityService = {
           NOT: { id: id } 
         },
       });
-      if (existing) throw new Error(AMENITY_ERRORS.DUPLICATE_NAME(data.name));
+      if (existing) {
+      const error: any = new Error(AMENITY_ERRORS.DUPLICATE_NAME(data.name));
+      error.status = 409; 
+      throw error;
+    }
     }
 
     return await prisma.amenity.update({
@@ -68,7 +81,7 @@ export const AmenityService = {
     });
   },
 
-  delete: async (id: number) => {
+  delete: async (id: AmenityId) => {
     
     const amenity = await AmenityService.getById(id);
 

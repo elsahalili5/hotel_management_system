@@ -13,7 +13,7 @@ import staffRoutes from "./modules/staff/staff.routes.ts";
 import amenityRoutes from "@modules/rooms/amenity/amenity.routes.ts";
 import roomTypeRoutes from "./routes/rooms/roomTypeRoutes";
 import roomRoutes from "./routes/rooms/roomRoutes.ts";
-import bedRoutes from "./routes/rooms/bedRoutes.ts";
+import bedRoutes from "@modules/rooms/bed/bed.routes.ts";
 
 const app = express();
 
