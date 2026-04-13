@@ -22,15 +22,15 @@ router.get(
   "/:id",
   authMiddleware,
   roleMiddleware([ROLES.ADMIN, ROLES.GUEST]),
-  validateRequestMiddleware(guestIdParamSchema),
+  validateRequestMiddleware(guestIdParamSchema, "params"),
   GuestController.getGuestById,
 );
-
-router.patch(
+// admin+guest
+router.put(
   "/:id",
   authMiddleware,
   roleMiddleware([ROLES.ADMIN, ROLES.GUEST]),
-  validateRequestMiddleware(guestIdParamSchema),
+  validateRequestMiddleware(guestIdParamSchema, "params"),
   validateRequestMiddleware(updateGuestSchema),
   GuestController.updateGuest,
 );

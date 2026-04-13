@@ -25,11 +25,6 @@ export const GuestController = {
   getGuestById: async (req: AuthRequest, res: Response) => {
     try {
       const id = Number(req.params.id);
-
-      if (Number.isNaN(id)) {
-        return res.status(400).json({ error: "Invalid guest id" });
-      }
-
       const guest = await GuestService.getGuestById(id);
 
       return res.status(200).json(guest);
@@ -47,15 +42,11 @@ export const GuestController = {
   },
 
   updateGuest: async (
-    req: TypedRequestBody<UpdateGuestInput>,
+    req: TypedRequestBody<UpdateGuestInput, { id: string }>,
     res: Response,
   ) => {
     try {
       const id = Number(req.params.id);
-
-      if (Number.isNaN(id)) {
-        return res.status(400).json({ error: "Invalid guest id" });
-      }
 
       const {
         phone_number,

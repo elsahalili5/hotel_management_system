@@ -1,6 +1,6 @@
 import { Response } from "express";
 import { UserService } from "./user.services.ts";
-
+import { AuthRequest } from "@lib/types.ts";
 import {
   CreateGuestInput,
   CreateStaffInput,
@@ -42,7 +42,7 @@ export const UserController = {
     }
   },
 
-  getUsers: async (req, res: Response) => {
+  getUsers: async (req: AuthRequest, res: Response) => {
     try {
       const users = await UserService.getUsers();
 
@@ -74,7 +74,10 @@ export const UserController = {
     }
   },
 
-  updateUser: async (req: TypedRequestBody<UpdateUserInput, { userId: string }>, res: Response) => {
+  updateUser: async (
+    req: TypedRequestBody<UpdateUserInput, { userId: string }>,
+    res: Response,
+  ) => {
     try {
       const userId = Number(req.params.userId);
 
@@ -93,7 +96,7 @@ export const UserController = {
     }
   },
 
-  deleteUser: async (req, res: Response) => {
+  deleteUser: async (req: AuthRequest, res: Response) => {
     try {
       const userId = Number(req.params.userId);
 

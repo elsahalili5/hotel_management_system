@@ -45,12 +45,4 @@ router.put(
   UserController.updateUser,
 );
 
-// udpdate user
-router.delete(
-  "/:userId",
-  authMiddleware,
-  roleMiddleware([ROLES.ADMIN, ROLES.MANAGER]),
-  UserController.deleteUser,
-);
-
 export default router;
