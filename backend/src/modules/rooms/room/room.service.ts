@@ -1,21 +1,12 @@
 import { prisma } from "@lib/prisma.ts";
 import { RoomStatus } from "@generated/prisma/enums.ts";
-import { CreateRoomInput, UpdateRoomInput, UpdateRoomStatusInput, RoomId } from "./room.types.ts";
-
-const roomSelect = {
-  id: true,
-  room_number: true,
-  floor: true,
-  status: true,
-  room_type: {
-    select: {
-      id: true,
-      name: true,
-      base_price: true,
-      max_occupancy: true,
-    },
-  },
-};
+import {
+  CreateRoomInput,
+  UpdateRoomInput,
+  UpdateRoomStatusInput,
+  RoomId,
+} from "./room.types.ts";
+import { roomSelect } from "@lib/constants.ts";
 
 const ROOM_ERRORS = {
   NOT_FOUND: { status: 404, message: "Room not found" },

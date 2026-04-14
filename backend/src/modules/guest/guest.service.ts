@@ -1,19 +1,10 @@
 import { prisma } from "../../lib/prisma.ts";
 import { Prisma } from "@prisma/client";
 import { UpdateGuestInput } from "./guest.types";
+import { safeUserSelect } from "@lib/constants.ts";
 
 const throwError = (status: number, message: string): never => {
   throw { status, message };
-};
-
-const safeUserSelect = {
-  id: true,
-  first_name: true,
-  last_name: true,
-  email: true,
-  status: true,
-  email_confirmed: true,
-  role: true,
 };
 
 export const GuestService = {

@@ -7,20 +7,12 @@ import {
   CreateStaffInput,
   UpdateUserInput,
 } from "./user.types.ts";
+import { safeUserSelect } from "@lib/constants.ts";
 
 const SALT_ROUNDS = 10;
 
 const throwError = (status: number, message: string): never => {
   throw { status, message };
-};
-
-const safeUserSelect = {
-  id: true,
-  first_name: true,
-  last_name: true,
-  email: true,
-  status: true,
-  created_at: true,
 };
 
 export const UserService = {
@@ -39,8 +31,8 @@ export const UserService = {
       where: { name: ROLES.GUEST },
     });
 
-    if (!role) {
-      throwError(404, "GUEST role not found");
+    if (!role?.id) {
+      return throwError(404, "GUEST role not found");
     }
 
     const password_hash = await bcrypt.hash(password, SALT_ROUNDS);

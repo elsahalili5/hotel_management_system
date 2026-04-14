@@ -1,7 +1,12 @@
 import { prisma } from "@lib/prisma.ts";
-import { CreateRoomTypeInput, UpdateRoomTypeInput, RoomTypeId } from "./roomType.types.ts";
+import {
+  CreateRoomTypeInput,
+  UpdateRoomTypeInput,
+  RoomTypeId,
+} from "./roomType.types.ts";
+import { RoomTypeDefaultArgs } from "@generated/prisma/models.ts";
 
-const roomTypeInclude = {
+const roomTypeInclude: RoomTypeDefaultArgs["include"] = {
   amenities: { select: { amenity: true } },
   beds: { select: { bed: true, quantity: true } },
   images: true,
@@ -43,7 +48,9 @@ export const RoomTypeService = {
   },
 
   create: async (data: CreateRoomTypeInput) => {
-    const existing = await prisma.roomType.findUnique({ where: { name: data.name } });
+    const existing = await prisma.roomType.findUnique({
+      where: { name: data.name },
+    });
     if (existing) throw ROOM_TYPE_ERRORS.DUPLICATE_NAME(data.name);
 
     if (data.beds && data.beds.length > 0) {
@@ -57,7 +64,10 @@ export const RoomTypeService = {
       }, 0);
 
       if (totalCap < data.max_occupancy) {
-        throw ROOM_TYPE_ERRORS.INSUFFICIENT_CAPACITY(totalCap, data.max_occupancy);
+        throw ROOM_TYPE_ERRORS.INSUFFICIENT_CAPACITY(
+          totalCap,
+          data.max_occupancy,
+        );
       }
     }
 
@@ -69,26 +79,32 @@ export const RoomTypeService = {
         max_occupancy: data.max_occupancy,
         size_m2: data.size_m2 ?? null,
 
-        amenities: data.amenities ? {
-          create: data.amenities.map((id) => ({
-            amenity: { connect: { id } },
-          })),
-        } : undefined,
+        amenities: data.amenities
+          ? {
+              create: data.amenities.map((id) => ({
+                amenity: { connect: { id } },
+              })),
+            }
+          : undefined,
 
-        beds: data.beds ? {
-          create: data.beds.map((b) => ({
-            bed: { connect: { id: b.bed_id } },
-            quantity: b.quantity,
-          })),
-        } : undefined,
+        beds: data.beds
+          ? {
+              create: data.beds.map((b) => ({
+                bed: { connect: { id: b.bed_id } },
+                quantity: b.quantity,
+              })),
+            }
+          : undefined,
 
-        images: data.images ? {
-          create: data.images.map((img) => ({
-            url: img.url,
-            is_primary: img.is_primary || false,
-            alt_text: img.alt_text ?? null,
-          })),
-        } : undefined,
+        images: data.images
+          ? {
+              create: data.images.map((img) => ({
+                url: img.url,
+                is_primary: img.is_primary || false,
+                alt_text: img.alt_text ?? null,
+              })),
+            }
+          : undefined,
       },
       include: roomTypeInclude,
     });
@@ -98,15 +114,19 @@ export const RoomTypeService = {
     const current = await RoomTypeService.getById(id);
 
     if (data.name && data.name !== current.name) {
-      const existing = await prisma.roomType.findUnique({ where: { name: data.name } });
+      const existing = await prisma.roomType.findUnique({
+        where: { name: data.name },
+      });
       if (existing) throw ROOM_TYPE_ERRORS.DUPLICATE_NAME(data.name);
     }
 
     const finalMaxOccupancy = data.max_occupancy ?? current.max_occupancy;
-    const finalBeds = data.beds ?? current.beds.map((b) => ({
-      bed_id: b.bed.id,
-      quantity: b.quantity,
-    }));
+    const finalBeds =
+      data.beds ??
+      current.beds.map((b) => ({
+        bed_id: b.bed.id,
+        quantity: b.quantity,
+      }));
 
     if (data.beds || data.max_occupancy) {
       const bedDetails = await prisma.bed.findMany({
@@ -119,14 +139,20 @@ export const RoomTypeService = {
       }, 0);
 
       if (totalCap < finalMaxOccupancy) {
-        throw ROOM_TYPE_ERRORS.INSUFFICIENT_CAPACITY(totalCap, finalMaxOccupancy);
+        throw ROOM_TYPE_ERRORS.INSUFFICIENT_CAPACITY(
+          totalCap,
+          finalMaxOccupancy,
+        );
       }
     }
 
     return await prisma.$transaction(async (tx) => {
-      if (data.amenities) await tx.roomTypeAmenity.deleteMany({ where: { room_type_id: id } });
-      if (data.beds) await tx.roomTypeBed.deleteMany({ where: { room_type_id: id } });
-      if (data.images) await tx.roomImage.deleteMany({ where: { room_type_id: id } });
+      if (data.amenities)
+        await tx.roomTypeAmenity.deleteMany({ where: { room_type_id: id } });
+      if (data.beds)
+        await tx.roomTypeBed.deleteMany({ where: { room_type_id: id } });
+      if (data.images)
+        await tx.roomImage.deleteMany({ where: { room_type_id: id } });
 
       return await tx.roomType.update({
         where: { id },
@@ -137,26 +163,32 @@ export const RoomTypeService = {
           max_occupancy: data.max_occupancy,
           size_m2: data.size_m2,
 
-          amenities: data.amenities ? {
-            create: data.amenities.map((aId) => ({
-              amenity: { connect: { id: aId } },
-            })),
-          } : undefined,
+          amenities: data.amenities
+            ? {
+                create: data.amenities.map((aId) => ({
+                  amenity: { connect: { id: aId } },
+                })),
+              }
+            : undefined,
 
-          beds: data.beds ? {
-            create: data.beds.map((b) => ({
-              bed: { connect: { id: b.bed_id } },
-              quantity: b.quantity,
-            })),
-          } : undefined,
+          beds: data.beds
+            ? {
+                create: data.beds.map((b) => ({
+                  bed: { connect: { id: b.bed_id } },
+                  quantity: b.quantity,
+                })),
+              }
+            : undefined,
 
-          images: data.images ? {
-            create: data.images.map((img) => ({
-              url: img.url,
-              is_primary: img.is_primary,
-              alt_text: img.alt_text,
-            })),
-          } : undefined,
+          images: data.images
+            ? {
+                create: data.images.map((img) => ({
+                  url: img.url,
+                  is_primary: img.is_primary,
+                  alt_text: img.alt_text,
+                })),
+              }
+            : undefined,
         },
         include: roomTypeInclude,
       });

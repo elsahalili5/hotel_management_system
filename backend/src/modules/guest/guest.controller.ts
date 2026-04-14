@@ -10,8 +10,6 @@ export const GuestController = {
 
       return res.status(200).json(guests);
     } catch (error: any) {
-      console.error(error);
-
       if (error.status) {
         return res.status(error.status).json({ error: error.message });
       }
