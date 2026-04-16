@@ -47,28 +47,28 @@ export const AuthController = {
     }
   },
 
-  refreshToken: async (req: Request, res: Response) => {
-    try {
-      const { refreshToken } = req.body;
+  // refreshToken: async (req: Request, res: Response) => {
+  //   try {
+  //     const { refreshToken } = req.body;
 
-      if (typeof refreshToken !== "string" || !refreshToken.trim()) {
-        return res.status(400).json({ error: "Refresh token required" });
-      }
+  //     if (typeof refreshToken !== "string" || !refreshToken.trim()) {
+  //       return res.status(400).json({ error: "Refresh token required" });
+  //     }
 
-      const result = await refreshAccessToken(refreshToken);
+  //     const result = await refreshAccessToken(refreshToken);
 
-      res.status(200).json({
-        message: "Token refreshed",
-        data: result,
-      });
-    } catch (error: any) {
-      console.error(error);
-      if (error.status) {
-        return res.status(error.status).json({ error: error.message });
-      }
-      res.status(500).json({ error: "Token refresh failed" });
-    }
-  },
+  //     res.status(200).json({
+  //       message: "Token refreshed",
+  //       data: result,
+  //     });
+  //   } catch (error: any) {
+  //     console.error(error);
+  //     if (error.status) {
+  //       return res.status(error.status).json({ error: error.message });
+  //     }
+  //     res.status(500).json({ error: "Token refresh failed" });
+  //   }
+  // },
 
   logoutUser: async (req: Request, res: Response) => {
     try {

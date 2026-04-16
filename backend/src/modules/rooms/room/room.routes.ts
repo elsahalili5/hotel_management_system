@@ -13,11 +13,7 @@ import { ROLES } from "@lib/roles.ts";
 
 const router = Router();
 
-router.get(
-  "/",
-  authMiddleware,
-  RoomController.getAll,
-);
+router.get("/", authMiddleware, RoomController.getAll);
 
 router.get(
   "/stats",

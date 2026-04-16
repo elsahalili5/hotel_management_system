@@ -3,37 +3,30 @@ import { RoomTypeController } from "./roomType.controller.ts";
 import { validateRequestMiddleware } from "@shared/middleware/validateRequest.middleware.ts";
 import { authMiddleware } from "@shared/middleware/authMiddleware.ts";
 import { roleMiddleware } from "@shared/middleware/roleMiddleware.ts";
-import { 
-  createRoomTypeSchema, 
-  updateRoomTypeSchema, 
-  roomTypeIdSchema 
+import {
+  createRoomTypeSchema,
+  updateRoomTypeSchema,
+  roomTypeIdSchema,
 } from "./roomType.schema.ts";
 import { ROLES } from "@lib/roles.ts";
 
 const router = Router();
 
+router.get("/", authMiddleware, RoomTypeController.getAll);
 
 router.get(
-  "/", 
-  authMiddleware, 
-  RoomTypeController.getAll
+  "/:id",
+  authMiddleware,
+  validateRequestMiddleware(roomTypeIdSchema, "params"),
+  RoomTypeController.getById,
 );
-
-router.get(
-  "/:id", 
-  authMiddleware, 
-  validateRequestMiddleware(roomTypeIdSchema, "params"), 
-  RoomTypeController.getById
-);
-
-
 
 router.post(
   "/",
   authMiddleware,
   roleMiddleware([ROLES.ADMIN]),
   validateRequestMiddleware(createRoomTypeSchema),
-  RoomTypeController.create
+  RoomTypeController.create,
 );
 
 router.patch(
@@ -42,7 +35,7 @@ router.patch(
   roleMiddleware([ROLES.ADMIN]),
   validateRequestMiddleware(roomTypeIdSchema, "params"),
   validateRequestMiddleware(updateRoomTypeSchema),
-  RoomTypeController.update
+  RoomTypeController.update,
 );
 
 router.delete(
@@ -50,7 +43,7 @@ router.delete(
   authMiddleware,
   roleMiddleware([ROLES.ADMIN]),
   validateRequestMiddleware(roomTypeIdSchema, "params"),
-  RoomTypeController.delete
+  RoomTypeController.delete,
 );
 
 export default router;

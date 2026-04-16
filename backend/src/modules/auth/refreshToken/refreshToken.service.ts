@@ -2,13 +2,9 @@ import jwt from "jsonwebtoken";
 import { prisma } from "@lib/prisma.ts";
 import { generateAccessToken } from "@lib/jwt.ts";
 import { UserStatus } from "@generated/prisma/enums.ts";
+import { RefreshTokenInput } from "./refreshToken.types.ts";
 
-if (!process.env.JWT_REFRESH_SECRET) {
-  throw new Error("JWT_REFRESH_SECRET is missing in .env file");
-}
-
-const REFRESH_SECRET = process.env.JWT_REFRESH_SECRET;
-
+const REFRESH_SECRET = process.env.JWT_REFRESH_SECRET!;
 export const refreshAccessToken = async (refreshToken: string) => {
   if (!refreshToken) {
     throw { status: 401, message: "Refresh token missing" };
@@ -18,17 +14,27 @@ export const refreshAccessToken = async (refreshToken: string) => {
     where: { token: refreshToken },
   });
 
-  if (!storedToken || storedToken.revoked) {
+  if (!storedToken) {
     throw { status: 401, message: "Invalid refresh token" };
+  }
+
+  if (storedToken.revoked) {
+    throw { status: 401, message: "Token revoked" };
   }
 
   if (storedToken.expires < new Date()) {
     throw { status: 401, message: "Refresh token expired" };
   }
 
-  const decoded = jwt.verify(refreshToken, REFRESH_SECRET) as {
-    userId: number;
-  };
+  let decoded: { userId: number };
+
+  try {
+    decoded = jwt.verify(refreshToken, REFRESH_SECRET) as {
+      userId: number;
+    };
+  } catch {
+    throw { status: 401, message: "Invalid refresh token" };
+  }
 
   const user = await prisma.user.findUnique({
     where: { id: decoded.userId },
