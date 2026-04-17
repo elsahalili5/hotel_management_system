@@ -8,5 +8,5 @@ import {
 
 export type CreateRoomInput = z.infer<typeof createRoomSchema>;
 export type UpdateRoomInput = z.infer<typeof updateRoomSchema>;
-export type RoomId = z.infer<typeof roomIdSchema>["id"];
+export type RoomIdParam = z.infer<typeof roomIdSchema>;
 export type UpdateRoomStatusInput = z.infer<typeof updateRoomStatusSchema>;

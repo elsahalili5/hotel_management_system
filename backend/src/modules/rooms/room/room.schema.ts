@@ -1,11 +1,9 @@
 import { z } from "zod";
 import { RoomStatus } from "@generated/prisma/enums.ts";
+import { numericStringSchema } from "@lib/validations";
 
 export const roomIdSchema = z.object({
-  id: z.coerce
-    .number({ message: "ID must be a valid number" })
-    .int()
-    .positive("ID must be a positive number"),
+  id: numericStringSchema,
 });
 
 export const createRoomSchema = z.object({
@@ -35,13 +33,17 @@ export const updateRoomStatusSchema = z.object({
   status: z.enum(RoomStatus),
 });
 
-export const updateRoomSchema = createRoomSchema.partial().refine(
-  (data) => 
-    data.room_number !== undefined || 
-    data.floor !== undefined || 
-    data.room_type_id !== undefined || 
-    data.status !== undefined,
-  {
-    message: "At least one field must be provided for update",
-  }
-);
+export const updateRoomSchema = createRoomSchema
+  .omit({ status: true })
+  .partial()
+  .extend({ status: z.enum(RoomStatus).optional() })
+  .refine(
+    (data) =>
+      data.room_number !== undefined ||
+      data.floor !== undefined ||
+      data.room_type_id !== undefined ||
+      data.status !== undefined,
+    {
+      message: "At least one field must be provided for update",
+    }
+  );

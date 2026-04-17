@@ -1,5 +1,5 @@
 import { prisma } from "@lib/prisma.ts";
-import { CreateAmenityInput, UpdateAmenityInput, AmenityId } from "./amenity.types.ts";
+import { CreateAmenityInput, UpdateAmenityInput } from "./amenity.types.ts";
 
 const amenitySelect = { id: true, name: true, icon: true };
 
@@ -19,7 +19,7 @@ export const AmenityService = {
     });
   },
 
-  getById: async (id: AmenityId) => {
+  getById: async (id: number) => {
     const amenity = await prisma.amenity.findUnique({
       where: { id },
       select: amenitySelect,
@@ -42,7 +42,7 @@ export const AmenityService = {
     });
   },
 
-  update: async (id: AmenityId, data: UpdateAmenityInput) => {
+  update: async (id: number, data: UpdateAmenityInput) => {
     await AmenityService.getById(id);
 
     if (data.name) {
@@ -59,7 +59,7 @@ export const AmenityService = {
     });
   },
 
-  delete: async (id: AmenityId) => {
+  delete: async (id: number) => {
     await AmenityService.getById(id);
     await prisma.amenity.delete({ where: { id } });
   },

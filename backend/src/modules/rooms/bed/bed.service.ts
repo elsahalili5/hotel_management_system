@@ -1,5 +1,5 @@
 import { prisma } from "@lib/prisma.ts";
-import { CreateBedInput, UpdateBedInput, BedId } from "./bed.types.ts";
+import { CreateBedInput, UpdateBedInput } from "./bed.types.ts";
 
 const bedSelect = { id: true, name: true, capacity: true };
 
@@ -19,7 +19,7 @@ export const BedService = {
     });
   },
 
-  getById: async (id: BedId) => {
+  getById: async (id: number) => {
     const bed = await prisma.bed.findUnique({
       where: { id },
       select: bedSelect,
@@ -42,7 +42,7 @@ export const BedService = {
     });
   },
 
-  update: async (id: BedId, data: UpdateBedInput) => {
+  update: async (id: number, data: UpdateBedInput) => {
     await BedService.getById(id);
 
     if (data.name) {
@@ -59,7 +59,7 @@ export const BedService = {
     });
   },
 
-  delete: async (id: BedId) => {
+  delete: async (id: number) => {
     await BedService.getById(id);
     await prisma.bed.delete({ where: { id } });
   },

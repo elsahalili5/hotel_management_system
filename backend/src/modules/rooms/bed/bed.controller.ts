@@ -1,6 +1,6 @@
 import { Request, Response } from "express";
 import { BedService } from "./bed.service.ts";
-import { CreateBedInput, UpdateBedInput } from "./bed.types.ts";
+import { CreateBedInput, UpdateBedInput, BedIdParam } from "./bed.types.ts";
 import { TypedRequest } from "@lib/types.ts";
 
 export const BedController = {
@@ -9,11 +9,12 @@ export const BedController = {
       const data = await BedService.getAll();
       res.status(200).json({ data });
     } catch (error: any) {
+      if (error.status) return res.status(error.status).json({ error: error.message });
       res.status(500).json({ error: "Failed to fetch beds" });
     }
   },
 
-  getById: async (req: Request, res: Response) => {
+  getById: async (req: TypedRequest<unknown, BedIdParam>, res: Response) => {
     try {
       const id = Number(req.params.id);
       const data = await BedService.getById(id);
@@ -37,7 +38,7 @@ export const BedController = {
   },
 
   update: async (
-    req: TypedRequest<UpdateBedInput, { id: string }>,
+    req: TypedRequest<UpdateBedInput, BedIdParam>,
     res: Response,
   ) => {
     try {
@@ -51,7 +52,7 @@ export const BedController = {
     }
   },
 
-  delete: async (req: Request, res: Response) => {
+  delete: async (req: TypedRequest<unknown, BedIdParam>, res: Response) => {
     try {
       const id = Number(req.params.id);
       await BedService.delete(id);
