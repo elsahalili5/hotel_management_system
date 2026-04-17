@@ -1,7 +1,8 @@
+import { numericStringSchema } from "@lib/validations";
 import { z } from "zod";
 
 export const guestIdParamSchema = z.object({
-  id: z.coerce.number().int().positive(),
+  id: numericStringSchema,
 });
 
 export const updateGuestSchema = z.object({

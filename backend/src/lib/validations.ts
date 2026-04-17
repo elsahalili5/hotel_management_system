@@ -1,7 +1,5 @@
-export const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+import z from "zod";
 
-export const isValidEmail = (email?: string) => {
-  const isValid = email && emailRegex.test(email.trim());
-
-  return isValid;
-};
+export const numericStringSchema = z
+  .string()
+  .regex(/^[0-9]+$/, "Must be a numeric string");

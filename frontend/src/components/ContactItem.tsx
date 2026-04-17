@@ -23,7 +23,7 @@ export const ContactItem: React.FC<ContactItemProps> = ({
 
       <h3 className="font-serif text-2xl text-mansio-espresso mb-2">{title}</h3>
 
-      <p className="text-sm text-mansio-mocha font-light mb-4 max-w-[200px] leading-relaxed">
+      <p className="text-sm text-mansio-mocha font-light mb-4 max-w-50 leading-relaxed">
         {description}
       </p>
 

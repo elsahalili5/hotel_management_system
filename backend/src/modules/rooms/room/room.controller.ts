@@ -1,7 +1,11 @@
 import { Request, Response } from "express";
 import { RoomService } from "./room.service.ts";
-import { CreateRoomInput, UpdateRoomInput, UpdateRoomStatusInput } from "./room.types.ts";
-import { TypedRequestBody } from "@lib/types.ts";
+import {
+  CreateRoomInput,
+  UpdateRoomInput,
+  UpdateRoomStatusInput,
+} from "./room.types.ts";
+import { TypedRequest } from "@lib/types.ts";
 
 export const RoomController = {
   getAll: async (_req: Request, res: Response) => {
@@ -19,39 +23,51 @@ export const RoomController = {
       const data = await RoomService.getById(id);
       res.status(200).json({ data });
     } catch (error: any) {
-      if (error.status) return res.status(error.status).json({ error: error.message });
+      if (error.status)
+        return res.status(error.status).json({ error: error.message });
       res.status(500).json({ error: "Failed to fetch room" });
     }
   },
 
-  create: async (req: TypedRequestBody<CreateRoomInput>, res: Response) => {
+  create: async (req: TypedRequest<CreateRoomInput>, res: Response) => {
     try {
       const data = await RoomService.create(req.body);
       res.status(201).json({ message: "Room created successfully", data });
     } catch (error: any) {
-      if (error.status) return res.status(error.status).json({ error: error.message });
+      if (error.status)
+        return res.status(error.status).json({ error: error.message });
       res.status(500).json({ error: "Failed to create room" });
     }
   },
 
-  update: async (req: TypedRequestBody<UpdateRoomInput, { id: string }>, res: Response) => {
+  update: async (
+    req: TypedRequest<UpdateRoomInput, { id: string }>,
+    res: Response,
+  ) => {
     try {
       const id = Number(req.params.id);
       const data = await RoomService.update(id, req.body);
       res.status(200).json({ message: "Room updated successfully", data });
     } catch (error: any) {
-      if (error.status) return res.status(error.status).json({ error: error.message });
+      if (error.status)
+        return res.status(error.status).json({ error: error.message });
       res.status(500).json({ error: "Failed to update room" });
     }
   },
 
-  updateStatus: async (req: TypedRequestBody<UpdateRoomStatusInput, { id: string }>, res: Response) => {
+  updateStatus: async (
+    req: TypedRequest<UpdateRoomStatusInput, { id: string }>,
+    res: Response,
+  ) => {
     try {
       const id = Number(req.params.id);
       const data = await RoomService.updateStatus(id, req.body);
-      res.status(200).json({ message: "Room status updated successfully", data });
+      res
+        .status(200)
+        .json({ message: "Room status updated successfully", data });
     } catch (error: any) {
-      if (error.status) return res.status(error.status).json({ error: error.message });
+      if (error.status)
+        return res.status(error.status).json({ error: error.message });
       res.status(500).json({ error: "Failed to update room status" });
     }
   },
@@ -62,7 +78,8 @@ export const RoomController = {
       await RoomService.delete(id);
       res.status(200).json({ message: "Room deleted successfully" });
     } catch (error: any) {
-      if (error.status) return res.status(error.status).json({ error: error.message });
+      if (error.status)
+        return res.status(error.status).json({ error: error.message });
       res.status(500).json({ error: "Failed to delete room" });
     }
   },

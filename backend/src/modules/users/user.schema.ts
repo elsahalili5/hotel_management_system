@@ -32,3 +32,6 @@ export const updateUserSchema = z.object({
   email: z.email().trim().optional(),
   password: z.string().trim().min(8).max(72).optional(),
 });
+export const userIdParamSchema = z.object({
+  userId: z.coerce.number().int().positive(),
+});

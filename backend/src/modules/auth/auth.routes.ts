@@ -1,6 +1,11 @@
 import { Router } from "express";
 import { AuthController } from "./auth.controller.ts";
-import { userLoginSchema, userRegisterSchema } from "./auth.schema.ts";
+import {
+  userLoginSchema,
+  userRegisterSchema,
+  refreshTokenSchema,
+  logoutSchema,
+} from "./auth.schema.ts";
 import { validateRequestMiddleware } from "@shared/middleware/validateRequest.middleware.ts";
 
 const router = Router();
@@ -17,6 +22,16 @@ router.post(
   AuthController.registerUser,
 );
 
-router.post("/logout", AuthController.logoutUser);
+router.post(
+  "/refresh-token",
+  validateRequestMiddleware(refreshTokenSchema),
+  AuthController.refreshToken,
+);
+
+router.post(
+  "/logout",
+  validateRequestMiddleware(logoutSchema),
+  AuthController.logoutUser,
+);
 
 export default router;

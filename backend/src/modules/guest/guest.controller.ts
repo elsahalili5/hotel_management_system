@@ -1,13 +1,12 @@
-import { Response } from "express";
-import { AuthRequest, TypedRequestBody } from "@lib/types.ts";
+import { Response, Request } from "express";
+import { AuthRequest, TypedRequest } from "@lib/types.ts";
 import { GuestService } from "./guest.service.ts";
-import { UpdateGuestInput } from "./guest.types.ts";
+import { UpdateGuestInput, GuestIdParam } from "./guest.types.ts";
 
 export const GuestController = {
   getGuests: async (_req: AuthRequest, res: Response) => {
     try {
       const guests = await GuestService.getAllGuests();
-
       return res.status(200).json(guests);
     } catch (error: any) {
       if (error.status) {
@@ -20,15 +19,16 @@ export const GuestController = {
     }
   },
 
-  getGuestById: async (req: AuthRequest, res: Response) => {
+  getGuestById: async (
+    req: TypedRequest<unknown, GuestIdParam>,
+    res: Response,
+  ) => {
     try {
       const id = Number(req.params.id);
       const guest = await GuestService.getGuestById(id);
 
       return res.status(200).json(guest);
     } catch (error: any) {
-      console.error(error);
-
       if (error.status) {
         return res.status(error.status).json({ error: error.message });
       }
@@ -38,9 +38,8 @@ export const GuestController = {
       });
     }
   },
-
   updateGuest: async (
-    req: TypedRequestBody<UpdateGuestInput, { id: string }>,
+    req: TypedRequest<UpdateGuestInput, GuestIdParam>,
     res: Response,
   ) => {
     try {

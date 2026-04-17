@@ -5,15 +5,13 @@ import {
   CreateGuestInput,
   CreateStaffInput,
   UpdateUserInput,
+  UserIdParam,
 } from "./user.types.ts";
 
-import { TypedRequestBody } from "@lib/types.ts";
+import { TypedRequest } from "@lib/types.ts";
 
 export const UserController = {
-  createGuest: async (
-    req: TypedRequestBody<CreateGuestInput>,
-    res: Response,
-  ) => {
+  createGuest: async (req: TypedRequest<CreateGuestInput>, res: Response) => {
     try {
       const guest = await UserService.createGuest(req.body);
 
@@ -26,10 +24,7 @@ export const UserController = {
     }
   },
 
-  createStaff: async (
-    req: TypedRequestBody<CreateStaffInput>,
-    res: Response,
-  ) => {
+  createStaff: async (req: TypedRequest<CreateStaffInput>, res: Response) => {
     try {
       const staff = await UserService.createStaff(req.body);
 
@@ -55,14 +50,12 @@ export const UserController = {
     }
   },
 
-  getUserById: async (req, res: Response) => {
+  getUserById: async (
+    req: AuthRequest & TypedRequest<unknown, UserIdParam>,
+    res: Response,
+  ) => {
     try {
-      const userId = Number(req.params.userId);
-
-      if (Number.isNaN(userId)) {
-        return res.status(400).json({ error: "Invalid user id" });
-      }
-
+      const userId = req.params.userId as unknown as number;
       const user = await UserService.getUserById(userId);
 
       return res.status(200).json(user);
@@ -73,18 +66,12 @@ export const UserController = {
       return res.status(500).json({ error: "Failed to fetch user" });
     }
   },
-
   updateUser: async (
-    req: TypedRequestBody<UpdateUserInput, { userId: string }>,
+    req: TypedRequest<UpdateUserInput, UserIdParam>,
     res: Response,
   ) => {
     try {
-      const userId = Number(req.params.userId);
-
-      if (Number.isNaN(userId)) {
-        return res.status(400).json({ error: "Invalid user id" });
-      }
-
+      const userId = req.params.userId as unknown as number;
       const user = await UserService.updateUser(userId, req.body);
 
       return res.status(200).json(user);
@@ -98,12 +85,7 @@ export const UserController = {
 
   deleteUser: async (req: AuthRequest, res: Response) => {
     try {
-      const userId = Number(req.params.userId);
-
-      if (Number.isNaN(userId)) {
-        return res.status(400).json({ error: "Invalid user id" });
-      }
-
+      const userId = req.params.userId as unknown as number;
       await UserService.deleteUser(userId);
 
       return res.status(204).send();

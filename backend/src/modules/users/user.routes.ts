@@ -3,6 +3,13 @@ import { UserController } from "./user.controller.ts";
 import { ROLES } from "@lib/roles.ts";
 import { authMiddleware } from "@shared/middleware/authMiddleware.ts";
 import { roleMiddleware } from "@shared/middleware/roleMiddleware.ts";
+import { validateRequestMiddleware } from "@shared/middleware/validateRequest.middleware.ts";
+import {
+  createGuestSchema,
+  createStaffSchema,
+  updateUserSchema,
+  userIdParamSchema,
+} from "./user.schema.ts";
 
 const router = Router();
 
@@ -10,18 +17,18 @@ router.post(
   "/create-guest",
   authMiddleware,
   roleMiddleware([ROLES.ADMIN, ROLES.MANAGER, ROLES.RECEPTIONIST]),
+  validateRequestMiddleware(createGuestSchema),
   UserController.createGuest,
 );
 
-// Create staff,
 router.post(
   "/create-staff",
   authMiddleware,
-  roleMiddleware([ROLES.ADMIN, ROLES.MANAGER, ROLES.RECEPTIONIST]),
+  roleMiddleware([ROLES.ADMIN, ROLES.MANAGER]),
+  validateRequestMiddleware(createStaffSchema),
   UserController.createStaff,
 );
 
-// get users
 router.get(
   "/",
   authMiddleware,
@@ -29,20 +36,29 @@ router.get(
   UserController.getUsers,
 );
 
-// get user by id
 router.get(
   "/:userId",
   authMiddleware,
   roleMiddleware([ROLES.ADMIN, ROLES.MANAGER]),
+  validateRequestMiddleware(userIdParamSchema, "params"),
   UserController.getUserById,
 );
 
-// update user
 router.put(
   "/:userId",
   authMiddleware,
   roleMiddleware([ROLES.ADMIN, ROLES.MANAGER]),
+  validateRequestMiddleware(userIdParamSchema, "params"),
+  validateRequestMiddleware(updateUserSchema),
   UserController.updateUser,
+);
+
+router.delete(
+  "/:userId",
+  authMiddleware,
+  roleMiddleware([ROLES.ADMIN, ROLES.MANAGER]),
+  validateRequestMiddleware(userIdParamSchema, "params"),
+  UserController.deleteUser,
 );
 
 export default router;

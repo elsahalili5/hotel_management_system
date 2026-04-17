@@ -1,6 +1,6 @@
 import { prisma } from "../../lib/prisma.ts";
-import { Prisma } from "@prisma/client";
-import { UpdateGuestInput } from "./guest.types";
+import { Prisma } from "@generated/prisma/client.ts";
+import { UpdateGuestInput, GuestIdParam } from "./guest.types";
 import { safeUserSelect } from "@lib/constants.ts";
 
 const throwError = (status: number, message: string): never => {
@@ -17,8 +17,6 @@ export const GuestService = {
       },
     });
   },
-
-  // ---------------- GET BY ID ----------------
   getGuestById: async (id: number) => {
     const guest = await prisma.guest.findUnique({
       where: { id },

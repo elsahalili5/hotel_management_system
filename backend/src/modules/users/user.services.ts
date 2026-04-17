@@ -77,7 +77,6 @@ export const UserService = {
     });
   },
 
-  // ---------------- CREATE STAFF ----------------
   createStaff: async (data: CreateStaffInput) => {
     const { first_name, last_name, email, password, role } = data;
 
@@ -94,7 +93,7 @@ export const UserService = {
     });
 
     if (!roleRecord) {
-      throwError(404, "Role not found");
+      return throwError(404, "Role not found");
     }
 
     const password_hash = await bcrypt.hash(password, SALT_ROUNDS);
@@ -170,7 +169,17 @@ export const UserService = {
 
     if (updateData.first_name) data.first_name = updateData.first_name;
     if (updateData.last_name) data.last_name = updateData.last_name;
-    if (updateData.email) data.email = updateData.email;
+    if (updateData.email) {
+      const emailTaken = await prisma.user.findUnique({
+        where: { email: updateData.email },
+      });
+
+      if (emailTaken && emailTaken.id !== userId) {
+        throwError(409, "Email already in use");
+      }
+
+      data.email = updateData.email;
+    }
 
     if (updateData.password) {
       data.password_hash = await bcrypt.hash(updateData.password, SALT_ROUNDS);

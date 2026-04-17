@@ -13,4 +13,8 @@ export interface AuthRequest extends Request {
   }>;
 }
 
-export type TypedRequestBody<T, P = {}> = Request<P, {}, T>;
+export type TypedRequest<
+  Body = unknown,
+  Params = Record<string, string>,
+  Query = unknown,
+> = Request<Params, any, Body, Query>;

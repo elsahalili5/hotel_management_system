@@ -4,8 +4,8 @@ if (!process.env.JWT_ACCESS_SECRET || !process.env.JWT_REFRESH_SECRET) {
   throw new Error("JWT secrets are missing in .env file");
 }
 
-const ACCESS_SECRET = process.env.JWT_ACCESS_SECRET;
-const REFRESH_SECRET = process.env.JWT_REFRESH_SECRET;
+export const ACCESS_SECRET = process.env.JWT_ACCESS_SECRET;
+export const REFRESH_SECRET = process.env.JWT_REFRESH_SECRET;
 
 export const generateAccessToken = (userId: number) => {
   return jwt.sign({ userId }, ACCESS_SECRET, { expiresIn: "15m" });

@@ -17,7 +17,6 @@ router.get(
   GuestController.getGuests,
 );
 
-// ADMIN + OWNER
 router.get(
   "/:id",
   authMiddleware,
@@ -25,7 +24,7 @@ router.get(
   validateRequestMiddleware(guestIdParamSchema, "params"),
   GuestController.getGuestById,
 );
-// admin+guest
+
 router.put(
   "/:id",
   authMiddleware,

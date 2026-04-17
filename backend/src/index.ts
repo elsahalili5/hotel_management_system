@@ -9,7 +9,6 @@ import authRoutes from "@modules/auth/auth.routes.ts";
 import userRoutes from "./modules/users/user.routes.ts";
 import guestRoutes from "./modules/guest/guest.routes.ts";
 import staffRoutes from "./modules/staff/staff.routes.ts";
-
 import amenityRoutes from "@modules/rooms/amenity/amenity.routes.ts";
 import roomTypeRoutes from "@modules/rooms/roomType/roomType.routes.ts";
 import roomRoutes from "@modules/rooms/room/room.routes.ts";

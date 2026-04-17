@@ -6,7 +6,7 @@ import { validateRequestMiddleware } from "@shared/middleware/validateRequest.mi
 import { StaffController } from "@modules/staff/staff.controller.ts";
 import { ROLES } from "@lib/roles.ts";
 
-import { updateStaffSchema } from "./staff.schema.ts";
+import { updateStaffSchema, staffIdParamSchema } from "./staff.schema.ts";
 
 const router = Router();
 
@@ -17,19 +17,19 @@ router.get(
   StaffController.getStaff,
 );
 
-// ADMIN + MANAGER
 router.get(
   "/:id",
   authMiddleware,
   roleMiddleware([ROLES.ADMIN, ROLES.MANAGER]),
+  validateRequestMiddleware(staffIdParamSchema, "params"),
   StaffController.getStaffById,
 );
 
-// ADMIN + MANAGER
 router.put(
   "/:id",
   authMiddleware,
-  roleMiddleware([ROLES.ADMIN, ROLES.MANAGER, ROLES.HOUSEKEEPING]),
+  roleMiddleware([ROLES.ADMIN, ROLES.MANAGER]),
+  validateRequestMiddleware(staffIdParamSchema, "params"),
   validateRequestMiddleware(updateStaffSchema),
   StaffController.updateStaff,
 );

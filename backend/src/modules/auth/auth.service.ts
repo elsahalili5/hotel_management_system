@@ -1,8 +1,17 @@
 import { prisma } from "@lib/prisma.ts";
 import bcrypt from "bcrypt";
 import { UserStatus } from "@generated/prisma/enums.ts";
-import { generateAccessToken, generateRefreshToken } from "@lib/jwt.ts";
-import { LoginUserInput, RegisterUserInput } from "./auth.types.ts";
+import {
+  generateAccessToken,
+  generateRefreshToken,
+  verifyRefreshToken,
+} from "@lib/jwt.ts";
+import {
+  LoginUserInput,
+  RegisterUserInput,
+  RefreshTokenInput,
+  LogoutInput,
+} from "./auth.types.ts";
 
 const SALT_ROUNDS = 10;
 const MAX_FAILED_ATTEMPTS = 5;
@@ -49,7 +58,7 @@ export const AuthService = {
         last_name: true,
         email: true,
         status: true,
-        user_roles: true,
+        user_roles: { include: { role: true } },
         guest_profile: true,
         created_at: true,
       },
@@ -74,7 +83,6 @@ export const AuthService = {
       throw { status: 401, message: "Invalid credentials" };
     }
 
-    // 🔒 INITIAL STATUS CHECK
     if (
       user.status === UserStatus.LOCKED ||
       user.status === UserStatus.DISABLED ||
@@ -82,7 +90,7 @@ export const AuthService = {
     ) {
       throw {
         status: 403,
-        message: `Account not allowed: ${user.status}`,
+        message: "Account access denied",
       };
     }
 
@@ -150,8 +158,77 @@ export const AuthService = {
       refreshToken,
     };
   },
+  refreshAccessToken: async (data: RefreshTokenInput) => {
+    const { refreshToken } = data;
 
-  logoutUser: async (refreshToken: string) => {
+    let decoded: { userId: number };
+
+    try {
+      decoded = verifyRefreshToken(refreshToken);
+    } catch {
+      throw { status: 401, message: "Invalid refresh token" };
+    }
+
+    const storedToken = await prisma.refreshTokens.findUnique({
+      where: { token: refreshToken },
+    });
+
+    if (!storedToken) {
+      throw { status: 401, message: "Invalid refresh token" };
+    }
+
+    if (storedToken.revoked) {
+      throw { status: 401, message: "Token revoked" };
+    }
+
+    if (storedToken.expires < new Date()) {
+      throw { status: 401, message: "Refresh token expired" };
+    }
+
+    const user = await prisma.user.findUnique({
+      where: { id: decoded.userId },
+    });
+
+    if (!user) {
+      throw { status: 401, message: "User not found" };
+    }
+
+    if (
+      user.status === UserStatus.LOCKED ||
+      user.status === UserStatus.DISABLED ||
+      user.status === UserStatus.PENDING
+    ) {
+      throw {
+        status: 403,
+        message: "Account not allowed to refresh token",
+      };
+    }
+
+    const newAccessToken = generateAccessToken(user.id);
+    const newRefreshToken = generateRefreshToken(user.id);
+
+    await prisma.refreshTokens.update({
+      where: { token: refreshToken },
+      data: { revoked: true },
+    });
+
+    await prisma.refreshTokens.create({
+      data: {
+        user_id: user.id,
+        token: newRefreshToken,
+        expires: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000),
+        revoked: false,
+      },
+    });
+
+    return {
+      accessToken: newAccessToken,
+      refreshToken: newRefreshToken,
+    };
+  },
+
+  logoutUser: async (data: LogoutInput) => {
+    const { refreshToken } = data;
     const tokenRecord = await prisma.refreshTokens.findUnique({
       where: { token: refreshToken },
     });

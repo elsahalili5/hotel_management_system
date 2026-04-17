@@ -19,3 +19,11 @@ export const userLoginSchema = z.object({
     .min(8, "Password must be at least 8 characters")
     .max(72, "Password must be at most 72 characters"),
 });
+
+export const refreshTokenSchema = z.object({
+  refreshToken: z.string().trim().min(1, "Refresh token required"),
+});
+
+export const logoutSchema = z.object({
+  refreshToken: z.string().trim().min(10, "Invalid refresh token"),
+});

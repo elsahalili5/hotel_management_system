@@ -1,17 +1,18 @@
 import { prisma } from "@lib/prisma.ts";
 import { UpdateStaffInput } from "./staff.types";
+import { safeUserSelect } from "@lib/constants.ts";
 
 export const StaffService = {
   getAllStaff: async () => {
     return prisma.staff.findMany({
-      include: { user: true },
+      include: { user: { select: safeUserSelect } },
     });
   },
 
   getStaffById: async (id: number) => {
     const staff = await prisma.staff.findUnique({
       where: { id },
-      include: { user: true },
+      include: { user: { select: safeUserSelect } },
     });
 
     if (!staff) {
@@ -41,7 +42,7 @@ export const StaffService = {
     return prisma.staff.update({
       where: { id },
       data: cleanData,
-      include: { user: true },
+      include: { user: { select: safeUserSelect } },
     });
   },
 };
