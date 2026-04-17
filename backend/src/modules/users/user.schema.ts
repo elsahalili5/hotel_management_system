@@ -1,5 +1,6 @@
 import { z } from "zod";
 import { ROLES } from "@lib/roles";
+import { numericStringSchema } from "@lib/validations";
 
 export const createGuestSchema = z.object({
   first_name: z.string().trim().min(1),
@@ -32,6 +33,7 @@ export const updateUserSchema = z.object({
   email: z.email().trim().optional(),
   password: z.string().trim().min(8).max(72).optional(),
 });
+
 export const userIdParamSchema = z.object({
-  userId: z.coerce.number().int().positive(),
+  userId: numericStringSchema,
 });

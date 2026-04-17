@@ -51,11 +51,12 @@ export const UserController = {
   },
 
   getUserById: async (
-    req: AuthRequest & TypedRequest<unknown, UserIdParam>,
+    req: TypedRequest<unknown, UserIdParam>,
     res: Response,
   ) => {
     try {
-      const userId = req.params.userId as unknown as number;
+      const userId = Number(req.params.userId);
+
       const user = await UserService.getUserById(userId);
 
       return res.status(200).json(user);
@@ -71,24 +72,40 @@ export const UserController = {
     res: Response,
   ) => {
     try {
-      const userId = req.params.userId as unknown as number;
-      const user = await UserService.updateUser(userId, req.body);
+      const userId = Number(req.params.userId);
 
-      return res.status(200).json(user);
-    } catch (error: any) {
-      if (error.status) {
-        return res.status(error.status).json({ error: error.message });
+      if (isNaN(userId)) {
+        return res.status(400).json({ error: "Invalid userId" });
       }
-      return res.status(500).json({ error: "Failed to update user" });
+
+      const updatedUser = await UserService.updateUser(userId, req.body);
+
+      return res.status(200).json(updatedUser);
+    } catch (error: any) {
+      console.error(error);
+
+      return res.status(error.status || 500).json({
+        error: error.message || "Failed to update user",
+      });
     }
   },
 
-  deleteUser: async (req: AuthRequest, res: Response) => {
+  deleteUser: async (
+    req: TypedRequest<unknown, UserIdParam>,
+    res: Response,
+  ) => {
     try {
-      const userId = req.params.userId as unknown as number;
+      const userId = Number(req.params.userId);
+
+      if (isNaN(userId)) {
+        return res.status(400).json({ error: "Invalid userId" });
+      }
+
       await UserService.deleteUser(userId);
 
-      return res.status(204).send();
+      return res.status(200).json({
+        message: "User deleted successfully",
+      });
     } catch (error: any) {
       if (error.status) {
         return res.status(error.status).json({ error: error.message });

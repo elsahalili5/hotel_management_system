@@ -20,7 +20,7 @@ router.get(
 router.get(
   "/:id",
   authMiddleware,
-  roleMiddleware([ROLES.ADMIN, ROLES.GUEST]),
+  roleMiddleware([ROLES.ADMIN, ROLES.MANAGER, ROLES.RECEPTIONIST]),
   validateRequestMiddleware(guestIdParamSchema, "params"),
   GuestController.getGuestById,
 );

@@ -1,7 +1,8 @@
-import { Response, Request } from "express";
+import { Response } from "express";
 import { AuthRequest, TypedRequest } from "@lib/types.ts";
 import { GuestService } from "./guest.service.ts";
 import { UpdateGuestInput, GuestIdParam } from "./guest.types.ts";
+import { ROLES } from "@lib/roles.ts";
 
 export const GuestController = {
   getGuests: async (_req: AuthRequest, res: Response) => {
@@ -77,14 +78,23 @@ export const GuestController = {
         });
       }
 
-      const updatedGuest = await GuestService.updateGuestProfile(id, {
-        phone_number,
-        address,
-        city,
-        country,
-        passport_number,
-        date_of_birth: dob,
-      });
+      const requestingUser = (req as AuthRequest).user;
+      const isGuest = requestingUser?.user_roles?.some(
+        (ur) => ur.role?.name === ROLES.GUEST,
+      );
+
+      const updatedGuest = await GuestService.updateGuestProfile(
+        id,
+        {
+          phone_number,
+          address,
+          city,
+          country,
+          passport_number,
+          date_of_birth: dob,
+        },
+        isGuest ? requestingUser?.id : undefined,
+      );
 
       return res.status(200).json(updatedGuest);
     } catch (error: any) {

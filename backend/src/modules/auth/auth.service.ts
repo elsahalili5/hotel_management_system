@@ -113,22 +113,6 @@ export const AuthService = {
       throw { status: 401, message: "Invalid credentials" };
     }
 
-    const freshUser = await prisma.user.findUnique({
-      where: { id: user.id },
-    });
-
-    if (
-      !freshUser ||
-      freshUser.status === UserStatus.LOCKED ||
-      freshUser.status === UserStatus.DISABLED ||
-      freshUser.status === UserStatus.PENDING
-    ) {
-      throw {
-        status: 403,
-        message: "Account is not allowed to login",
-      };
-    }
-
     if (user.access_failed_count !== 0) {
       await prisma.user.update({
         where: { id: user.id },
@@ -150,10 +134,18 @@ export const AuthService = {
       },
     });
 
-    const { password_hash, ...safeUser } = user;
-
     return {
-      user: safeUser,
+      user: {
+        id: user.id,
+        first_name: user.first_name,
+        last_name: user.last_name,
+        email: user.email,
+        status: user.status,
+        email_confirmed: user.email_confirmed,
+        user_roles: user.user_roles,
+        guest_profile: user.guest_profile,
+        staff_profile: user.staff_profile,
+      },
       accessToken,
       refreshToken,
     };

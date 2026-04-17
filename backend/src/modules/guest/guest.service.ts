@@ -34,13 +34,21 @@ export const GuestService = {
     return guest;
   },
 
-  updateGuestProfile: async (id: number, data: UpdateGuestInput) => {
+  updateGuestProfile: async (
+    id: number,
+    data: UpdateGuestInput,
+    requestingUserId?: number,
+  ) => {
     const guest = await prisma.guest.findUnique({
       where: { id },
     });
 
     if (!guest) {
       throwError(404, "Guest not found");
+    }
+
+    if (requestingUserId !== undefined && guest!.user_id !== requestingUserId) {
+      throwError(403, "Forbidden: You can only update your own profile");
     }
 
     const cleanData = Object.fromEntries(

@@ -25,23 +25,22 @@ export const createRoomSchema = z.object({
     .int()
     .positive("Room type ID must be a positive number"),
 
-  status: z
-    .enum(RoomStatus)
-    .optional()
-    .default(RoomStatus.AVAILABLE),
+  status: z.enum(RoomStatus).optional().default(RoomStatus.AVAILABLE),
 });
 
 export const updateRoomStatusSchema = z.object({
   status: z.enum(RoomStatus),
 });
 
-export const updateRoomSchema = createRoomSchema.partial().refine(
-  (data) => 
-    data.room_number !== undefined || 
-    data.floor !== undefined || 
-    data.room_type_id !== undefined || 
-    data.status !== undefined,
-  {
-    message: "At least one field must be provided for update",
-  }
-);
+export const updateRoomSchema = createRoomSchema
+  .partial()
+  .refine(
+    (data) =>
+      data.room_number !== undefined ||
+      data.floor !== undefined ||
+      data.room_type_id !== undefined ||
+      data.status !== undefined,
+    {
+      message: "At least one field must be provided for update",
+    },
+  );

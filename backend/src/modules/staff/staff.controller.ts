@@ -2,7 +2,7 @@ import { Response } from "express";
 import { StaffService } from "./staff.service";
 import { AuthRequest, TypedRequest } from "@lib/types.ts";
 import { StaffIdParam, UpdateStaffInput } from "./staff.types";
-
+import { ROLES, RoleType } from "@lib/roles.ts";
 export const StaffController = {
   getStaff: async (req: AuthRequest, res: Response) => {
     try {
@@ -29,13 +29,44 @@ export const StaffController = {
       });
     }
   },
-
   updateStaff: async (
     req: TypedRequest<UpdateStaffInput, StaffIdParam>,
     res: Response,
   ) => {
     try {
       const id = Number(req.params.id);
+
+      if (isNaN(id)) {
+        return res.status(400).json({ error: "Invalid staff id" });
+      }
+
+      const currentUser = (req as AuthRequest).user;
+      if (!currentUser) {
+        return;
+      }
+      const staff = await StaffService.getStaffById(id);
+
+      // 🔥 normalize roles (type-safe)
+      const userRoles: RoleType[] =
+        currentUser?.user_roles?.map((ur) => ur.role?.name as RoleType) || [];
+
+      const isAdminOrManager =
+        userRoles.includes(ROLES.ADMIN) || userRoles.includes(ROLES.MANAGER);
+
+      const isSelf = staff.user_id === currentUser.id;
+      if (!isAdminOrManager && !isSelf) {
+        return res.status(403).json({
+          error: "You can only update your own staff profile",
+        });
+      }
+
+      // veq  admin/manager mun e ndrron is_active
+      if (!isAdminOrManager && req.body.is_active !== undefined) {
+        return res.status(403).json({
+          error: "You cannot change active status",
+        });
+      }
+
       const updatedStaff = await StaffService.updateStaffProfile(id, req.body);
 
       return res.status(200).json({

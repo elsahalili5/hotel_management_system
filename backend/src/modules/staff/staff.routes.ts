@@ -13,14 +13,14 @@ const router = Router();
 router.get(
   "/",
   authMiddleware,
-  roleMiddleware([ROLES.ADMIN, ROLES.MANAGER]),
+  roleMiddleware([ROLES.ADMIN, ROLES.MANAGER, ROLES.RECEPTIONIST]),
   StaffController.getStaff,
 );
 
 router.get(
   "/:id",
   authMiddleware,
-  roleMiddleware([ROLES.ADMIN, ROLES.MANAGER]),
+  roleMiddleware([ROLES.ADMIN, ROLES.MANAGER, ROLES.RECEPTIONIST]),
   validateRequestMiddleware(staffIdParamSchema, "params"),
   StaffController.getStaffById,
 );
@@ -28,7 +28,12 @@ router.get(
 router.put(
   "/:id",
   authMiddleware,
-  roleMiddleware([ROLES.ADMIN, ROLES.MANAGER]),
+  roleMiddleware([
+    ROLES.ADMIN,
+    ROLES.MANAGER,
+    ROLES.HOUSEKEEPING,
+    ROLES.RECEPTIONIST,
+  ]),
   validateRequestMiddleware(staffIdParamSchema, "params"),
   validateRequestMiddleware(updateStaffSchema),
   StaffController.updateStaff,
