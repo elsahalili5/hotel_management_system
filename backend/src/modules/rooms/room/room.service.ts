@@ -4,7 +4,6 @@ import {
   CreateRoomInput,
   UpdateRoomInput,
   UpdateRoomStatusInput,
-  RoomId,
 } from "./room.types.ts";
 import { roomSelect } from "@lib/constants.ts";
 
@@ -24,7 +23,7 @@ export const RoomService = {
     });
   },
 
-  getById: async (id: RoomId) => {
+  getById: async (id: number) => {
     const room = await prisma.room.findUnique({
       where: { id },
       select: roomSelect,
@@ -52,7 +51,7 @@ export const RoomService = {
     });
   },
 
-  update: async (id: RoomId, data: UpdateRoomInput) => {
+  update: async (id: number, data: UpdateRoomInput) => {
     await RoomService.getById(id);
 
     if (data.room_number) {
@@ -69,7 +68,7 @@ export const RoomService = {
     });
   },
 
-  updateStatus: async (id: RoomId, data: UpdateRoomStatusInput) => {
+  updateStatus: async (id: number, data: UpdateRoomStatusInput) => {
     await RoomService.getById(id);
 
     return await prisma.room.update({
@@ -79,7 +78,7 @@ export const RoomService = {
     });
   },
 
-  delete: async (id: RoomId) => {
+  delete: async (id: number) => {
     await RoomService.getById(id);
     await prisma.room.delete({ where: { id } });
   },

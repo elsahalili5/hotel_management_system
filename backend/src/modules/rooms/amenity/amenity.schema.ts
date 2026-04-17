@@ -1,4 +1,5 @@
 import { z } from "zod";
+import { numericStringSchema } from "@lib/validations";
 
 export const createAmenitySchema = z.object({
   name: z.string().trim().min(1, "Amenity name is required"),
@@ -15,8 +16,5 @@ export const updateAmenitySchema = z
   });
 
 export const amenityIdSchema = z.object({
-  id: z.coerce
-    .number({ message: "ID must be a valid number" })
-    .int()
-    .positive("ID must be a positive number"),
+  id: numericStringSchema,
 });

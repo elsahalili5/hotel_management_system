@@ -1,6 +1,6 @@
 import { Request, Response } from "express";
 import { RoomTypeService } from "./roomType.service.ts";
-import { CreateRoomTypeInput, UpdateRoomTypeInput } from "./roomType.types.ts";
+import { CreateRoomTypeInput, UpdateRoomTypeInput, RoomTypeIdParam } from "./roomType.types.ts";
 import { TypedRequest } from "@lib/types.ts";
 
 export const RoomTypeController = {
@@ -10,11 +10,12 @@ export const RoomTypeController = {
       const count = data.length;
       res.status(200).json({ count, data });
     } catch (error: any) {
+      if (error.status) return res.status(error.status).json({ error: error.message });
       res.status(500).json({ error: "Failed to fetch room types" });
     }
   },
 
-  getById: async (req: Request, res: Response) => {
+  getById: async (req: TypedRequest<unknown, RoomTypeIdParam>, res: Response) => {
     try {
       const id = Number(req.params.id);
       const data = await RoomTypeService.getById(id);
@@ -38,7 +39,7 @@ export const RoomTypeController = {
   },
 
   update: async (
-    req: TypedRequest<UpdateRoomTypeInput, { id: string }>,
+    req: TypedRequest<UpdateRoomTypeInput, RoomTypeIdParam>,
     res: Response,
   ) => {
     try {
@@ -52,7 +53,7 @@ export const RoomTypeController = {
     }
   },
 
-  delete: async (req: Request, res: Response) => {
+  delete: async (req: TypedRequest<unknown, RoomTypeIdParam>, res: Response) => {
     try {
       const id = Number(req.params.id);
       await RoomTypeService.delete(id);

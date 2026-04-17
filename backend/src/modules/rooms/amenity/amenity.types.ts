@@ -7,6 +7,6 @@ import {
 
 export type CreateAmenityInput = z.infer<typeof createAmenitySchema>;
 export type UpdateAmenityInput = z.infer<typeof updateAmenitySchema>;
-export type AmenityId = z.infer<typeof amenityIdSchema>["id"];
+export type AmenityIdParam = z.infer<typeof amenityIdSchema>;
 
 

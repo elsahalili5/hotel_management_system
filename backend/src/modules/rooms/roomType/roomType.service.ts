@@ -2,16 +2,13 @@ import { prisma } from "@lib/prisma.ts";
 import {
   CreateRoomTypeInput,
   UpdateRoomTypeInput,
-  RoomTypeId,
 } from "./roomType.types.ts";
-import { RoomTypeDefaultArgs } from "@generated/prisma/models.ts";
-
-const roomTypeInclude: RoomTypeDefaultArgs["include"] = {
+const roomTypeInclude = {
   amenities: { select: { amenity: true } },
   beds: { select: { bed: true, quantity: true } },
   images: true,
   _count: { select: { rooms: true } },
-};
+} as const;
 
 const ROOM_TYPE_ERRORS = {
   NOT_FOUND: { status: 404, message: "Room Type not found" },
@@ -37,7 +34,7 @@ export const RoomTypeService = {
     });
   },
 
-  getById: async (id: RoomTypeId) => {
+  getById: async (id: number) => {
     const roomType = await prisma.roomType.findUnique({
       where: { id },
       include: roomTypeInclude,
@@ -110,7 +107,7 @@ export const RoomTypeService = {
     });
   },
 
-  update: async (id: RoomTypeId, data: UpdateRoomTypeInput) => {
+  update: async (id: number, data: UpdateRoomTypeInput) => {
     const current = await RoomTypeService.getById(id);
 
     if (data.name && data.name !== current.name) {
@@ -128,7 +125,7 @@ export const RoomTypeService = {
         quantity: b.quantity,
       }));
 
-    if (data.beds || data.max_occupancy) {
+    if ((data.beds && data.beds.length > 0) || data.max_occupancy) {
       const bedDetails = await prisma.bed.findMany({
         where: { id: { in: finalBeds.map((b) => b.bed_id) } },
       });
@@ -195,7 +192,7 @@ export const RoomTypeService = {
     });
   },
 
-  delete: async (id: RoomTypeId) => {
+  delete: async (id: number) => {
     const roomType = await RoomTypeService.getById(id);
 
     if (roomType._count.rooms > 0) {

@@ -1,6 +1,6 @@
 import { Request, Response } from "express";
 import { AmenityService } from "./amenity.service.ts";
-import { CreateAmenityInput, UpdateAmenityInput } from "./amenity.types.ts";
+import { CreateAmenityInput, UpdateAmenityInput, AmenityIdParam } from "./amenity.types.ts";
 import { TypedRequest } from "@lib/types.ts";
 
 export const AmenityController = {
@@ -9,11 +9,12 @@ export const AmenityController = {
       const data = await AmenityService.getAll();
       res.status(200).json({ data });
     } catch (error: any) {
+      if (error.status) return res.status(error.status).json({ error: error.message });
       res.status(500).json({ error: "Failed to fetch amenities" });
     }
   },
 
-  getById: async (req: Request, res: Response) => {
+  getById: async (req: TypedRequest<unknown, AmenityIdParam>, res: Response) => {
     try {
       const id = Number(req.params.id);
       const data = await AmenityService.getById(id);
@@ -37,7 +38,7 @@ export const AmenityController = {
   },
 
   update: async (
-    req: TypedRequest<UpdateAmenityInput, { id: string }>,
+    req: TypedRequest<UpdateAmenityInput, AmenityIdParam>,
     res: Response,
   ) => {
     try {
@@ -51,7 +52,7 @@ export const AmenityController = {
     }
   },
 
-  delete: async (req: Request, res: Response) => {
+  delete: async (req: TypedRequest<unknown, AmenityIdParam>, res: Response) => {
     try {
       const id = Number(req.params.id);
       await AmenityService.delete(id);

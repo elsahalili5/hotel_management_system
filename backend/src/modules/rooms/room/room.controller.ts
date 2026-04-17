@@ -4,6 +4,7 @@ import {
   CreateRoomInput,
   UpdateRoomInput,
   UpdateRoomStatusInput,
+  RoomIdParam,
 } from "./room.types.ts";
 import { TypedRequest } from "@lib/types.ts";
 
@@ -13,11 +14,12 @@ export const RoomController = {
       const data = await RoomService.getAll();
       res.status(200).json({ data });
     } catch (error: any) {
+      if (error.status) return res.status(error.status).json({ error: error.message });
       res.status(500).json({ error: "Failed to fetch rooms" });
     }
   },
 
-  getById: async (req: Request, res: Response) => {
+  getById: async (req: TypedRequest<unknown, RoomIdParam>, res: Response) => {
     try {
       const id = Number(req.params.id);
       const data = await RoomService.getById(id);
@@ -41,7 +43,7 @@ export const RoomController = {
   },
 
   update: async (
-    req: TypedRequest<UpdateRoomInput, { id: string }>,
+    req: TypedRequest<UpdateRoomInput, RoomIdParam>,
     res: Response,
   ) => {
     try {
@@ -56,7 +58,7 @@ export const RoomController = {
   },
 
   updateStatus: async (
-    req: TypedRequest<UpdateRoomStatusInput, { id: string }>,
+    req: TypedRequest<UpdateRoomStatusInput, RoomIdParam>,
     res: Response,
   ) => {
     try {
@@ -72,7 +74,7 @@ export const RoomController = {
     }
   },
 
-  delete: async (req: Request, res: Response) => {
+  delete: async (req: TypedRequest<unknown, RoomIdParam>, res: Response) => {
     try {
       const id = Number(req.params.id);
       await RoomService.delete(id);
@@ -89,6 +91,7 @@ export const RoomController = {
       const data = await RoomService.getStats();
       res.status(200).json({ data });
     } catch (error: any) {
+      if (error.status) return res.status(error.status).json({ error: error.message });
       res.status(500).json({ error: "Failed to fetch room stats" });
     }
   },
