@@ -27,6 +27,7 @@ const iconBase =
 interface ButtonProps {
   children: ReactNode
   className?: string
+  color?: string
   variant?: 'primary' | 'outline' | 'ghost'
   endIcon?: ReactNode
   startIcon?: ReactNode
@@ -39,17 +40,18 @@ export function Button({
   children,
   onClick,
   className = '',
+  color,
   variant = 'primary',
   endIcon,
   startIcon,
   isIcon = false,
   'aria-label': ariaLabel,
 }: ButtonProps) {
-  const style = variants[variant]
+  const variantStyle = variants[variant]
   const cls = isIcon ? `${iconBase} ${className}` : `${base} ${className}`
 
   return (
-    <button onClick={onClick} className={cls} style={style} aria-label={ariaLabel}>
+    <button onClick={onClick} className={cls} style={{ ...variantStyle, ...(color && { color }) }} aria-label={ariaLabel}>
       {!isIcon && startIcon}
       {children}
       {!isIcon && endIcon}

@@ -4,6 +4,7 @@ import { TextSection } from '../components/TextSection'
 import { SplitSection } from '../components/SplitSection'
 import { useState } from 'react'
 import { AccordionItem } from '../components/AccordionItem'
+import { CallToAction } from '../components/CallToAction'
 import { ArrowRight } from 'lucide-react'
 
 const faqs = [
@@ -83,7 +84,13 @@ function App() {
         buttonEndIcon={<ArrowRight size={20}/>}
       />
 
-      
+      <CallToAction
+              kicker="Reserve Your Stay"
+              title="Ready to Experience Mansio?"
+              description="Our team is here to ensure every detail of your stay exceeds your expectations."
+              buttonLabel="Book Now"
+              buttonTo="/rooms"
+            />
       <div className="w-full px-4 md:px-10 py-16 md:py-32">
         <h2 className="font-serif md:text-5xl mb-10 text-4xl text-center text-mansio-espresso">
           Frequently Asked Questions
