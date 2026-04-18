@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import { Link } from '@tanstack/react-router'
-import { ArrowRight, Menu, X } from 'lucide-react'
+import { ArrowRight, Menu, X, UserCircle } from 'lucide-react'
 import { Logo } from './Logo'
 import { Container } from './Container'
 import { Button } from './Button'
@@ -45,6 +45,11 @@ export default function Header() {
             <div className="ml-auto flex items-center gap-3">
               <Link to="/contact" className="hidden lg:inline-flex no-underline">
                 <Button endIcon={<ArrowRight size={16} />}>BOOK NOW</Button>
+              </Link>
+              <Link to="/profile" className="hidden lg:inline-flex no-underline">
+                <Button isIcon variant="ghost" aria-label="Profile">
+                  <UserCircle size={22} />
+                </Button>
               </Link>
 
               <Button

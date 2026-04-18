@@ -41,6 +41,7 @@ export interface FormSectionProps {
   onSubmit?: (values: Record<string, string>) => Promise<void> | void
   background?: 'cream' | 'white' | 'ivory'
   card?: boolean
+  inline?: boolean
   footer?: ReactNode
 }
 
@@ -61,6 +62,7 @@ export function FormSection({
   onSubmit,
   background = 'cream',
   card = false,
+  inline = false,
   footer,
 }: FormSectionProps) {
   const [values, setValues] = useState<Record<string, string>>(() =>
@@ -169,6 +171,15 @@ export function FormSection({
       )}
     </>
   )
+
+  if (inline) {
+    return (
+      <>
+        {inner}
+        {footer}
+      </>
+    )
+  }
 
   if (card) {
     return (
