@@ -27,7 +27,6 @@ export const AuthController = {
       return res.status(500).json({ error: "Registration failed" });
     }
   },
-
   loginUser: async (req: TypedRequest<LoginUserInput>, res: Response) => {
     try {
       const result = await AuthService.loginUser(req.body);
@@ -39,14 +38,12 @@ export const AuthController = {
     } catch (error: any) {
       console.error(error);
 
-      if (error.status) {
-        return res.status(error.status).json({ error: error.message });
-      }
+      const status = error?.status || 500;
+      const message = error?.message || "Login failed";
 
-      return res.status(500).json({ error: "Login failed" });
+      return res.status(status).json({ error: message });
     }
   },
-
   refreshToken: async (req: TypedRequest<RefreshTokenInput>, res: Response) => {
     try {
       const result = await AuthService.refreshAccessToken(req.body);

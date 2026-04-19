@@ -74,19 +74,14 @@ export const UserController = {
     try {
       const userId = Number(req.params.userId);
 
-      if (isNaN(userId)) {
-        return res.status(400).json({ error: "Invalid userId" });
-      }
-
       const updatedUser = await UserService.updateUser(userId, req.body);
 
       return res.status(200).json(updatedUser);
     } catch (error: any) {
-      console.error(error);
-
-      return res.status(error.status || 500).json({
-        error: error.message || "Failed to update user",
-      });
+      if (error.status) {
+        return res.status(error.status).json({ error: error.message });
+      }
+      return res.status(500).json({ error: "Failed to update user" });
     }
   },
 
@@ -96,10 +91,6 @@ export const UserController = {
   ) => {
     try {
       const userId = Number(req.params.userId);
-
-      if (isNaN(userId)) {
-        return res.status(400).json({ error: "Invalid userId" });
-      }
 
       await UserService.deleteUser(userId);
 

@@ -1,4 +1,4 @@
-import { Outlet, createRootRoute } from '@tanstack/react-router'
+import { Outlet, createRootRoute, useLocation } from '@tanstack/react-router'
 import Header from '../components/Header'
 import Footer from '../components/Footer'
 
@@ -9,11 +9,16 @@ export const Route = createRootRoute({
 })
 
 function RootComponent() {
+  const location = useLocation()
+  const hideLayout = ['/login', '/signup', '/dashboard'].includes(
+    location.pathname,
+  )
+
   return (
     <>
-      <Header />
+      {!hideLayout && <Header />}
       <Outlet />
-      <Footer/>
+      {!hideLayout && <Footer />}
     </>
   )
 }

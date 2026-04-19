@@ -3,12 +3,11 @@ import jwt from "jsonwebtoken";
 import { prisma } from "@lib/prisma.ts";
 import { UserStatus } from "@generated/prisma/enums.ts";
 import { AuthRequest } from "@lib/types.ts";
+import { ACCESS_SECRET } from "@lib/jwt.ts";
 
 if (!process.env.JWT_ACCESS_SECRET) {
   throw new Error("JWT_ACCESS_SECRET is missing in .env file");
 }
-
-const ACCESS_SECRET = process.env.JWT_ACCESS_SECRET;
 
 export const authMiddleware = async (
   req: AuthRequest,

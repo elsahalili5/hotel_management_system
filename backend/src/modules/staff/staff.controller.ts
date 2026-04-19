@@ -35,18 +35,12 @@ export const StaffController = {
   ) => {
     try {
       const id = Number(req.params.id);
-
-      if (isNaN(id)) {
-        return res.status(400).json({ error: "Invalid staff id" });
-      }
-
       const currentUser = (req as AuthRequest).user;
       if (!currentUser) {
-        return;
+        return res.status(401).json({ error: "Unauthorized" });
       }
       const staff = await StaffService.getStaffById(id);
 
-      // 🔥 normalize roles (type-safe)
       const userRoles: RoleType[] =
         currentUser?.user_roles?.map((ur) => ur.role?.name as RoleType) || [];
 

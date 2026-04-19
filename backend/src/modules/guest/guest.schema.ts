@@ -5,11 +5,15 @@ export const guestIdParamSchema = z.object({
   id: numericStringSchema,
 });
 
-export const updateGuestSchema = z.object({
-  phone_number: z.string().trim().optional(),
-  address: z.string().trim().optional(),
-  city: z.string().trim().optional(),
-  country: z.string().trim().optional(),
-  passport_number: z.string().trim().optional(),
-  date_of_birth: z.coerce.date().optional(),
-});
+export const updateGuestSchema = z
+  .object({
+    phone_number: z.string().trim().optional(),
+    address: z.string().trim().optional(),
+    city: z.string().trim().optional(),
+    country: z.string().trim().optional(),
+    passport_number: z.string().trim().optional(),
+    date_of_birth: z.coerce.date().optional(),
+  })
+  .refine((data) => Object.values(data).some((v) => v !== undefined), {
+    message: "No fields provided to update",
+  });

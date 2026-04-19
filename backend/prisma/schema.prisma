@@ -42,6 +42,7 @@ model User {
 
   lockout_enabled     Boolean    @default(true)
   access_failed_count Int        @default(0)
+  locked_until        DateTime?
   email_confirmed     Boolean    @default(false)
 
   created_at          DateTime   @default(now())

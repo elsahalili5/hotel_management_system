@@ -2,6 +2,7 @@ import { Response, NextFunction } from "express";
 import { AuthRequest } from "@lib/types";
 
 export const roleMiddleware = (roles: string[]) => {
+  //  pra e prnaonn ni rolee kthen ni middleware function qe e merr request, response dhe next
   return (req: AuthRequest, res: Response, next: NextFunction) => {
     if (!req.user) {
       return res.status(401).json({

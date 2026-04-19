@@ -12,9 +12,12 @@ import {
   RefreshTokenInput,
   LogoutInput,
 } from "./auth.types.ts";
+import { safeUserSelect } from "@lib/constants.ts";
 
 const SALT_ROUNDS = 10;
+// dmth nr i perseritjeve te hashimit te passwordit, sa me i larte aq me i sigurt eshte passwordi, por edhe me shume kohe merr per tu hash-uar
 const MAX_FAILED_ATTEMPTS = 5;
+const LOCKOUT_DURATION_MS = 15 * 60 * 1000; // 15 minuta
 
 export const AuthService = {
   registerUser: async (data: RegisterUserInput) => {
@@ -35,7 +38,7 @@ export const AuthService = {
     if (!guestRole) {
       throw { status: 500, message: "Guest role not found" };
     }
-
+    // salt round tregon dmth sa her e forcon paswordin
     const password_hash = await bcrypt.hash(password, SALT_ROUNDS);
 
     const user = await prisma.user.create({
@@ -53,12 +56,7 @@ export const AuthService = {
         },
       },
       select: {
-        id: true,
-        first_name: true,
-        last_name: true,
-        email: true,
-        status: true,
-        user_roles: { include: { role: true } },
+        ...safeUserSelect,
         guest_profile: true,
         created_at: true,
       },
@@ -83,8 +81,30 @@ export const AuthService = {
       throw { status: 401, message: "Invalid credentials" };
     }
 
+    if (user.status === UserStatus.LOCKED) {
+      if (user.locked_until && user.locked_until <= new Date()) {
+        await prisma.user.update({
+          where: { id: user.id },
+          data: {
+            status: UserStatus.ACTIVE,
+            access_failed_count: 0,
+            locked_until: null,
+          },
+        });
+        user.status = UserStatus.ACTIVE;
+        user.access_failed_count = 0;
+        user.locked_until = null;
+      } else {
+        throw {
+          status: 403,
+          message: user.locked_until
+            ? `Account locked until ${user.locked_until.toISOString()}`
+            : "Account access denied",
+        };
+      }
+    }
+
     if (
-      user.status === UserStatus.LOCKED ||
       user.status === UserStatus.DISABLED ||
       user.status === UserStatus.PENDING
     ) {
@@ -95,19 +115,30 @@ export const AuthService = {
     }
 
     const isMatch = await bcrypt.compare(password, user.password_hash);
-
     if (!isMatch) {
       if (user.lockout_enabled) {
         const newCount = user.access_failed_count + 1;
 
-        await prisma.user.update({
+        const isLocking = newCount >= MAX_FAILED_ATTEMPTS;
+        const lockedUntil = isLocking
+          ? new Date(Date.now() + LOCKOUT_DURATION_MS)
+          : undefined;
+
+        const updatedUser = await prisma.user.update({
           where: { id: user.id },
           data: {
             access_failed_count: newCount,
-            status:
-              newCount >= MAX_FAILED_ATTEMPTS ? UserStatus.LOCKED : user.status,
+            status: isLocking ? UserStatus.LOCKED : user.status,
+            locked_until: lockedUntil,
           },
         });
+
+        if (updatedUser.status === UserStatus.LOCKED) {
+          throw {
+            status: 403,
+            message: `Account locked until ${updatedUser.locked_until!.toISOString()}`,
+          };
+        }
       }
 
       throw { status: 401, message: "Invalid credentials" };

@@ -1,0 +1,1068 @@
+<!DOCTYPE html>
+<html lang="sq">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Mansio — Prezantim Arkitekturor</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Raleway:wght@300;400;600;700;800&display=swap');
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --cream:    #f7f2ea;
+      --ivory:    #ede5d4;
+      --linen:    #d4c4a8;
+      --taupe:    #9c8d7a;
+      --mocha:    #6b5744;
+      --espresso: #3a2718;
+      --ink:      #241508;
+      --gold:     #c4a882;
+      --white:    #ffffff;
+      --green:    #4a7c59;
+      --blue:     #2d5986;
+      --red:      #8b3a3a;
+    }
+
+    html, body {
+      width: 100%; height: 100%; overflow: hidden;
+      font-family: 'Raleway', sans-serif;
+      background: var(--espresso);
+    }
+
+    /* ── SLIDE CONTAINER ── */
+    .deck {
+      width: 100vw; height: 100vh;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .slide {
+      position: absolute; inset: 0;
+      display: flex; flex-direction: column; justify-content: center; align-items: center;
+      padding: 48px 64px;
+      opacity: 0; transform: translateX(60px);
+      transition: opacity .45s ease, transform .45s ease;
+      pointer-events: none;
+    }
+    .slide.active {
+      opacity: 1; transform: translateX(0);
+      pointer-events: all;
+    }
+    .slide.exit {
+      opacity: 0; transform: translateX(-60px);
+    }
+
+    /* ── BACKGROUNDS ── */
+    .bg-cream    { background: var(--cream); }
+    .bg-ivory    { background: var(--ivory); }
+    .bg-espresso { background: var(--espresso); }
+    .bg-dark     { background: var(--ink); }
+    .bg-gold     { background: linear-gradient(135deg, var(--mocha) 0%, var(--espresso) 100%); }
+    .bg-cover    {
+      background-image: linear-gradient(135deg, rgba(36,21,8,.92) 0%, rgba(58,39,24,.88) 100%),
+        repeating-linear-gradient(45deg, rgba(196,168,130,.04) 0px, rgba(196,168,130,.04) 1px, transparent 1px, transparent 12px);
+    }
+
+    /* ── TYPOGRAPHY ── */
+    h1 { font-size: clamp(2rem, 4vw, 3.2rem); font-weight: 800; line-height: 1.1; }
+    h2 { font-size: clamp(1.5rem, 3vw, 2.4rem); font-weight: 700; line-height: 1.2; }
+    h3 { font-size: clamp(1.1rem, 2vw, 1.5rem); font-weight: 600; }
+    p, li { font-size: clamp(.85rem, 1.5vw, 1.05rem); line-height: 1.65; font-weight: 400; }
+    .kicker {
+      text-transform: uppercase; letter-spacing: .18em; font-size: .75rem; font-weight: 700;
+    }
+    .gold { color: var(--gold); }
+    .light { color: var(--cream); }
+    .muted { color: var(--taupe); }
+    .ink   { color: var(--ink); }
+    .espresso { color: var(--espresso); }
+
+    /* ── LAYOUT HELPERS ── */
+    .center { text-align: center; }
+    .cols   { display: grid; gap: 40px; width: 100%; }
+    .cols-2 { grid-template-columns: 1fr 1fr; }
+    .cols-3 { grid-template-columns: 1fr 1fr 1fr; }
+    .cols-2-1 { grid-template-columns: 2fr 1fr; }
+    .full-width { width: 100%; max-width: 1100px; }
+    .mt { margin-top: 24px; }
+    .mb { margin-bottom: 16px; }
+    .gap { gap: 12px; display: flex; flex-direction: column; }
+
+    /* ── CARD ── */
+    .card {
+      background: rgba(255,255,255,.07);
+      border: 1px solid rgba(196,168,130,.2);
+      border-radius: 12px; padding: 24px 28px;
+    }
+    .card-light {
+      background: var(--white);
+      border: 1px solid var(--linen);
+      border-radius: 12px; padding: 22px 26px;
+      box-shadow: 0 2px 12px rgba(36,21,8,.08);
+    }
+    .card-gold {
+      background: rgba(196,168,130,.12);
+      border: 1.5px solid var(--gold);
+      border-radius: 12px; padding: 20px 24px;
+    }
+
+    /* ── BADGE / CHIP ── */
+    .badge {
+      display: inline-flex; align-items: center; gap: 6px;
+      padding: 4px 12px; border-radius: 999px; font-size: .72rem; font-weight: 700;
+      text-transform: uppercase; letter-spacing: .08em;
+    }
+    .badge-gold   { background: rgba(196,168,130,.2); color: var(--gold); border: 1px solid var(--gold); }
+    .badge-green  { background: rgba(74,124,89,.2); color: #7ec897; border: 1px solid #4a7c59; }
+    .badge-blue   { background: rgba(45,89,134,.2); color: #7db3e8; border: 1px solid #2d5986; }
+    .badge-red    { background: rgba(139,58,58,.2); color: #e88a8a; border: 1px solid #8b3a3a; }
+    .badge-cream  { background: rgba(247,242,234,.12); color: var(--cream); border: 1px solid rgba(247,242,234,.3); }
+
+    /* ── TABLE ── */
+    table { width: 100%; border-collapse: collapse; font-size: .82rem; }
+    th { background: rgba(196,168,130,.15); color: var(--gold); text-align: left; padding: 10px 14px; font-weight: 700; text-transform: uppercase; letter-spacing: .07em; font-size: .72rem; }
+    td { padding: 9px 14px; color: var(--cream); border-bottom: 1px solid rgba(196,168,130,.1); }
+    tr:last-child td { border-bottom: none; }
+    .tbl-light th { background: var(--ivory); color: var(--espresso); }
+    .tbl-light td { color: var(--ink); border-bottom: 1px solid var(--linen); }
+
+    /* ── CODE ── */
+    code {
+      font-family: 'JetBrains Mono', 'Fira Code', 'Courier New', monospace;
+      background: rgba(196,168,130,.12); color: var(--gold);
+      padding: 2px 7px; border-radius: 4px; font-size: .82em;
+    }
+    .codeblock {
+      background: #1a0f06; border: 1px solid rgba(196,168,130,.2);
+      border-radius: 10px; padding: 18px 22px;
+      font-family: 'JetBrains Mono', 'Fira Code', monospace;
+      font-size: .78rem; color: var(--cream); line-height: 1.7;
+      white-space: pre;
+    }
+    .c-gold  { color: var(--gold); }
+    .c-green { color: #7ec897; }
+    .c-blue  { color: #7db3e8; }
+    .c-red   { color: #e88a8a; }
+    .c-gray  { color: var(--taupe); }
+
+    /* ── PIPELINE ── */
+    .pipeline {
+      display: flex; align-items: center; gap: 10px;
+      flex-wrap: wrap; justify-content: center;
+    }
+    .pipe-step {
+      background: rgba(196,168,130,.1); border: 1.5px solid var(--gold);
+      border-radius: 8px; padding: 10px 18px; color: var(--cream);
+      font-size: .8rem; font-weight: 600; text-align: center;
+    }
+    .pipe-arrow { color: var(--gold); font-size: 1.2rem; font-weight: 700; }
+
+    /* ── ERD NODE ── */
+    .erd {
+      display: grid; grid-template-columns: repeat(4, 1fr); gap: 14px;
+      width: 100%;
+    }
+    .erd-node {
+      background: #1a0f06; border: 1.5px solid rgba(196,168,130,.3);
+      border-radius: 10px; padding: 14px 16px;
+    }
+    .erd-node.primary { border-color: var(--gold); }
+    .erd-title { color: var(--gold); font-weight: 700; font-size: .82rem; text-transform: uppercase; letter-spacing: .06em; margin-bottom: 8px; }
+    .erd-field { color: var(--cream); font-size: .72rem; line-height: 1.6; font-family: monospace; }
+    .erd-field span { color: var(--taupe); }
+
+    /* ── PROGRESS / TIMELINE ── */
+    .timeline { display: flex; flex-direction: column; gap: 0; width: 100%; }
+    .tl-item  { display: flex; gap: 20px; align-items: flex-start; }
+    .tl-dot   { width: 14px; height: 14px; border-radius: 50%; margin-top: 4px; flex-shrink: 0; }
+    .tl-line  { width: 2px; background: rgba(196,168,130,.2); margin: 4px 0 4px 6px; height: 30px; }
+    .tl-done  { background: var(--green); box-shadow: 0 0 8px #4a7c59; }
+    .tl-wip   { background: var(--gold); box-shadow: 0 0 8px var(--gold); }
+    .tl-todo  { background: var(--taupe); }
+
+    /* ── PROGRESS BAR ── */
+    .prog-bar { background: rgba(196,168,130,.1); border-radius: 999px; height: 8px; overflow: hidden; }
+    .prog-fill { height: 100%; border-radius: 999px; background: linear-gradient(90deg, var(--mocha), var(--gold)); }
+
+    /* ── NAV ── */
+    #nav {
+      position: fixed; bottom: 28px; left: 50%; transform: translateX(-50%);
+      display: flex; align-items: center; gap: 12px; z-index: 100;
+      background: rgba(36,21,8,.75); backdrop-filter: blur(12px);
+      border: 1px solid rgba(196,168,130,.25); border-radius: 999px;
+      padding: 10px 20px;
+    }
+    #nav button {
+      background: none; border: none; cursor: pointer; color: var(--gold);
+      font-size: 1.1rem; padding: 4px 10px; border-radius: 6px;
+      transition: background .2s;
+    }
+    #nav button:hover { background: rgba(196,168,130,.15); }
+    #nav button:disabled { color: var(--taupe); cursor: default; }
+    #slide-counter { color: var(--linen); font-size: .78rem; font-weight: 600; min-width: 60px; text-align: center; }
+
+    /* ── SEPARATOR ── */
+    .sep { width: 60px; height: 3px; background: var(--gold); border-radius: 2px; margin: 16px auto; }
+    .sep-left { margin: 16px 0; }
+
+    /* ── LIST ── */
+    ul.styled { list-style: none; }
+    ul.styled li::before { content: "▸"; color: var(--gold); margin-right: 10px; }
+    ul.styled li { color: var(--cream); margin-bottom: 8px; }
+    ul.styled.dark li { color: var(--ink); }
+    ul.styled.dark li::before { color: var(--mocha); }
+
+    /* ── STAT ── */
+    .stat-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; width: 100%; }
+    .stat-box { text-align: center; padding: 20px 12px; }
+    .stat-num { font-size: clamp(1.8rem, 3vw, 2.8rem); font-weight: 800; color: var(--gold); }
+    .stat-lbl { font-size: .75rem; color: var(--taupe); text-transform: uppercase; letter-spacing: .1em; margin-top: 4px; }
+
+    /* ── RESPONSIVE ── */
+    @media (max-width: 900px) {
+      .cols-2, .cols-3, .cols-2-1 { grid-template-columns: 1fr; }
+      .erd { grid-template-columns: repeat(2, 1fr); }
+      .stat-grid { grid-template-columns: repeat(2, 1fr); }
+    }
+  </style>
+</head>
+<body>
+
+<div class="deck" id="deck">
+
+  <!-- ═══════════════════════════════════════════════════════ SLIDE 1 — COVER -->
+  <div class="slide bg-cover active" id="s1">
+    <div class="center" style="max-width:700px">
+      <p class="kicker gold" style="margin-bottom:16px">Sistemi i Menaxhimit të Hotelit</p>
+      <h1 class="light" style="font-size:clamp(2.4rem,5vw,4rem);margin-bottom:8px">Mansio</h1>
+      <p class="gold" style="font-size:1.1rem;font-weight:300;letter-spacing:.08em;margin-bottom:32px">Full-Stack Hotel Management System</p>
+      <div class="sep"></div>
+      <div style="display:flex;gap:12px;justify-content:center;flex-wrap:wrap;margin-top:28px">
+        <span class="badge badge-gold">Node.js + Express 5</span>
+        <span class="badge badge-blue">React 19</span>
+        <span class="badge badge-green">Prisma + MariaDB</span>
+        <span class="badge badge-cream">TypeScript</span>
+        <span class="badge badge-gold">JWT Auth</span>
+      </div>
+      <p class="muted" style="margin-top:40px;font-size:.8rem">Navigim: ← → ose butonat poshtë &nbsp;|&nbsp; Shtypni F11 për full-screen</p>
+    </div>
+  </div>
+
+  <!-- ═══════════════════════════════════════════════════════ SLIDE 2 — AGENDA -->
+  <div class="slide bg-ivory">
+    <div class="full-width">
+      <p class="kicker muted mb">Ç'do të shohim sot</p>
+      <h2 class="espresso">Agjenda</h2>
+      <div class="sep-left" style="background:var(--mocha)"></div>
+      <div class="cols cols-2 mt">
+        <div class="gap">
+          <div class="card-light">
+            <p class="kicker" style="color:var(--mocha)">01 — Pamje e Përgjithshme</p>
+            <p class="ink mt" style="margin-top:8px">Çfarë është Mansio dhe çfarë problemesh zgjidh</p>
+          </div>
+          <div class="card-light">
+            <p class="kicker" style="color:var(--mocha)">02 — Tech Stack</p>
+            <p class="ink mt" style="margin-top:8px">Teknologjitë e zgjedhura dhe arsyet</p>
+          </div>
+          <div class="card-light">
+            <p class="kicker" style="color:var(--mocha)">03 — Struktura e Projektit</p>
+            <p class="ink mt" style="margin-top:8px">Monorepo, modulet, konventat</p>
+          </div>
+          <div class="card-light">
+            <p class="kicker" style="color:var(--mocha)">04 — Skema e Bazës (Prisma)</p>
+            <p class="ink mt" style="margin-top:8px">Modelet, relacionet, enums</p>
+          </div>
+        </div>
+        <div class="gap">
+          <div class="card-light">
+            <p class="kicker" style="color:var(--mocha)">05 — Sistemi i Autentikimit</p>
+            <p class="ink mt" style="margin-top:8px">JWT, refresh tokens, account lockout</p>
+          </div>
+          <div class="card-light">
+            <p class="kicker" style="color:var(--mocha)">06 — Modulet Kryesore</p>
+            <p class="ink mt" style="margin-top:8px">Users, Guests, Staff, Rooms</p>
+          </div>
+          <div class="card-light">
+            <p class="kicker" style="color:var(--mocha)">07 — Middleware & Siguria</p>
+            <p class="ink mt" style="margin-top:8px">Auth, Role, Validation pipeline</p>
+          </div>
+          <div class="card-light">
+            <p class="kicker" style="color:var(--mocha)">08 — Frontend & Gjendja Aktuale</p>
+            <p class="ink mt" style="margin-top:8px">React, TanStack Router, Dashboard</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══════════════════════════════════════════════════════ SLIDE 3 — OVERVIEW -->
+  <div class="slide bg-espresso">
+    <div class="full-width">
+      <p class="kicker gold mb">01 — Pamje e Përgjithshme</p>
+      <h2 class="light">Çfarë është Mansio?</h2>
+      <div class="sep-left"></div>
+      <div class="cols cols-2 mt">
+        <div class="gap">
+          <p class="light" style="font-size:1.05rem;line-height:1.8">
+            Mansio është një <strong class="gold">sistem i plotë menaxhimi hoteli</strong> i ndërtuar si aplikacion web full-stack. Sistemi lejon:
+          </p>
+          <ul class="styled">
+            <li>Menaxhimin e stafit dhe mysafirëve</li>
+            <li>Kontrollin e dhomave dhe llojeve të dhomave</li>
+            <li>Sistemin e rezervimeve (në zhvillim)</li>
+            <li>Dashboard administrativ me statistika</li>
+            <li>Kontroll të aksesit bazuar në role (RBAC)</li>
+          </ul>
+        </div>
+        <div class="gap">
+          <div class="card-gold">
+            <p class="kicker gold mb">Rolet e Sistemit</p>
+            <ul class="styled">
+              <li><strong class="gold">ADMIN</strong> — Akses i plotë</li>
+              <li><strong style="color:#7db3e8">MANAGER</strong> — Menaxhim operacional</li>
+              <li><strong style="color:#7ec897">RECEPTIONIST</strong> — Check-in/out, mysafirë</li>
+              <li><strong style="color:#e8c87d">HOUSEKEEPING</strong> — Statusi i dhomave</li>
+              <li><strong style="color:#e88a8a">GUEST</strong> — Profili personal</li>
+            </ul>
+          </div>
+          <div class="card" style="border-color:rgba(126,200,151,.3)">
+            <p class="kicker" style="color:#7ec897;margin-bottom:8px">Arkitektura</p>
+            <p class="light" style="font-size:.85rem">
+              <strong class="gold">Monorepo</strong> me <code>backend/</code> dhe <code>frontend/</code> si paketa të pavarura. Backend REST API + Frontend SPA të ndarë komplet.
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══════════════════════════════════════════════════════ SLIDE 4 — TECH STACK -->
+  <div class="slide bg-cream">
+    <div class="full-width">
+      <p class="kicker muted mb">02 — Tech Stack</p>
+      <h2 class="espresso">Teknologjitë e Zgjedhura</h2>
+      <div class="sep-left" style="background:var(--mocha)"></div>
+      <div class="cols cols-2 mt">
+        <div>
+          <p class="kicker" style="color:var(--mocha);margin-bottom:12px">Backend</p>
+          <table class="tbl-light">
+            <tr><th>Qëllimi</th><th>Teknologjia</th></tr>
+            <tr><td>Runtime</td><td><strong>Node.js</strong> (ESM modules)</td></tr>
+            <tr><td>Framework</td><td><strong>Express 5.x</strong></td></tr>
+            <tr><td>Gjuha</td><td><strong>TypeScript 5.3</strong> + tsx</td></tr>
+            <tr><td>ORM</td><td><strong>Prisma 7.x</strong></td></tr>
+            <tr><td>Baza e të dhënave</td><td><strong>MariaDB / MySQL</strong></td></tr>
+            <tr><td>Autentikimi</td><td><strong>JWT</strong> (jsonwebtoken)</td></tr>
+            <tr><td>Hash fjalëkalimi</td><td><strong>bcrypt</strong> (10 rounds)</td></tr>
+            <tr><td>Validimi</td><td><strong>Zod 4.x</strong></td></tr>
+          </table>
+        </div>
+        <div>
+          <p class="kicker" style="color:var(--mocha);margin-bottom:12px">Frontend</p>
+          <table class="tbl-light">
+            <tr><th>Qëllimi</th><th>Teknologjia</th></tr>
+            <tr><td>Framework</td><td><strong>React 19</strong></td></tr>
+            <tr><td>Build tool</td><td><strong>Vite 7.x</strong></td></tr>
+            <tr><td>Routing</td><td><strong>TanStack Router</strong> (file-based)</td></tr>
+            <tr><td>Stilizimi</td><td><strong>Tailwind CSS 4</strong></td></tr>
+            <tr><td>Ikonat</td><td><strong>Lucide React</strong></td></tr>
+            <tr><td>Gjuha</td><td><strong>TypeScript 5.7</strong></td></tr>
+            <tr><td>Testet</td><td><strong>Vitest</strong> + Testing Library</td></tr>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══════════════════════════════════════════════════════ SLIDE 5 — STRUCTURE -->
+  <div class="slide bg-espresso">
+    <div class="full-width">
+      <p class="kicker gold mb">03 — Struktura e Projektit</p>
+      <h2 class="light">Organizimi i Kodit</h2>
+      <div class="sep-left"></div>
+      <div class="cols cols-2 mt">
+        <div class="codeblock" style="font-size:.73rem">
+<span class="c-gold">mansio/</span>
+├── <span class="c-blue">backend/</span>
+│   ├── prisma/
+│   │   ├── <span class="c-green">schema.prisma</span>    <span class="c-gray"># Modelet e DB</span>
+│   │   └── <span class="c-green">seed.ts</span>          <span class="c-gray"># Të dhëna fillestare</span>
+│   └── src/
+│       ├── <span class="c-gold">index.ts</span>         <span class="c-gray"># Entry point + routes</span>
+│       ├── generated/prisma/ <span class="c-gray"># Prisma Client</span>
+│       ├── lib/
+│       │   ├── <span class="c-green">prisma.ts</span>       <span class="c-gray"># DB connection</span>
+│       │   ├── <span class="c-green">jwt.ts</span>          <span class="c-gray"># Token utils</span>
+│       │   ├── <span class="c-green">roles.ts</span>        <span class="c-gray"># Role constants</span>
+│       │   └── <span class="c-green">constants.ts</span>    <span class="c-gray"># safeUserSelect etc.</span>
+│       ├── shared/middleware/
+│       │   ├── <span class="c-red">authMiddleware.ts</span>
+│       │   ├── <span class="c-red">roleMiddleware.ts</span>
+│       │   └── <span class="c-red">validateRequest.ts</span>
+│       └── modules/
+│           ├── auth/          guest/
+│           ├── users/         staff/
+│           ├── rooms/         room-types/
+│           ├── amenities/     beds/
+│           └── <span class="c-gray">[çdo modul ka: schema, types, service, controller, routes]</span>
+└── <span class="c-blue">frontend/</span>
+    └── src/
+        ├── routes/         <span class="c-gray"># File-based routing</span>
+        └── components/     <span class="c-gray"># UI components</span></div>
+        <div class="gap">
+          <div class="card-gold">
+            <p class="kicker gold mb">Anatomia e çdo Moduli</p>
+            <div class="pipeline" style="flex-direction:column;align-items:flex-start;gap:8px">
+              <div style="display:flex;align-items:center;gap:8px">
+                <span class="pipe-step" style="font-size:.72rem;padding:7px 14px">*.schema.ts</span>
+                <span style="color:var(--taupe);font-size:.78rem">Zod schemas + validimi</span>
+              </div>
+              <div style="display:flex;align-items:center;gap:8px">
+                <span class="pipe-step" style="font-size:.72rem;padding:7px 14px">*.types.ts</span>
+                <span style="color:var(--taupe);font-size:.78rem">TypeScript types (nga Zod)</span>
+              </div>
+              <div style="display:flex;align-items:center;gap:8px">
+                <span class="pipe-step" style="font-size:.72rem;padding:7px 14px">*.service.ts</span>
+                <span style="color:var(--taupe);font-size:.78rem">Logjika e biznesit + DB</span>
+              </div>
+              <div style="display:flex;align-items:center;gap:8px">
+                <span class="pipe-step" style="font-size:.72rem;padding:7px 14px">*.controller.ts</span>
+                <span style="color:var(--taupe);font-size:.78rem">HTTP req/res handling</span>
+              </div>
+              <div style="display:flex;align-items:center;gap:8px">
+                <span class="pipe-step" style="font-size:.72rem;padding:7px 14px">*.routes.ts</span>
+                <span style="color:var(--taupe);font-size:.78rem">Express router + middleware chain</span>
+              </div>
+            </div>
+          </div>
+          <div class="card" style="border-color:rgba(125,179,232,.3)">
+            <p class="kicker" style="color:#7db3e8;margin-bottom:8px">Parimi kryesor</p>
+            <p class="light" style="font-size:.85rem">Asnjë logjikë biznesi në controller — controllers janë vetëm HTTP "glue". E gjithë logjika jeton në service layer.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══════════════════════════════════════════════════════ SLIDE 6 — PRISMA SCHEMA -->
+  <div class="slide bg-dark">
+    <div class="full-width">
+      <p class="kicker gold mb">04 — Baza e të Dhënave</p>
+      <h2 class="light">Skema Prisma — Entity Relationship</h2>
+      <div class="sep-left"></div>
+      <div class="erd mt">
+        <div class="erd-node primary">
+          <div class="erd-title">User (qendror)</div>
+          <div class="erd-field">id <span>Int PK</span></div>
+          <div class="erd-field">first_name <span>String</span></div>
+          <div class="erd-field">last_name <span>String</span></div>
+          <div class="erd-field">email <span>unique</span></div>
+          <div class="erd-field">password_hash <span>String</span></div>
+          <div class="erd-field">status <span>UserStatus</span></div>
+          <div class="erd-field">access_failed_count <span>Int</span></div>
+          <div class="erd-field">→ staff_profile? <span>1:1</span></div>
+          <div class="erd-field">→ guest_profile? <span>1:1</span></div>
+          <div class="erd-field">→ user_roles[] <span>1:N</span></div>
+        </div>
+        <div class="erd-node">
+          <div class="erd-title">Staff</div>
+          <div class="erd-field">id <span>Int PK</span></div>
+          <div class="erd-field">user_id <span>unique FK</span></div>
+          <div class="erd-field">phone_number <span>String?</span></div>
+          <div class="erd-field">shift <span>Shift enum</span></div>
+          <div class="erd-field">is_active <span>Boolean</span></div>
+          <div style="margin-top:10px;font-size:.68rem;color:var(--taupe)">Cascade delete nga User</div>
+        </div>
+        <div class="erd-node">
+          <div class="erd-title">Guest</div>
+          <div class="erd-field">id <span>Int PK</span></div>
+          <div class="erd-field">user_id <span>unique FK</span></div>
+          <div class="erd-field">phone_number <span>String?</span></div>
+          <div class="erd-field">address / city <span>String?</span></div>
+          <div class="erd-field">country <span>String?</span></div>
+          <div class="erd-field">passport_number <span>unique?</span></div>
+          <div class="erd-field">date_of_birth <span>DateTime?</span></div>
+          <div class="erd-field">→ reservations[] <span>1:N</span></div>
+        </div>
+        <div class="erd-node">
+          <div class="erd-title">Role + UserRole</div>
+          <div class="erd-field">Role.name <span>unique</span></div>
+          <div class="erd-field" style="margin-top:6px;color:var(--taupe)">JOIN TABLE:</div>
+          <div class="erd-field">UserRole(user_id,</div>
+          <div class="erd-field">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;role_id)</div>
+          <div class="erd-field">Composite PK</div>
+          <div style="margin-top:8px;font-size:.68rem;color:#7ec897">5 role: ADMIN, MANAGER, RECEPTIONIST, HOUSEKEEPING, GUEST</div>
+        </div>
+        <div class="erd-node">
+          <div class="erd-title">RoomType</div>
+          <div class="erd-field">id <span>Int PK</span></div>
+          <div class="erd-field">name <span>unique</span></div>
+          <div class="erd-field">base_price <span>Decimal(10,2)</span></div>
+          <div class="erd-field">max_occupancy <span>Int</span></div>
+          <div class="erd-field">size_m2 <span>Int?</span></div>
+          <div class="erd-field">→ rooms[] <span>1:N</span></div>
+          <div class="erd-field">→ amenities[] <span>M:N</span></div>
+          <div class="erd-field">→ beds[] <span>M:N+qty</span></div>
+          <div class="erd-field">→ images[] <span>1:N</span></div>
+        </div>
+        <div class="erd-node">
+          <div class="erd-title">Room</div>
+          <div class="erd-field">id <span>Int PK</span></div>
+          <div class="erd-field">room_number <span>unique</span></div>
+          <div class="erd-field">floor <span>Int</span></div>
+          <div class="erd-field">status <span>RoomStatus</span></div>
+          <div class="erd-field">room_type_id <span>FK</span></div>
+          <div style="margin-top:8px;font-size:.68rem;color:#7db3e8">AVAILABLE | OCCUPIED | CLEANING</div>
+        </div>
+        <div class="erd-node">
+          <div class="erd-title">Amenity + Bed</div>
+          <div class="erd-field">Amenity: id, name, icon</div>
+          <div class="erd-field" style="margin-top:6px">Bed: id, name, capacity</div>
+          <div style="margin-top:8px;font-size:.68rem;color:var(--taupe)">JOIN tables me payload:</div>
+          <div class="erd-field">RoomTypeAmenity</div>
+          <div class="erd-field">RoomTypeBed(qty)</div>
+        </div>
+        <div class="erd-node">
+          <div class="erd-title">RefreshTokens</div>
+          <div class="erd-field">token <span>unique</span></div>
+          <div class="erd-field">user_id <span>FK</span></div>
+          <div class="erd-field">expires <span>DateTime</span></div>
+          <div class="erd-field">revoked <span>Boolean</span></div>
+          <div style="margin-top:8px;font-size:.68rem;color:#e88a8a">Soft revocation — token rotacioni</div>
+        </div>
+      </div>
+      <div style="margin-top:16px;display:flex;gap:12px;flex-wrap:wrap">
+        <span class="badge badge-gold">UserStatus: PENDING | ACTIVE | LOCKED | DISABLED</span>
+        <span class="badge badge-blue">Shift: MORNING | AFTERNOON | NIGHT</span>
+        <span class="badge badge-green">RoomStatus: AVAILABLE | OCCUPIED | CLEANING</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══════════════════════════════════════════════════════ SLIDE 7 — AUTH FLOW -->
+  <div class="slide bg-espresso">
+    <div class="full-width">
+      <p class="kicker gold mb">05 — Autentikimi</p>
+      <h2 class="light">Sistemi JWT me Refresh Token Rotation</h2>
+      <div class="sep-left"></div>
+      <div class="cols cols-2 mt">
+        <div class="gap">
+          <div class="card">
+            <p class="kicker gold mb">Login Flow</p>
+            <div class="pipeline" style="flex-direction:column;align-items:flex-start;gap:6px">
+              <div style="font-size:.78rem;color:var(--cream)">1. Verifiko email → ngarko User + roles</div>
+              <div style="font-size:.78rem;color:var(--cream)">2. Kontrollo status (LOCKED/DISABLED/PENDING → 403)</div>
+              <div style="font-size:.78rem;color:var(--cream)">3. <code>bcrypt.compare(password, hash)</code></div>
+              <div style="font-size:.78rem;color:var(--taupe)">   → Dështim: <span style="color:#e88a8a">rrit access_failed_count</span></div>
+              <div style="font-size:.78rem;color:var(--taupe)">   → 5 dështime: <span style="color:#e88a8a">status = LOCKED</span></div>
+              <div style="font-size:.78rem;color:var(--cream)">4. Sukses: reset access_failed_count = 0</div>
+              <div style="font-size:.78rem;color:var(--cream)">5. Gjenero <span class="gold">accessToken</span> (15 min)</div>
+              <div style="font-size:.78rem;color:var(--cream)">6. Gjenero <span class="gold">refreshToken</span> (7 ditë)</div>
+              <div style="font-size:.78rem;color:var(--cream)">7. Ruaj refreshToken në DB (<code>RefreshTokens</code>)</div>
+            </div>
+          </div>
+          <div class="card-gold">
+            <p class="kicker gold mb">Refresh Token Rotation</p>
+            <p class="light" style="font-size:.82rem">Çdo herë që përdoruesi kërkon access token të ri:</p>
+            <ul class="styled" style="margin-top:10px">
+              <li style="font-size:.78rem">Verifiko JWT nënshkrimin</li>
+              <li style="font-size:.78rem">Kontrollo DB: ekziston + jo revokuar + jo skaduar</li>
+              <li style="font-size:.78rem">Kontrollo që user është ende ACTIVE</li>
+              <li style="font-size:.78rem"><strong class="gold">Revoko tokenin e vjetër</strong> (revoked = true)</li>
+              <li style="font-size:.78rem"><strong class="gold">Lësho çift të ri</strong> access + refresh</li>
+            </ul>
+          </div>
+        </div>
+        <div class="gap">
+          <div class="card" style="border-color:rgba(126,200,151,.3)">
+            <p class="kicker" style="color:#7ec897;margin-bottom:10px">Vendim Arkitekturor: Stateful Auth</p>
+            <p class="light" style="font-size:.82rem;line-height:1.7">
+              <strong class="gold">authMiddleware</strong> ngarkon User-in nga DB çdo kërkesë — jo vetëm dekodon JWT.
+            </p>
+            <p style="color:var(--taupe);font-size:.78rem;margin-top:8px">
+              Kjo garanton që nëse një llogari LOCKED-ohet, efekti është <strong style="color:#e88a8a">i menjëhershëm</strong> — nuk pret skadimin e access token (15 min).
+            </p>
+          </div>
+          <div class="card">
+            <p class="kicker gold mb">Endpoints Auth</p>
+            <table>
+              <tr><th>Method</th><th>Path</th><th>Aksion</th></tr>
+              <tr><td>POST</td><td><code>/api/auth/register</code></td><td style="color:var(--linen)">Regjistrim</td></tr>
+              <tr><td>POST</td><td><code>/api/auth/login</code></td><td style="color:var(--linen)">Hyrje</td></tr>
+              <tr><td>POST</td><td><code>/api/auth/refresh-token</code></td><td style="color:var(--linen)">Rifresho token</td></tr>
+              <tr><td>POST</td><td><code>/api/auth/logout</code></td><td style="color:var(--linen)">Dalje (revoko)</td></tr>
+            </table>
+          </div>
+          <div class="card" style="border-color:rgba(126,200,151,.3)">
+            <p class="kicker" style="color:#7ec897;margin-bottom:8px">Regjistrim automatik</p>
+            <p style="color:var(--cream);font-size:.8rem">Çdo regjistrim i ri krijon automatikisht: <code>User</code> + <code>UserRole(GUEST)</code> + <code>Guest profile</code> bosh — në një operacion Prisma të vetëm (nested write).</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══════════════════════════════════════════════════════ SLIDE 8 — MIDDLEWARE -->
+  <div class="slide bg-dark">
+    <div class="full-width">
+      <p class="kicker gold mb">06 — Middleware & Siguria</p>
+      <h2 class="light">Pipeline i Mbrojtjes — Çdo Kërkesë e Mbrojtur</h2>
+      <div class="sep-left"></div>
+      <div class="pipeline mt" style="margin-bottom:24px">
+        <div class="pipe-step">HTTP Request</div>
+        <span class="pipe-arrow">→</span>
+        <div class="pipe-step" style="border-color:#7db3e8;color:#7db3e8">authMiddleware<br><span style="font-size:.65rem;color:var(--taupe)">Verifiko JWT + ngarko User</span></div>
+        <span class="pipe-arrow">→</span>
+        <div class="pipe-step" style="border-color:#e88a8a;color:#e88a8a">roleMiddleware<br><span style="font-size:.65rem;color:var(--taupe)">Kontrollo role</span></div>
+        <span class="pipe-arrow">→</span>
+        <div class="pipe-step" style="border-color:#7ec897;color:#7ec897">validateRequest<br><span style="font-size:.65rem;color:var(--taupe)">Zod schema parse</span></div>
+        <span class="pipe-arrow">→</span>
+        <div class="pipe-step" style="border-color:var(--gold);color:var(--gold)">Controller<br><span style="font-size:.65rem;color:var(--taupe)">HTTP layer</span></div>
+        <span class="pipe-arrow">→</span>
+        <div class="pipe-step">Service<br><span style="font-size:.65rem;color:var(--taupe)">Logjika + DB</span></div>
+      </div>
+      <div class="cols cols-3 mt">
+        <div class="card">
+          <p class="kicker" style="color:#7db3e8;margin-bottom:10px">authMiddleware.ts</p>
+          <ul class="styled">
+            <li style="font-size:.78rem">Ekstrakto <code>Bearer &lt;token&gt;</code></li>
+            <li style="font-size:.78rem">Verifiko JWT me <code>JWT_ACCESS_SECRET</code></li>
+            <li style="font-size:.78rem">Ngarko User + roles nga DB</li>
+            <li style="font-size:.78rem">LOCKED/DISABLED/PENDING → 403</li>
+            <li style="font-size:.78rem">Shtoje <code>req.user</code> për controllers</li>
+          </ul>
+        </div>
+        <div class="card">
+          <p class="kicker" style="color:#e88a8a;margin-bottom:10px">roleMiddleware.ts</p>
+          <ul class="styled">
+            <li style="font-size:.78rem">Factory: <code>roleMiddleware(['ADMIN'])</code></li>
+            <li style="font-size:.78rem">Lexon <code>req.user.user_roles</code></li>
+            <li style="font-size:.78rem">Kontrollo ndeshje me allowed roles</li>
+            <li style="font-size:.78rem">401 nëse nuk ka user</li>
+            <li style="font-size:.78rem">403 nëse role e gabuar</li>
+          </ul>
+        </div>
+        <div class="card">
+          <p class="kicker" style="color:#7ec897;margin-bottom:10px">validateRequestMiddleware.ts</p>
+          <ul class="styled">
+            <li style="font-size:.78rem">Generic: <code>&lt;T&gt;(schema, source)</code></li>
+            <li style="font-size:.78rem">Source: <code>body | params | query</code></li>
+            <li style="font-size:.78rem">400 me details nëse invalid</li>
+            <li style="font-size:.78rem"><strong class="gold">Zëvendëson req.body</strong> me të dhëna të pastruara</li>
+            <li style="font-size:.78rem">Controllers marrin tipe TypeScript të sakta</li>
+          </ul>
+        </div>
+      </div>
+      <div class="card-gold mt" style="margin-top:16px">
+        <p style="font-size:.82rem;color:var(--cream)"><strong class="gold">Siguria kundër SQL Injection:</strong> Çdo param <code>:id</code> kalon nëpër <code>numericStringSchema = z.string().regex(/^[0-9]+$/)</code> — parandalon injeksion me string jo-numerik.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══════════════════════════════════════════════════════ SLIDE 9 — MODULES -->
+  <div class="slide bg-ivory">
+    <div class="full-width">
+      <p class="kicker muted mb">07 — Modulet Kryesore</p>
+      <h2 class="espresso">Users / Guest / Staff — Kontroll Aksesi</h2>
+      <div class="sep-left" style="background:var(--mocha)"></div>
+      <div class="cols cols-3 mt">
+        <div class="card-light" style="border-top:3px solid var(--mocha)">
+          <p class="kicker" style="color:var(--mocha);margin-bottom:10px">Users Module</p>
+          <table class="tbl-light" style="font-size:.72rem">
+            <tr><th>Endpoint</th><th>Role</th></tr>
+            <tr><td>POST /create-guest</td><td>ADMIN, MGR, RECEP</td></tr>
+            <tr><td>POST /create-staff</td><td>ADMIN, MGR</td></tr>
+            <tr><td>GET /</td><td>ADMIN, MGR</td></tr>
+            <tr><td>GET /:userId</td><td>ADMIN, MGR</td></tr>
+            <tr><td>PUT /:userId</td><td>ADMIN, MGR</td></tr>
+            <tr><td>DELETE /:userId</td><td>ADMIN, MGR</td></tr>
+          </table>
+          <p style="font-size:.72rem;color:var(--taupe);margin-top:10px"><strong>safeUserSelect</strong>: eksklud password_hash, lockout_enabled, access_failed_count nga çdo response.</p>
+        </div>
+        <div class="card-light" style="border-top:3px solid var(--blue)">
+          <p class="kicker" style="color:var(--blue);margin-bottom:10px">Guest Module</p>
+          <table class="tbl-light" style="font-size:.72rem">
+            <tr><th>Endpoint</th><th>Role</th></tr>
+            <tr><td>GET /</td><td>ADMIN, MGR, RECEP</td></tr>
+            <tr><td>GET /:id</td><td>ADMIN, MGR, RECEP</td></tr>
+            <tr><td>PUT /:id</td><td>ADMIN, GUEST</td></tr>
+          </table>
+          <div style="margin-top:12px;background:rgba(45,89,134,.08);border-radius:8px;padding:10px">
+            <p class="kicker" style="color:var(--blue);margin-bottom:6px">Self-Ownership Check</p>
+            <p style="font-size:.72rem;color:var(--ink);line-height:1.5">
+              GUEST mund të ndryshojë <strong>vetëm profilin e tij</strong>.<br>
+              Service verifikon: <code>guest.user_id === req.user.id</code><br>
+              Nëse jo → <strong style="color:#8b3a3a">403 Forbidden</strong>
+            </p>
+          </div>
+        </div>
+        <div class="card-light" style="border-top:3px solid var(--green)">
+          <p class="kicker" style="color:var(--green);margin-bottom:10px">Staff Module</p>
+          <table class="tbl-light" style="font-size:.72rem">
+            <tr><th>Endpoint</th><th>Role</th></tr>
+            <tr><td>GET /</td><td>ADMIN, MGR, RECEP</td></tr>
+            <tr><td>GET /:id</td><td>ADMIN, MGR, RECEP</td></tr>
+            <tr><td>PUT /:id</td><td>ADMIN,MGR,HK,RECEP</td></tr>
+          </table>
+          <div style="margin-top:12px;background:rgba(74,124,89,.08);border-radius:8px;padding:10px">
+            <p class="kicker" style="color:var(--green);margin-bottom:6px">Fine-grained Permission</p>
+            <p style="font-size:.72rem;color:var(--ink);line-height:1.5">
+              Stafi jo-admin mund të ndryshojë <strong>vetëm veten</strong>.<br>
+              Vetëm ADMIN/MANAGER mund të ndryshojnë <code>is_active</code>.<br>
+              Kontrolli bëhet direkt në controller.
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══════════════════════════════════════════════════════ SLIDE 10 — ROOMS -->
+  <div class="slide bg-espresso">
+    <div class="full-width">
+      <p class="kicker gold mb">08 — Menaxhimi i Dhomave</p>
+      <h2 class="light">Room Types, Rooms, Amenities, Beds</h2>
+      <div class="sep-left"></div>
+      <div class="cols cols-2 mt">
+        <div class="gap">
+          <div class="card">
+            <p class="kicker gold mb">RoomType — Logjika Komplekse</p>
+            <ul class="styled">
+              <li style="font-size:.8rem"><strong class="gold">Validim kapaciteti:</strong> shuma e <code>bed.capacity × qty</code> duhet ≥ <code>max_occupancy</code></li>
+              <li style="font-size:.8rem"><strong class="gold">Update transaksional:</strong> <code>prisma.$transaction</code> — fshin të gjitha amenities/beds/images ekzistuese, pastaj i rikrijmë</li>
+              <li style="font-size:.8rem"><strong class="gold">Delete guard:</strong> refuzon fshirjen nëse ka dhoma aktive (409)</li>
+              <li style="font-size:.8rem"><code>base_price</code>: <code>.multipleOf(0.01)</code> — max 2 decimale</li>
+            </ul>
+          </div>
+          <div class="card-gold">
+            <p class="kicker gold mb">Room Stats Dashboard</p>
+            <p class="light" style="font-size:.82rem">Endpoint i dedikuar <code>GET /api/rooms/stats</code> përdor:</p>
+            <div class="codeblock" style="margin-top:10px;font-size:.72rem">prisma.room.groupBy({
+  by: ["status"],
+  _count: { _all: true }
+})
+<span class="c-gray">// → { AVAILABLE: 12, OCCUPIED: 8, CLEANING: 3 }</span></div>
+          </div>
+        </div>
+        <div class="gap">
+          <table>
+            <tr><th>Moduli</th><th>GET</th><th>POST/PATCH/DEL</th></tr>
+            <tr><td style="color:var(--gold)">RoomTypes</td><td style="color:var(--linen)">Any auth</td><td style="color:#e88a8a">ADMIN only</td></tr>
+            <tr><td style="color:var(--gold)">Rooms</td><td style="color:var(--linen)">Any auth</td><td style="color:#7db3e8">ADMIN, MGR</td></tr>
+            <tr><td style="color:var(--gold)">Amenities</td><td style="color:var(--linen)">Any auth</td><td style="color:#7db3e8">ADMIN, MGR</td></tr>
+            <tr><td style="color:var(--gold)">Beds</td><td style="color:var(--linen)">Any auth</td><td style="color:#7db3e8">ADMIN, MGR</td></tr>
+          </table>
+          <div class="card" style="border-color:rgba(125,179,232,.3)">
+            <p class="kicker" style="color:#7db3e8;margin-bottom:10px">roomTypeInclude — Reuse Pattern</p>
+            <div class="codeblock" style="font-size:.7rem">const roomTypeInclude = {
+  amenities: { select: { amenity: true } },
+  beds: { select: { bed: true, quantity: true } },
+  images: true,
+  _count: { select: { rooms: true } }
+}
+<span class="c-gray">// Përdoret në të gjitha queries</span></div>
+          </div>
+          <div class="card">
+            <p class="kicker gold mb">Room Status Machine</p>
+            <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap;margin-top:4px">
+              <span class="badge badge-green">AVAILABLE</span>
+              <span style="color:var(--gold)">⇄</span>
+              <span class="badge badge-red">OCCUPIED</span>
+              <span style="color:var(--gold)">→</span>
+              <span class="badge badge-blue">CLEANING</span>
+              <span style="color:var(--gold)">→</span>
+              <span class="badge badge-green">AVAILABLE</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══════════════════════════════════════════════════════ SLIDE 11 — FRONTEND -->
+  <div class="slide bg-cream">
+    <div class="full-width">
+      <p class="kicker muted mb">09 — Frontend</p>
+      <h2 class="espresso">React 19 + TanStack Router + Tailwind 4</h2>
+      <div class="sep-left" style="background:var(--mocha)"></div>
+      <div class="cols cols-2 mt">
+        <div class="gap">
+          <div class="card-light">
+            <p class="kicker" style="color:var(--mocha);margin-bottom:10px">Routing (File-Based)</p>
+            <table class="tbl-light" style="font-size:.72rem">
+              <tr><th>Route</th><th>Përshkrimi</th></tr>
+              <tr><td>/</td><td>Landing page — Hero, FAQ, CTA</td></tr>
+              <tr><td>/rooms</td><td>Listë dhomash</td></tr>
+              <tr><td>/rooms/$roomTypeId</td><td>Detaj dhome — Gallery, Booking</td></tr>
+              <tr><td>/restaurant, /spa</td><td>Faqe marketing</td></tr>
+              <tr><td>/login, /signup</td><td>Autentikimi (UI gati)</td></tr>
+              <tr><td>/dashboard</td><td>Panel admin (mock data)</td></tr>
+            </table>
+          </div>
+          <div class="card-light">
+            <p class="kicker" style="color:var(--mocha);margin-bottom:10px">Design System — Mansio Palette</p>
+            <div style="display:flex;flex-wrap:wrap;gap:8px">
+              <div style="display:flex;align-items:center;gap:6px"><div style="width:16px;height:16px;border-radius:3px;background:#f7f2ea;border:1px solid #d4c4a8"></div><span style="font-size:.72rem;color:var(--ink)">cream</span></div>
+              <div style="display:flex;align-items:center;gap:6px"><div style="width:16px;height:16px;border-radius:3px;background:#d4c4a8"></div><span style="font-size:.72rem;color:var(--ink)">linen</span></div>
+              <div style="display:flex;align-items:center;gap:6px"><div style="width:16px;height:16px;border-radius:3px;background:#9c8d7a"></div><span style="font-size:.72rem;color:var(--ink)">taupe</span></div>
+              <div style="display:flex;align-items:center;gap:6px"><div style="width:16px;height:16px;border-radius:3px;background:#6b5744"></div><span style="font-size:.72rem;color:var(--ink)">mocha</span></div>
+              <div style="display:flex;align-items:center;gap:6px"><div style="width:16px;height:16px;border-radius:3px;background:#3a2718"></div><span style="font-size:.72rem;color:var(--ink)">espresso</span></div>
+              <div style="display:flex;align-items:center;gap:6px"><div style="width:16px;height:16px;border-radius:3px;background:#c4a882;border:1px solid #d4c4a8"></div><span style="font-size:.72rem;color:var(--ink)">gold</span></div>
+            </div>
+            <p style="font-size:.72rem;color:var(--taupe);margin-top:8px">Font: <strong>Raleway</strong> (body) + <strong>Bodoni Moda</strong> (titujt)</p>
+          </div>
+        </div>
+        <div class="gap">
+          <div class="card-light">
+            <p class="kicker" style="color:var(--mocha);margin-bottom:10px">Dashboard Components</p>
+            <ul class="styled dark">
+              <li style="font-size:.78rem"><strong>StatCard</strong> — KPI me trend (↑↓)</li>
+              <li style="font-size:.78rem"><strong>DataTable&lt;T&gt;</strong> — Generic typed table</li>
+              <li style="font-size:.78rem"><strong>OccupancyBar</strong> — Progress bar per kategori</li>
+              <li style="font-size:.78rem"><strong>StatusBadge</strong> — checked-in/out/pending/confirmed</li>
+              <li style="font-size:.78rem"><strong>DashboardSidebar</strong> — Navigim me active state</li>
+            </ul>
+          </div>
+          <div class="card-light" style="border-left:4px solid #e8a83a">
+            <p class="kicker" style="color:#7a5c1a;margin-bottom:8px">Gjendja Aktuale Frontend</p>
+            <ul style="list-style:none;font-size:.78rem;color:var(--ink);line-height:1.8">
+              <li>✅ UI marketing komplet (8 faqe)</li>
+              <li>✅ Dashboard layout + komponente</li>
+              <li>✅ Room detail page</li>
+              <li>⏳ Login/Signup nuk janë lidhur me API</li>
+              <li>⏳ Dashboard përdor mock data</li>
+              <li>⏳ Rezervimet — stub i vetëm</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══════════════════════════════════════════════════════ SLIDE 12 — KEY DECISIONS -->
+  <div class="slide bg-dark">
+    <div class="full-width">
+      <p class="kicker gold mb">10 — Vendime Arkitekturore</p>
+      <h2 class="light">Pse u Zgjodh Kjo Arkitekturë?</h2>
+      <div class="sep-left"></div>
+      <div class="cols cols-2 mt">
+        <div class="gap">
+          <div class="card-gold">
+            <p class="kicker gold mb" style="font-size:.68rem">Logjikë e pastër e shtresave</p>
+            <p class="light" style="font-size:.82rem">Routes → Middleware → Controller → Service → Prisma. Asnjë logjikë biznesi jashtë service layer. Lejon testim të izoluar.</p>
+          </div>
+          <div class="card-gold">
+            <p class="kicker gold mb" style="font-size:.68rem">Zod si single source of truth</p>
+            <p class="light" style="font-size:.82rem">Skema Zod gjeneron automatikisht TypeScript types (<code>z.infer&lt;&gt;</code>). Asnjë duplikim — validimi dhe tipat janë gjithmonë sinkronizuar.</p>
+          </div>
+          <div class="card-gold">
+            <p class="kicker gold mb" style="font-size:.68rem">safeUserSelect — Parandalim ekspozimi</p>
+            <p class="light" style="font-size:.82rem">Konstantë e vetme që eksklud <code>password_hash</code>, <code>lockout_enabled</code> nga <em>çdo</em> response. Nuk mund të harrohet nga ndonjë developer.</p>
+          </div>
+        </div>
+        <div class="gap">
+          <div class="card-gold">
+            <p class="kicker gold mb" style="font-size:.68rem">Stateful JWT vs Stateless</p>
+            <p class="light" style="font-size:.82rem">Secilia kërkesë e mbrojtur verifikon User-in nga DB. <strong class="gold">Arsyeja:</strong> lockout-i duhet të hyjë në fuqi menjëherë, jo pas 15 minutash kur skadon JWT.</p>
+          </div>
+          <div class="card-gold">
+            <p class="kicker gold mb" style="font-size:.68rem">Refresh Token Rotation</p>
+            <p class="light" style="font-size:.82rem">Çdo refresh lëshon token të ri dhe revoke-on atë të vjetrin. Standard industry kundër vjedhjes së refresh tokens.</p>
+          </div>
+          <div class="card-gold">
+            <p class="kicker gold mb" style="font-size:.68rem">Kontrolli me dy nivele për Staff</p>
+            <p class="light" style="font-size:.82rem">roleMiddleware lejon hyrje → Controller bën kontroll shtesë: a është vetja, a po ndryshon is_active. Lejon granularitet të lartë pa middleware shtesë.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══════════════════════════════════════════════════════ SLIDE 13 — STATS -->
+  <div class="slide bg-espresso">
+    <div class="full-width center">
+      <p class="kicker gold mb">Numrat e Projektit</p>
+      <h2 class="light mb">Madhësia e Sistemit</h2>
+      <div class="sep"></div>
+      <div class="stat-grid mt">
+        <div class="stat-box card">
+          <div class="stat-num">8</div>
+          <div class="stat-lbl">Modulet Backend</div>
+        </div>
+        <div class="stat-box card">
+          <div class="stat-num">12</div>
+          <div class="stat-lbl">Modelet Prisma</div>
+        </div>
+        <div class="stat-box card">
+          <div class="stat-num">5</div>
+          <div class="stat-lbl">Role RBAC</div>
+        </div>
+        <div class="stat-box card">
+          <div class="stat-num">30+</div>
+          <div class="stat-lbl">API Endpoints</div>
+        </div>
+        <div class="stat-box card">
+          <div class="stat-num">3</div>
+          <div class="stat-lbl">Middleware shtresë</div>
+        </div>
+        <div class="stat-box card">
+          <div class="stat-num">11</div>
+          <div class="stat-lbl">Routes Frontend</div>
+        </div>
+        <div class="stat-box card">
+          <div class="stat-num">20+</div>
+          <div class="stat-lbl">Komponente UI</div>
+        </div>
+        <div class="stat-box card">
+          <div class="stat-num">100%</div>
+          <div class="stat-lbl">TypeScript</div>
+        </div>
+      </div>
+      <div style="margin-top:28px;display:flex;gap:12px;justify-content:center;flex-wrap:wrap">
+        <span class="badge badge-green">Backend: Production-Ready</span>
+        <span class="badge badge-gold">Frontend UI: Complete</span>
+        <span class="badge badge-blue">Integration: In Progress</span>
+        <span class="badge badge-red">Reservations: Stub</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══════════════════════════════════════════════════════ SLIDE 14 — ROADMAP -->
+  <div class="slide bg-ivory">
+    <div class="full-width">
+      <p class="kicker muted mb">Hapat e Ardhshëm</p>
+      <h2 class="espresso">Roadmap i Zhvillimit</h2>
+      <div class="sep-left" style="background:var(--mocha)"></div>
+      <div class="cols cols-2 mt">
+        <div>
+          <p class="kicker" style="color:var(--mocha);margin-bottom:16px">Çfarë është bërë</p>
+          <div class="timeline">
+            <div class="tl-item">
+              <div class="tl-dot tl-done"></div>
+              <p style="font-size:.82rem;color:var(--ink)">Backend API i plotë — Auth, Users, Guests, Staff, Rooms</p>
+            </div>
+            <div class="tl-line"></div>
+            <div class="tl-item">
+              <div class="tl-dot tl-done"></div>
+              <p style="font-size:.82rem;color:var(--ink)">Skema Prisma me të gjitha relacionet dhe enums</p>
+            </div>
+            <div class="tl-line"></div>
+            <div class="tl-item">
+              <div class="tl-dot tl-done"></div>
+              <p style="font-size:.82rem;color:var(--ink)">RBAC i plotë me 5 role dhe middleware pipeline</p>
+            </div>
+            <div class="tl-line"></div>
+            <div class="tl-item">
+              <div class="tl-dot tl-done"></div>
+              <p style="font-size:.82rem;color:var(--ink)">JWT Authentication me refresh token rotation + account lockout</p>
+            </div>
+            <div class="tl-line"></div>
+            <div class="tl-item">
+              <div class="tl-dot tl-done"></div>
+              <p style="font-size:.82rem;color:var(--ink)">UI marketing + dashboard layout + room detail page</p>
+            </div>
+          </div>
+        </div>
+        <div>
+          <p class="kicker" style="color:var(--mocha);margin-bottom:16px">Çfarë mbetet</p>
+          <div class="timeline">
+            <div class="tl-item">
+              <div class="tl-dot tl-wip"></div>
+              <p style="font-size:.82rem;color:var(--ink)"><strong>Lidhja Login/Signup me API</strong> — FormSection ka TODO comment</p>
+            </div>
+            <div class="tl-line"></div>
+            <div class="tl-item">
+              <div class="tl-dot tl-wip"></div>
+              <p style="font-size:.82rem;color:var(--ink)"><strong>Dashboard me të dhëna reale</strong> — zëvendëso mock data me API calls</p>
+            </div>
+            <div class="tl-line"></div>
+            <div class="tl-item">
+              <div class="tl-dot tl-todo"></div>
+              <p style="font-size:.82rem;color:var(--ink)">Sistemi i Rezervimeve — modeli ekziston, logjika mungon</p>
+            </div>
+            <div class="tl-line"></div>
+            <div class="tl-item">
+              <div class="tl-dot tl-todo"></div>
+              <p style="font-size:.82rem;color:var(--ink)">Shared types package <code>packages/</code> — frontend/backend type sharing</p>
+            </div>
+            <div class="tl-line"></div>
+            <div class="tl-item">
+              <div class="tl-dot tl-todo"></div>
+              <p style="font-size:.82rem;color:var(--ink)">Email verification flow (modeli ekziston, logjika mungon)</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══════════════════════════════════════════════════════ SLIDE 15 — CLOSING -->
+  <div class="slide bg-cover">
+    <div class="center" style="max-width:700px">
+      <p class="kicker gold" style="margin-bottom:20px">Faleminderit</p>
+      <h1 class="light" style="font-size:clamp(2rem,4.5vw,3.6rem);margin-bottom:12px">Mansio</h1>
+      <p class="gold" style="font-size:1rem;font-weight:300;letter-spacing:.06em;margin-bottom:32px">Full-Stack Hotel Management System</p>
+      <div class="sep"></div>
+      <div class="cols cols-2 mt" style="max-width:600px;margin:28px auto 0">
+        <div class="card">
+          <p class="kicker gold mb" style="font-size:.65rem">Backend</p>
+          <p class="light" style="font-size:.8rem">Node.js · Express 5 · Prisma · MariaDB · JWT · Zod · TypeScript</p>
+        </div>
+        <div class="card">
+          <p class="kicker gold mb" style="font-size:.65rem">Frontend</p>
+          <p class="light" style="font-size:.8rem">React 19 · TanStack Router · Tailwind 4 · Vite · TypeScript</p>
+        </div>
+      </div>
+      <p class="muted" style="margin-top:40px;font-size:.82rem">Pyetje?</p>
+    </div>
+  </div>
+
+</div><!-- /deck -->
+
+<!-- ── NAV ── -->
+<div id="nav">
+  <button id="btn-prev" onclick="goTo(current-1)" title="Previous">←</button>
+  <span id="slide-counter">1 / 15</span>
+  <button id="btn-next" onclick="goTo(current+1)" title="Next">→</button>
+</div>
+
+<script>
+  const slides = document.querySelectorAll('.slide');
+  const total = slides.length;
+  let current = 0;
+
+  function goTo(n) {
+    if (n < 0 || n >= total) return;
+    slides[current].classList.remove('active');
+    slides[current].classList.add('exit');
+    setTimeout(() => slides[current - (n > current ? 0 : -1) + (n > current ? -1 : 1)]?.classList.remove('exit'), 450);
+    slides[current].addEventListener('transitionend', () => slides[current]?.classList.remove('exit'), { once: true });
+    current = n;
+    slides[current].classList.add('active');
+    document.getElementById('slide-counter').textContent = (current+1) + ' / ' + total;
+    document.getElementById('btn-prev').disabled = current === 0;
+    document.getElementById('btn-next').disabled = current === total - 1;
+  }
+
+  // Keyboard
+  document.addEventListener('keydown', e => {
+    if (e.key === 'ArrowRight' || e.key === 'ArrowDown' || e.key === ' ') goTo(current + 1);
+    if (e.key === 'ArrowLeft'  || e.key === 'ArrowUp') goTo(current - 1);
+    if (e.key === 'Home') goTo(0);
+    if (e.key === 'End')  goTo(total - 1);
+  });
+
+  // Touch swipe
+  let tx = 0;
+  document.addEventListener('touchstart', e => tx = e.touches[0].clientX);
+  document.addEventListener('touchend',   e => {
+    const dx = e.changedTouches[0].clientX - tx;
+    if (Math.abs(dx) > 60) goTo(dx < 0 ? current+1 : current-1);
+  });
+
+  // Init
+  document.getElementById('btn-prev').disabled = true;
+</script>
+</body>
+</html>

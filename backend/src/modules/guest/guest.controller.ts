@@ -55,29 +55,6 @@ export const GuestController = {
         date_of_birth,
       } = req.body;
 
-      const isEmpty = [
-        phone_number,
-        address,
-        city,
-        country,
-        passport_number,
-        date_of_birth,
-      ].every((f) => f === undefined);
-
-      if (isEmpty) {
-        return res.status(400).json({
-          error: "No fields provided to update",
-        });
-      }
-
-      const dob = date_of_birth ? new Date(date_of_birth) : undefined;
-
-      if (dob && isNaN(dob.getTime())) {
-        return res.status(400).json({
-          error: "Invalid date_of_birth",
-        });
-      }
-
       const requestingUser = (req as AuthRequest).user;
       const isGuest = requestingUser?.user_roles?.some(
         (ur) => ur.role?.name === ROLES.GUEST,
@@ -91,7 +68,7 @@ export const GuestController = {
           city,
           country,
           passport_number,
-          date_of_birth: dob,
+          date_of_birth,
         },
         isGuest ? requestingUser?.id : undefined,
       );
