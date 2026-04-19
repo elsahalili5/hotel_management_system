@@ -32,6 +32,8 @@ interface ButtonProps {
   endIcon?: ReactNode
   startIcon?: ReactNode
   isIcon?: boolean
+  type?: 'button' | 'submit' | 'reset'
+  disabled?: boolean
   onClick?: () => void
   'aria-label'?: string
 }
@@ -45,13 +47,15 @@ export function Button({
   endIcon,
   startIcon,
   isIcon = false,
+  type = 'button',
+  disabled = false,
   'aria-label': ariaLabel,
 }: ButtonProps) {
   const variantStyle = variants[variant]
   const cls = isIcon ? `${iconBase} ${className}` : `${base} ${className}`
 
   return (
-    <button onClick={onClick} className={cls} style={{ ...variantStyle, ...(color && { color }) }} aria-label={ariaLabel}>
+    <button onClick={onClick} type={type} disabled={disabled} className={cls} style={{ ...variantStyle, ...(color && { color }) }} aria-label={ariaLabel}>
       {!isIcon && startIcon}
       {children}
       {!isIcon && endIcon}
