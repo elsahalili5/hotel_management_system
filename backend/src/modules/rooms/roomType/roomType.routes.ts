@@ -12,11 +12,10 @@ import { ROLES } from "@lib/roles.ts";
 
 const router = Router();
 
-router.get("/", authMiddleware, RoomTypeController.getAll);
+router.get("/", RoomTypeController.getAll);
 
 router.get(
   "/:id",
-  authMiddleware,
   validateRequestMiddleware(roomTypeIdSchema, "params"),
   RoomTypeController.getById,
 );

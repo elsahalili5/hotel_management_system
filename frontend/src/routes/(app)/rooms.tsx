@@ -3,6 +3,7 @@ import { ArrowRight } from 'lucide-react'
 import { HeroSection } from '#/components/HeroSection'
 import { TextSection } from '#/components/TextSection'
 import { SplitSection } from '#/components/SplitSection'
+import { useRoomTypes } from '#/modules/rooms/hooks/use-room-types'
 
 export const Route = createFileRoute('/(app)/rooms')({
   component: Rooms,
@@ -10,6 +11,7 @@ export const Route = createFileRoute('/(app)/rooms')({
 
 function Rooms() {
   const childMatches = useChildMatches()
+  const { data: roomTypes, isLoading, isError } = useRoomTypes()
 
   if (childMatches.length > 0) {
     return <Outlet />
@@ -32,15 +34,34 @@ function Rooms() {
         ]}
       />
 
-      <SplitSection
-        title="Luxury Suites"
-        text="Our suites offer an unparalleled level of comfort and sophistication. Expansive living areas, panoramic views, and bespoke furnishings create an atmosphere of effortless luxury — ideal for those who seek the very best that Mansio has to offer."
-        image="https://epidamn.com/assets/images/inside.png"
-        buttonLabel="See More"
-        buttonTo="/rooms/1"
-        buttonEndIcon={<ArrowRight size={20} />}
-        imageRight={false}
-      />
+      {isLoading && (
+        <p className="text-center text-mansio-taupe py-16">Loading rooms...</p>
+      )}
+
+      {isError && (
+        <p className="text-center text-red-500 py-16">Failed to load rooms. Please try again.</p>
+      )}
+
+      {roomTypes?.length === 0 && (
+        <p className="text-center text-mansio-taupe py-16">No rooms available at the moment.</p>
+      )}
+
+      {roomTypes?.map((room, index) => {
+        const primaryImage = room.images.find((img) => img.is_primary) ?? room.images[0]
+
+        return (
+          <SplitSection
+            key={room.id}
+            title={room.name}
+            text={room.description ?? `From $${room.base_price} / night · Up to ${room.max_occupancy} guests${room.size_m2 ? ` · ${room.size_m2} m²` : ''}`}
+            image={primaryImage?.url ?? 'https://www.epidamn.com/assets/images/room1.jpg'}
+            buttonLabel="See More"
+            buttonTo={`/rooms/${room.id}`}
+            buttonEndIcon={<ArrowRight size={20} />}
+            imageRight={index % 2 === 0}
+          />
+        )
+      })}
     </main>
   )
 }
