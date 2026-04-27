@@ -1,13 +1,13 @@
 import { createFileRoute, Link } from '@tanstack/react-router'
-import { HeroSection } from '../components/HeroSection'
-import { Button } from '../components/Button'
-import { StatsBar } from '../components/room/StatsBar'
-import { RoomGallery } from '../components/room/RoomGallery'
-import { RoomAmenities, type Amenity } from '../components/room/RoomAmenities'
-import { BookingCard } from '../components/room/BookingCard'
-import { PoliciesStrip } from '../components/room/PoliciesStrip'
-import { CallToAction } from '../components/CallToAction'
-import { Container } from '../components/Container'
+import { HeroSection } from '#/components/HeroSection'
+import { Button } from '#/components/Button'
+import { StatsBar } from '#/components/room/StatsBar'
+import { RoomGallery } from '#/components/room/RoomGallery'
+import { RoomAmenities, type Amenity } from '#/components/room/RoomAmenities'
+import { BookingCard } from '#/components/room/BookingCard'
+import { PoliciesStrip } from '#/components/room/PoliciesStrip'
+import { CallToAction } from '#/components/CallToAction'
+import { Container } from '#/components/Container'
 import {
   Wifi,
   Tv,
@@ -20,7 +20,7 @@ import {
   ChevronLeft,
 } from 'lucide-react'
 
-export const Route = createFileRoute('/rooms/$roomTypeId')({
+export const Route = createFileRoute('/(app)/rooms/$roomTypeId')({
   component: RoomDetail,
 })
 

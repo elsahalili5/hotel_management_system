@@ -1,4 +1,4 @@
-import { createFileRoute, Link } from '@tanstack/react-router'
+import { createFileRoute, redirect } from '@tanstack/react-router'
 import {
   BedDouble,
   BookOpen,
@@ -10,18 +10,18 @@ import {
   Users,
   XCircle,
 } from 'lucide-react'
-import { Container } from '../components/Container'
-import { DashboardCard } from '../components/dashboard/DashboardCard'
-import { DashboardHeader } from '../components/dashboard/DashboardHeader'
-import { DashboardSidebar } from '../components/dashboard/DashboardSidebar'
-import { DataTable } from '../components/dashboard/DataTable'
-import type { Column } from '../components/dashboard/DataTable'
-import { OccupancyBar } from '../components/dashboard/OccupancyBar'
-import { StatCard } from '../components/dashboard/StatCard'
-import { StatusBadge } from '../components/dashboard/StatusBadge'
-import type { BookingStatus } from '../components/dashboard/StatusBadge'
+import { Container } from '../../components/Container'
+import { DashboardCard } from '../../components/dashboard/DashboardCard'
+import { DashboardHeader } from '../../components/dashboard/DashboardHeader'
+import { DashboardSidebar } from '../../components/dashboard/DashboardSidebar'
+import { DataTable } from '../../components/dashboard/DataTable'
+import type { Column } from '../../components/dashboard/DataTable'
+import { OccupancyBar } from '../../components/dashboard/OccupancyBar'
+import { StatCard } from '../../components/dashboard/StatCard'
+import { StatusBadge } from '../../components/dashboard/StatusBadge'
+import type { BookingStatus } from '../../components/dashboard/StatusBadge'
 
-export const Route = createFileRoute('/dashboard')({
+export const Route = createFileRoute('/(admin)/dashboard')({
   component: RouteComponent,
 })
 

@@ -1,9 +1,9 @@
 import { createFileRoute } from '@tanstack/react-router'
-import { HeroSection } from '../components/HeroSection'
-import { ContactItem } from '../components/ContactItem'
+import { HeroSection } from '#/components/HeroSection'
+import { ContactItem } from '#/components/ContactItem'
 import { PhoneCall, Send, Headset } from 'lucide-react'
 
-export const Route = createFileRoute('/contact')({
+export const Route = createFileRoute('/(app)/contact')({
   component: ContactPage,
 })
 

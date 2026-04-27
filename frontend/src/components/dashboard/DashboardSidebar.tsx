@@ -1,4 +1,4 @@
-import { Link, useLocation } from '@tanstack/react-router'
+import { Link, useLocation, useNavigate } from '@tanstack/react-router'
 import {
   BedDouble,
   BookOpen,
@@ -10,6 +10,7 @@ import {
   Users,
 } from 'lucide-react'
 import { Logo } from '../Logo'
+import { useAuth } from '#/modules/auth/auth-context';
 
 const navItems = [
   { label: 'Dashboard', icon: LayoutDashboard, path: '/dashboard' as const },
@@ -21,7 +22,14 @@ const navItems = [
 ]
 
 export function DashboardSidebar() {
-  const location = useLocation()
+  const navigate = useNavigate();
+  const location = useLocation();
+  const auth = useAuth();
+
+  const handleLogout = () => {
+    auth.logout();
+    navigate({ to: '/login', replace: true });
+  }
 
   return (
     <aside
@@ -86,6 +94,7 @@ export function DashboardSidebar() {
         style={{ borderColor: 'rgba(196, 168, 130, 0.15)' }}
       >
         <button
+        onClick={handleLogout}
           className="flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm w-full transition-all duration-200 hover:opacity-70"
           style={{ color: 'rgba(212, 196, 168, 0.5)' }}
         >

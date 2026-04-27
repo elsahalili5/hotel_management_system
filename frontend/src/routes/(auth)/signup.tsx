@@ -1,8 +1,8 @@
 import { createFileRoute, Link } from '@tanstack/react-router'
-import { FormSection } from '../components/Form'
+import { FormSection } from '../../components/Form'
 import { UserPlus } from 'lucide-react'
 
-export const Route = createFileRoute('/signup')({
+export const Route = createFileRoute('/(auth)/signup')({
   component: SignupPage,
 })
 

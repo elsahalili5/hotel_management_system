@@ -9,73 +9,33 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
-import { Route as UsersRouteImport } from './routes/users'
-import { Route as SpaRouteImport } from './routes/spa'
-import { Route as SignupRouteImport } from './routes/signup'
-import { Route as RoomsRouteImport } from './routes/rooms'
-import { Route as RestaurantRouteImport } from './routes/restaurant'
-import { Route as ProfileRouteImport } from './routes/profile'
-import { Route as LoginRouteImport } from './routes/login'
-import { Route as DashboardRouteImport } from './routes/dashboard'
-import { Route as ContactRouteImport } from './routes/contact'
-import { Route as BookingsRouteImport } from './routes/bookings'
-import { Route as AboutRouteImport } from './routes/about'
+import { Route as authRouteRouteImport } from './routes/(auth)/route'
+import { Route as appRouteRouteImport } from './routes/(app)/route'
+import { Route as adminRouteRouteImport } from './routes/(admin)/route'
 import { Route as IndexRouteImport } from './routes/index'
-import { Route as RoomsRoomTypeIdRouteImport } from './routes/rooms.$roomTypeId'
+import { Route as authSignupRouteImport } from './routes/(auth)/signup'
+import { Route as authLoginRouteImport } from './routes/(auth)/login'
+import { Route as appUsersRouteImport } from './routes/(app)/users'
+import { Route as appSpaRouteImport } from './routes/(app)/spa'
+import { Route as appRoomsRouteImport } from './routes/(app)/rooms'
+import { Route as appRestaurantRouteImport } from './routes/(app)/restaurant'
+import { Route as appProfileRouteImport } from './routes/(app)/profile'
+import { Route as appContactRouteImport } from './routes/(app)/contact'
+import { Route as appBookingsRouteImport } from './routes/(app)/bookings'
+import { Route as appAboutRouteImport } from './routes/(app)/about'
+import { Route as adminDashboardRouteImport } from './routes/(admin)/dashboard'
+import { Route as appRoomsRoomTypeIdRouteImport } from './routes/(app)/rooms.$roomTypeId'
 
-const UsersRoute = UsersRouteImport.update({
-  id: '/users',
-  path: '/users',
+const authRouteRoute = authRouteRouteImport.update({
+  id: '/(auth)',
   getParentRoute: () => rootRouteImport,
 } as any)
-const SpaRoute = SpaRouteImport.update({
-  id: '/spa',
-  path: '/spa',
+const appRouteRoute = appRouteRouteImport.update({
+  id: '/(app)',
   getParentRoute: () => rootRouteImport,
 } as any)
-const SignupRoute = SignupRouteImport.update({
-  id: '/signup',
-  path: '/signup',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const RoomsRoute = RoomsRouteImport.update({
-  id: '/rooms',
-  path: '/rooms',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const RestaurantRoute = RestaurantRouteImport.update({
-  id: '/restaurant',
-  path: '/restaurant',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const ProfileRoute = ProfileRouteImport.update({
-  id: '/profile',
-  path: '/profile',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const LoginRoute = LoginRouteImport.update({
-  id: '/login',
-  path: '/login',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const DashboardRoute = DashboardRouteImport.update({
-  id: '/dashboard',
-  path: '/dashboard',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const ContactRoute = ContactRouteImport.update({
-  id: '/contact',
-  path: '/contact',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const BookingsRoute = BookingsRouteImport.update({
-  id: '/bookings',
-  path: '/bookings',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const AboutRoute = AboutRouteImport.update({
-  id: '/about',
-  path: '/about',
+const adminRouteRoute = adminRouteRouteImport.update({
+  id: '/(admin)',
   getParentRoute: () => rootRouteImport,
 } as any)
 const IndexRoute = IndexRouteImport.update({
@@ -83,198 +43,195 @@ const IndexRoute = IndexRouteImport.update({
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
-const RoomsRoomTypeIdRoute = RoomsRoomTypeIdRouteImport.update({
+const authSignupRoute = authSignupRouteImport.update({
+  id: '/signup',
+  path: '/signup',
+  getParentRoute: () => authRouteRoute,
+} as any)
+const authLoginRoute = authLoginRouteImport.update({
+  id: '/login',
+  path: '/login',
+  getParentRoute: () => authRouteRoute,
+} as any)
+const appUsersRoute = appUsersRouteImport.update({
+  id: '/users',
+  path: '/users',
+  getParentRoute: () => appRouteRoute,
+} as any)
+const appSpaRoute = appSpaRouteImport.update({
+  id: '/spa',
+  path: '/spa',
+  getParentRoute: () => appRouteRoute,
+} as any)
+const appRoomsRoute = appRoomsRouteImport.update({
+  id: '/rooms',
+  path: '/rooms',
+  getParentRoute: () => appRouteRoute,
+} as any)
+const appRestaurantRoute = appRestaurantRouteImport.update({
+  id: '/restaurant',
+  path: '/restaurant',
+  getParentRoute: () => appRouteRoute,
+} as any)
+const appProfileRoute = appProfileRouteImport.update({
+  id: '/profile',
+  path: '/profile',
+  getParentRoute: () => appRouteRoute,
+} as any)
+const appContactRoute = appContactRouteImport.update({
+  id: '/contact',
+  path: '/contact',
+  getParentRoute: () => appRouteRoute,
+} as any)
+const appBookingsRoute = appBookingsRouteImport.update({
+  id: '/bookings',
+  path: '/bookings',
+  getParentRoute: () => appRouteRoute,
+} as any)
+const appAboutRoute = appAboutRouteImport.update({
+  id: '/about',
+  path: '/about',
+  getParentRoute: () => appRouteRoute,
+} as any)
+const adminDashboardRoute = adminDashboardRouteImport.update({
+  id: '/dashboard',
+  path: '/dashboard',
+  getParentRoute: () => adminRouteRoute,
+} as any)
+const appRoomsRoomTypeIdRoute = appRoomsRoomTypeIdRouteImport.update({
   id: '/$roomTypeId',
   path: '/$roomTypeId',
-  getParentRoute: () => RoomsRoute,
+  getParentRoute: () => appRoomsRoute,
 } as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
-  '/about': typeof AboutRoute
-  '/bookings': typeof BookingsRoute
-  '/contact': typeof ContactRoute
-  '/dashboard': typeof DashboardRoute
-  '/login': typeof LoginRoute
-  '/profile': typeof ProfileRoute
-  '/restaurant': typeof RestaurantRoute
-  '/rooms': typeof RoomsRouteWithChildren
-  '/signup': typeof SignupRoute
-  '/spa': typeof SpaRoute
-  '/users': typeof UsersRoute
-  '/rooms/$roomTypeId': typeof RoomsRoomTypeIdRoute
+  '/dashboard': typeof adminDashboardRoute
+  '/about': typeof appAboutRoute
+  '/bookings': typeof appBookingsRoute
+  '/contact': typeof appContactRoute
+  '/profile': typeof appProfileRoute
+  '/restaurant': typeof appRestaurantRoute
+  '/rooms': typeof appRoomsRouteWithChildren
+  '/spa': typeof appSpaRoute
+  '/users': typeof appUsersRoute
+  '/login': typeof authLoginRoute
+  '/signup': typeof authSignupRoute
+  '/rooms/$roomTypeId': typeof appRoomsRoomTypeIdRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
-  '/about': typeof AboutRoute
-  '/bookings': typeof BookingsRoute
-  '/contact': typeof ContactRoute
-  '/dashboard': typeof DashboardRoute
-  '/login': typeof LoginRoute
-  '/profile': typeof ProfileRoute
-  '/restaurant': typeof RestaurantRoute
-  '/rooms': typeof RoomsRouteWithChildren
-  '/signup': typeof SignupRoute
-  '/spa': typeof SpaRoute
-  '/users': typeof UsersRoute
-  '/rooms/$roomTypeId': typeof RoomsRoomTypeIdRoute
+  '/dashboard': typeof adminDashboardRoute
+  '/about': typeof appAboutRoute
+  '/bookings': typeof appBookingsRoute
+  '/contact': typeof appContactRoute
+  '/profile': typeof appProfileRoute
+  '/restaurant': typeof appRestaurantRoute
+  '/rooms': typeof appRoomsRouteWithChildren
+  '/spa': typeof appSpaRoute
+  '/users': typeof appUsersRoute
+  '/login': typeof authLoginRoute
+  '/signup': typeof authSignupRoute
+  '/rooms/$roomTypeId': typeof appRoomsRoomTypeIdRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
-  '/about': typeof AboutRoute
-  '/bookings': typeof BookingsRoute
-  '/contact': typeof ContactRoute
-  '/dashboard': typeof DashboardRoute
-  '/login': typeof LoginRoute
-  '/profile': typeof ProfileRoute
-  '/restaurant': typeof RestaurantRoute
-  '/rooms': typeof RoomsRouteWithChildren
-  '/signup': typeof SignupRoute
-  '/spa': typeof SpaRoute
-  '/users': typeof UsersRoute
-  '/rooms/$roomTypeId': typeof RoomsRoomTypeIdRoute
+  '/(admin)': typeof adminRouteRouteWithChildren
+  '/(app)': typeof appRouteRouteWithChildren
+  '/(auth)': typeof authRouteRouteWithChildren
+  '/(admin)/dashboard': typeof adminDashboardRoute
+  '/(app)/about': typeof appAboutRoute
+  '/(app)/bookings': typeof appBookingsRoute
+  '/(app)/contact': typeof appContactRoute
+  '/(app)/profile': typeof appProfileRoute
+  '/(app)/restaurant': typeof appRestaurantRoute
+  '/(app)/rooms': typeof appRoomsRouteWithChildren
+  '/(app)/spa': typeof appSpaRoute
+  '/(app)/users': typeof appUsersRoute
+  '/(auth)/login': typeof authLoginRoute
+  '/(auth)/signup': typeof authSignupRoute
+  '/(app)/rooms/$roomTypeId': typeof appRoomsRoomTypeIdRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
     | '/'
+    | '/dashboard'
     | '/about'
     | '/bookings'
     | '/contact'
-    | '/dashboard'
-    | '/login'
     | '/profile'
     | '/restaurant'
     | '/rooms'
-    | '/signup'
     | '/spa'
     | '/users'
+    | '/login'
+    | '/signup'
     | '/rooms/$roomTypeId'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
+    | '/dashboard'
     | '/about'
     | '/bookings'
     | '/contact'
-    | '/dashboard'
-    | '/login'
     | '/profile'
     | '/restaurant'
     | '/rooms'
-    | '/signup'
     | '/spa'
     | '/users'
+    | '/login'
+    | '/signup'
     | '/rooms/$roomTypeId'
   id:
     | '__root__'
     | '/'
-    | '/about'
-    | '/bookings'
-    | '/contact'
-    | '/dashboard'
-    | '/login'
-    | '/profile'
-    | '/restaurant'
-    | '/rooms'
-    | '/signup'
-    | '/spa'
-    | '/users'
-    | '/rooms/$roomTypeId'
+    | '/(admin)'
+    | '/(app)'
+    | '/(auth)'
+    | '/(admin)/dashboard'
+    | '/(app)/about'
+    | '/(app)/bookings'
+    | '/(app)/contact'
+    | '/(app)/profile'
+    | '/(app)/restaurant'
+    | '/(app)/rooms'
+    | '/(app)/spa'
+    | '/(app)/users'
+    | '/(auth)/login'
+    | '/(auth)/signup'
+    | '/(app)/rooms/$roomTypeId'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
-  AboutRoute: typeof AboutRoute
-  BookingsRoute: typeof BookingsRoute
-  ContactRoute: typeof ContactRoute
-  DashboardRoute: typeof DashboardRoute
-  LoginRoute: typeof LoginRoute
-  ProfileRoute: typeof ProfileRoute
-  RestaurantRoute: typeof RestaurantRoute
-  RoomsRoute: typeof RoomsRouteWithChildren
-  SignupRoute: typeof SignupRoute
-  SpaRoute: typeof SpaRoute
-  UsersRoute: typeof UsersRoute
+  adminRouteRoute: typeof adminRouteRouteWithChildren
+  appRouteRoute: typeof appRouteRouteWithChildren
+  authRouteRoute: typeof authRouteRouteWithChildren
 }
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
-    '/users': {
-      id: '/users'
-      path: '/users'
-      fullPath: '/users'
-      preLoaderRoute: typeof UsersRouteImport
+    '/(auth)': {
+      id: '/(auth)'
+      path: ''
+      fullPath: ''
+      preLoaderRoute: typeof authRouteRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/spa': {
-      id: '/spa'
-      path: '/spa'
-      fullPath: '/spa'
-      preLoaderRoute: typeof SpaRouteImport
+    '/(app)': {
+      id: '/(app)'
+      path: ''
+      fullPath: ''
+      preLoaderRoute: typeof appRouteRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/signup': {
-      id: '/signup'
-      path: '/signup'
-      fullPath: '/signup'
-      preLoaderRoute: typeof SignupRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/rooms': {
-      id: '/rooms'
-      path: '/rooms'
-      fullPath: '/rooms'
-      preLoaderRoute: typeof RoomsRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/restaurant': {
-      id: '/restaurant'
-      path: '/restaurant'
-      fullPath: '/restaurant'
-      preLoaderRoute: typeof RestaurantRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/profile': {
-      id: '/profile'
-      path: '/profile'
-      fullPath: '/profile'
-      preLoaderRoute: typeof ProfileRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/login': {
-      id: '/login'
-      path: '/login'
-      fullPath: '/login'
-      preLoaderRoute: typeof LoginRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/dashboard': {
-      id: '/dashboard'
-      path: '/dashboard'
-      fullPath: '/dashboard'
-      preLoaderRoute: typeof DashboardRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/contact': {
-      id: '/contact'
-      path: '/contact'
-      fullPath: '/contact'
-      preLoaderRoute: typeof ContactRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/bookings': {
-      id: '/bookings'
-      path: '/bookings'
-      fullPath: '/bookings'
-      preLoaderRoute: typeof BookingsRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/about': {
-      id: '/about'
-      path: '/about'
-      fullPath: '/about'
-      preLoaderRoute: typeof AboutRouteImport
+    '/(admin)': {
+      id: '/(admin)'
+      path: ''
+      fullPath: ''
+      preLoaderRoute: typeof adminRouteRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/': {
@@ -284,39 +241,162 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/rooms/$roomTypeId': {
-      id: '/rooms/$roomTypeId'
+    '/(auth)/signup': {
+      id: '/(auth)/signup'
+      path: '/signup'
+      fullPath: '/signup'
+      preLoaderRoute: typeof authSignupRouteImport
+      parentRoute: typeof authRouteRoute
+    }
+    '/(auth)/login': {
+      id: '/(auth)/login'
+      path: '/login'
+      fullPath: '/login'
+      preLoaderRoute: typeof authLoginRouteImport
+      parentRoute: typeof authRouteRoute
+    }
+    '/(app)/users': {
+      id: '/(app)/users'
+      path: '/users'
+      fullPath: '/users'
+      preLoaderRoute: typeof appUsersRouteImport
+      parentRoute: typeof appRouteRoute
+    }
+    '/(app)/spa': {
+      id: '/(app)/spa'
+      path: '/spa'
+      fullPath: '/spa'
+      preLoaderRoute: typeof appSpaRouteImport
+      parentRoute: typeof appRouteRoute
+    }
+    '/(app)/rooms': {
+      id: '/(app)/rooms'
+      path: '/rooms'
+      fullPath: '/rooms'
+      preLoaderRoute: typeof appRoomsRouteImport
+      parentRoute: typeof appRouteRoute
+    }
+    '/(app)/restaurant': {
+      id: '/(app)/restaurant'
+      path: '/restaurant'
+      fullPath: '/restaurant'
+      preLoaderRoute: typeof appRestaurantRouteImport
+      parentRoute: typeof appRouteRoute
+    }
+    '/(app)/profile': {
+      id: '/(app)/profile'
+      path: '/profile'
+      fullPath: '/profile'
+      preLoaderRoute: typeof appProfileRouteImport
+      parentRoute: typeof appRouteRoute
+    }
+    '/(app)/contact': {
+      id: '/(app)/contact'
+      path: '/contact'
+      fullPath: '/contact'
+      preLoaderRoute: typeof appContactRouteImport
+      parentRoute: typeof appRouteRoute
+    }
+    '/(app)/bookings': {
+      id: '/(app)/bookings'
+      path: '/bookings'
+      fullPath: '/bookings'
+      preLoaderRoute: typeof appBookingsRouteImport
+      parentRoute: typeof appRouteRoute
+    }
+    '/(app)/about': {
+      id: '/(app)/about'
+      path: '/about'
+      fullPath: '/about'
+      preLoaderRoute: typeof appAboutRouteImport
+      parentRoute: typeof appRouteRoute
+    }
+    '/(admin)/dashboard': {
+      id: '/(admin)/dashboard'
+      path: '/dashboard'
+      fullPath: '/dashboard'
+      preLoaderRoute: typeof adminDashboardRouteImport
+      parentRoute: typeof adminRouteRoute
+    }
+    '/(app)/rooms/$roomTypeId': {
+      id: '/(app)/rooms/$roomTypeId'
       path: '/$roomTypeId'
       fullPath: '/rooms/$roomTypeId'
-      preLoaderRoute: typeof RoomsRoomTypeIdRouteImport
-      parentRoute: typeof RoomsRoute
+      preLoaderRoute: typeof appRoomsRoomTypeIdRouteImport
+      parentRoute: typeof appRoomsRoute
     }
   }
 }
 
-interface RoomsRouteChildren {
-  RoomsRoomTypeIdRoute: typeof RoomsRoomTypeIdRoute
+interface adminRouteRouteChildren {
+  adminDashboardRoute: typeof adminDashboardRoute
 }
 
-const RoomsRouteChildren: RoomsRouteChildren = {
-  RoomsRoomTypeIdRoute: RoomsRoomTypeIdRoute,
+const adminRouteRouteChildren: adminRouteRouteChildren = {
+  adminDashboardRoute: adminDashboardRoute,
 }
 
-const RoomsRouteWithChildren = RoomsRoute._addFileChildren(RoomsRouteChildren)
+const adminRouteRouteWithChildren = adminRouteRoute._addFileChildren(
+  adminRouteRouteChildren,
+)
+
+interface appRoomsRouteChildren {
+  appRoomsRoomTypeIdRoute: typeof appRoomsRoomTypeIdRoute
+}
+
+const appRoomsRouteChildren: appRoomsRouteChildren = {
+  appRoomsRoomTypeIdRoute: appRoomsRoomTypeIdRoute,
+}
+
+const appRoomsRouteWithChildren = appRoomsRoute._addFileChildren(
+  appRoomsRouteChildren,
+)
+
+interface appRouteRouteChildren {
+  appAboutRoute: typeof appAboutRoute
+  appBookingsRoute: typeof appBookingsRoute
+  appContactRoute: typeof appContactRoute
+  appProfileRoute: typeof appProfileRoute
+  appRestaurantRoute: typeof appRestaurantRoute
+  appRoomsRoute: typeof appRoomsRouteWithChildren
+  appSpaRoute: typeof appSpaRoute
+  appUsersRoute: typeof appUsersRoute
+}
+
+const appRouteRouteChildren: appRouteRouteChildren = {
+  appAboutRoute: appAboutRoute,
+  appBookingsRoute: appBookingsRoute,
+  appContactRoute: appContactRoute,
+  appProfileRoute: appProfileRoute,
+  appRestaurantRoute: appRestaurantRoute,
+  appRoomsRoute: appRoomsRouteWithChildren,
+  appSpaRoute: appSpaRoute,
+  appUsersRoute: appUsersRoute,
+}
+
+const appRouteRouteWithChildren = appRouteRoute._addFileChildren(
+  appRouteRouteChildren,
+)
+
+interface authRouteRouteChildren {
+  authLoginRoute: typeof authLoginRoute
+  authSignupRoute: typeof authSignupRoute
+}
+
+const authRouteRouteChildren: authRouteRouteChildren = {
+  authLoginRoute: authLoginRoute,
+  authSignupRoute: authSignupRoute,
+}
+
+const authRouteRouteWithChildren = authRouteRoute._addFileChildren(
+  authRouteRouteChildren,
+)
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
-  AboutRoute: AboutRoute,
-  BookingsRoute: BookingsRoute,
-  ContactRoute: ContactRoute,
-  DashboardRoute: DashboardRoute,
-  LoginRoute: LoginRoute,
-  ProfileRoute: ProfileRoute,
-  RestaurantRoute: RestaurantRoute,
-  RoomsRoute: RoomsRouteWithChildren,
-  SignupRoute: SignupRoute,
-  SpaRoute: SpaRoute,
-  UsersRoute: UsersRoute,
+  adminRouteRoute: adminRouteRouteWithChildren,
+  appRouteRoute: appRouteRouteWithChildren,
+  authRouteRoute: authRouteRouteWithChildren,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)

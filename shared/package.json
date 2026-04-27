@@ -1,0 +1,11 @@
+{
+  "name": "@mansio/shared",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "exports": {
+    ".": "./src/index.ts",
+    "./auth": "./src/auth.ts",
+    "./types": "./src/types.ts"
+  }
+}

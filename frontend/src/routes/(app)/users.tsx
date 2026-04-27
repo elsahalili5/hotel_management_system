@@ -2,7 +2,7 @@ import { Button } from '#/components/Button'
 import { createFileRoute } from '@tanstack/react-router'
 import { useEffect, useState } from 'react'
 
-export const Route = createFileRoute('/users')({
+export const Route = createFileRoute('/(app)/users')({
   component: RouteComponent,
 })
 

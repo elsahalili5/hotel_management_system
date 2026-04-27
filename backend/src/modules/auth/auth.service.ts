@@ -11,6 +11,7 @@ import {
   RegisterUserInput,
   RefreshTokenInput,
   LogoutInput,
+  LoginUserResponse,
 } from "./auth.types.ts";
 import { safeUserSelect } from "@lib/constants.ts";
 
@@ -65,7 +66,7 @@ export const AuthService = {
     return user;
   },
 
-  loginUser: async (payload: LoginUserInput) => {
+  loginUser: async (payload: LoginUserInput): Promise<LoginUserResponse> => {
     const { email, password } = payload;
 
     const user = await prisma.user.findUnique({
@@ -166,17 +167,7 @@ export const AuthService = {
     });
 
     return {
-      user: {
-        id: user.id,
-        first_name: user.first_name,
-        last_name: user.last_name,
-        email: user.email,
-        status: user.status,
-        email_confirmed: user.email_confirmed,
-        user_roles: user.user_roles,
-        guest_profile: user.guest_profile,
-        staff_profile: user.staff_profile,
-      },
+      user,
       accessToken,
       refreshToken,
     };

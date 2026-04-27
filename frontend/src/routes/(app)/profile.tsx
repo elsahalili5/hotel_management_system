@@ -1,13 +1,13 @@
 import { createFileRoute } from '@tanstack/react-router'
-import { Container } from '../components/Container'
-import { CallToAction } from '../components/CallToAction'
-import { ProfileHeader } from '../components/profile/ProfileHeader'
-import { PersonalInfoCard } from '../components/profile/PersonalInfoCard'
-import { ReservationsCard } from '../components/profile/ReservationsCard'
-import { TravelDocumentCard } from '../components/profile/TravelDocumentCard'
-import { QuickStatsCard } from '../components/profile/QuickStatsCard'
+import { Container } from '#/components/Container'
+import { CallToAction } from '#/components/CallToAction'
+import { ProfileHeader } from '#/components/profile/ProfileHeader'
+import { PersonalInfoCard } from '#/components/profile/PersonalInfoCard'
+import { ReservationsCard } from '#/components/profile/ReservationsCard'
+import { TravelDocumentCard } from '#/components/profile/TravelDocumentCard'
+import { QuickStatsCard } from '#/components/profile/QuickStatsCard'
 
-export const Route = createFileRoute('/profile')({
+export const Route = createFileRoute('/(app)/profile')({
   component: GuestProfile,
 })
 

@@ -1,11 +1,11 @@
 import { createFileRoute } from '@tanstack/react-router'
-import { HeroSection } from '../components/HeroSection'
-import { TextSection } from '../components/TextSection'
-import { DynamicImage } from '../components/DynamicImage'
+  import { HeroSection } from '#/components/HeroSection'
+import { TextSection } from '#/components/TextSection'
+import { DynamicImage } from '#/components/DynamicImage'
 import { useState } from 'react'
-import { AccordionItem } from '../components/AccordionItem'
+import { AccordionItem } from '#/components/AccordionItem'
 
-export const Route = createFileRoute('/about')({
+export const Route = createFileRoute('/(app)/about')({
   component: About,
 })
 

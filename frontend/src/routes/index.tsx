@@ -38,7 +38,8 @@ const faqs = [
 export const Route = createFileRoute('/')({ component: App })
 
 function App() {
-  const [openIndex, setOpenIndex] = useState<number | null>(null)
+  const [openIndex, setOpenIndex] = useState<number | null>(null);
+
 
   return (
     <main className="min-h-screen">

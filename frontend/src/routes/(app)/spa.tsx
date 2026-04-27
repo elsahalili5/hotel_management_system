@@ -1,9 +1,9 @@
 import { createFileRoute } from '@tanstack/react-router'
-import { HeroSection } from '../components/HeroSection'
-import {TextSection} from "../components/TextSection"
-import {SplitSection} from "../components/SplitSection"
+import { HeroSection } from '#/components/HeroSection'
+import {TextSection} from '#/components/TextSection'
+import {SplitSection} from '#/components/SplitSection'
 
-export const Route = createFileRoute('/spa')({
+export const Route = createFileRoute('/(app)/spa')({
   component: RouteComponent,
 })
 

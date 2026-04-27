@@ -1,10 +1,10 @@
 import { createFileRoute, Outlet, useChildMatches } from '@tanstack/react-router'
 import { ArrowRight } from 'lucide-react'
-import { HeroSection } from '../components/HeroSection'
-import { TextSection } from '../components/TextSection'
-import { SplitSection } from '../components/SplitSection'
+import { HeroSection } from '#/components/HeroSection'
+import { TextSection } from '#/components/TextSection'
+import { SplitSection } from '#/components/SplitSection'
 
-export const Route = createFileRoute('/rooms')({
+export const Route = createFileRoute('/(app)/rooms')({
   component: Rooms,
 })
 

@@ -1,10 +1,10 @@
 import { createFileRoute } from '@tanstack/react-router'
-import { HeroSection } from '../components/HeroSection'
-import { TextSection } from '../components/TextSection'
-import { SplitSection } from '../components/SplitSection'
-import { DynamicImage } from '../components/DynamicImage'
+import { HeroSection } from '#/components/HeroSection'
+import { TextSection } from '#/components/TextSection'
+import { SplitSection } from '#/components/SplitSection'
+import { DynamicImage } from '#/components/DynamicImage'
 
-export const Route = createFileRoute('/restaurant')({
+export const Route = createFileRoute('/(app)/restaurant')({
   component: Restaurant,
 })
 
