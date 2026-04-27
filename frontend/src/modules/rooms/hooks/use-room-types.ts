@@ -9,6 +9,13 @@ export const roomTypeKeys = {
 export function useRoomTypes() {
   return useQuery({
     queryKey: roomTypeKeys.all,
-    queryFn: () => roomTypeApi.getAll(),
+    queryFn: roomTypeApi.getAll,
+  })
+}
+
+export function useRoomTypeById(id: number) {
+  return useQuery({
+    queryKey: roomTypeKeys.detail(id),
+    queryFn: () => roomTypeApi.getById(id),
   })
 }
