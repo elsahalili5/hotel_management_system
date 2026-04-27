@@ -17,3 +17,7 @@ export type LoginUserResponse = {
   accessToken: string;
   refreshToken: string;
 };
+
+export type RegisterUserResponse = {
+  user: AuthUser;
+};

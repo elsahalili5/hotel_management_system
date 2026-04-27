@@ -8,7 +8,7 @@ export const Route = createFileRoute('/(auth)/login')({
 function LoginPage() {
   return (
     <main>
-        <LoginForm />
+      <LoginForm />
     </main>
   )
 }

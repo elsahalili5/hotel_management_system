@@ -10,5 +10,5 @@ export const Route = createFileRoute('/(admin)')({
 })
 
 function RouteComponent() {
-  return  <Outlet />
+  return <Outlet />
 }

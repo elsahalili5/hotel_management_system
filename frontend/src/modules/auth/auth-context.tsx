@@ -1,6 +1,10 @@
 import { createContext, useContext, useMemo, useState } from 'react'
 import type { ReactNode } from 'react'
-import type { AuthUser, LoginUserInput, LoginUserResponse } from '@mansio/shared/auth'
+import type {
+  AuthUser,
+  LoginUserInput,
+  LoginUserResponse,
+} from '@mansio/shared/'
 import { authApi } from './api/auth-api'
 
 const AUTH_STORAGE_KEY = 'mansio-auth'
@@ -77,7 +81,6 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     }),
     [accessToken, user],
   )
-
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>
 }

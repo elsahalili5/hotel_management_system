@@ -1,24 +1,17 @@
 import { Prisma } from "../generated/prisma/client";
 import { Request } from "express";
 
-
 export type AuthUser = Prisma.UserGetPayload<{
   include: {
-    user_roles: {
-      include: {
-        role: true;
-      };
-    };
+    user_roles: true;
     guest_profile: true;
     staff_profile: true;
   };
 }>;
 
-
 export interface AuthRequest extends Request {
   user?: AuthUser;
 }
-
 
 export type TypedRequest<
   Body = unknown,

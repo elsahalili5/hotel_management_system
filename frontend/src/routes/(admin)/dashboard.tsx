@@ -136,7 +136,10 @@ const bookingColumns: Column<Booking>[] = [
     key: 'id',
     header: 'Booking',
     render: (b) => (
-      <span className="font-medium text-xs" style={{ color: 'var(--gold-deep)' }}>
+      <span
+        className="font-medium text-xs"
+        style={{ color: 'var(--gold-deep)' }}
+      >
         {b.id}
       </span>
     ),

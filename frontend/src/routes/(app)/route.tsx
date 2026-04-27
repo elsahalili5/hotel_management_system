@@ -1,5 +1,6 @@
 import { createFileRoute, Outlet, redirect } from '@tanstack/react-router'
-
+import Footer from '#/components/Footer'
+import Header from '#/components/Header'
 export const Route = createFileRoute('/(app)')({
   beforeLoad: ({ context, location }) => {
     const publicPaths = ['/rooms', '/about', '/restaurant', '/spa', '/contact']
@@ -12,5 +13,11 @@ export const Route = createFileRoute('/(app)')({
 })
 
 function RouteComponent() {
-  return <Outlet />
+  return (
+    <>
+      <Header />
+      <Outlet />
+      <Footer />
+    </>
+  )
 }

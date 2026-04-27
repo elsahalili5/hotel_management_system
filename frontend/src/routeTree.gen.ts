@@ -9,6 +9,7 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
+import { Route as GentritRouteImport } from './routes/gentrit'
 import { Route as authRouteRouteImport } from './routes/(auth)/route'
 import { Route as appRouteRouteImport } from './routes/(app)/route'
 import { Route as adminRouteRouteImport } from './routes/(admin)/route'
@@ -25,7 +26,13 @@ import { Route as appBookingsRouteImport } from './routes/(app)/bookings'
 import { Route as appAboutRouteImport } from './routes/(app)/about'
 import { Route as adminDashboardRouteImport } from './routes/(admin)/dashboard'
 import { Route as appRoomsRoomTypeIdRouteImport } from './routes/(app)/rooms.$roomTypeId'
+import { Route as adminDashboardRoomsRouteImport } from './routes/(admin)/dashboard.rooms'
 
+const GentritRoute = GentritRouteImport.update({
+  id: '/gentrit',
+  path: '/gentrit',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const authRouteRoute = authRouteRouteImport.update({
   id: '/(auth)',
   getParentRoute: () => rootRouteImport,
@@ -103,10 +110,16 @@ const appRoomsRoomTypeIdRoute = appRoomsRoomTypeIdRouteImport.update({
   path: '/$roomTypeId',
   getParentRoute: () => appRoomsRoute,
 } as any)
+const adminDashboardRoomsRoute = adminDashboardRoomsRouteImport.update({
+  id: '/rooms',
+  path: '/rooms',
+  getParentRoute: () => adminDashboardRoute,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
-  '/dashboard': typeof adminDashboardRoute
+  '/gentrit': typeof GentritRoute
+  '/dashboard': typeof adminDashboardRouteWithChildren
   '/about': typeof appAboutRoute
   '/bookings': typeof appBookingsRoute
   '/contact': typeof appContactRoute
@@ -117,11 +130,13 @@ export interface FileRoutesByFullPath {
   '/users': typeof appUsersRoute
   '/login': typeof authLoginRoute
   '/signup': typeof authSignupRoute
+  '/dashboard/rooms': typeof adminDashboardRoomsRoute
   '/rooms/$roomTypeId': typeof appRoomsRoomTypeIdRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
-  '/dashboard': typeof adminDashboardRoute
+  '/gentrit': typeof GentritRoute
+  '/dashboard': typeof adminDashboardRouteWithChildren
   '/about': typeof appAboutRoute
   '/bookings': typeof appBookingsRoute
   '/contact': typeof appContactRoute
@@ -132,6 +147,7 @@ export interface FileRoutesByTo {
   '/users': typeof appUsersRoute
   '/login': typeof authLoginRoute
   '/signup': typeof authSignupRoute
+  '/dashboard/rooms': typeof adminDashboardRoomsRoute
   '/rooms/$roomTypeId': typeof appRoomsRoomTypeIdRoute
 }
 export interface FileRoutesById {
@@ -140,7 +156,8 @@ export interface FileRoutesById {
   '/(admin)': typeof adminRouteRouteWithChildren
   '/(app)': typeof appRouteRouteWithChildren
   '/(auth)': typeof authRouteRouteWithChildren
-  '/(admin)/dashboard': typeof adminDashboardRoute
+  '/gentrit': typeof GentritRoute
+  '/(admin)/dashboard': typeof adminDashboardRouteWithChildren
   '/(app)/about': typeof appAboutRoute
   '/(app)/bookings': typeof appBookingsRoute
   '/(app)/contact': typeof appContactRoute
@@ -151,12 +168,14 @@ export interface FileRoutesById {
   '/(app)/users': typeof appUsersRoute
   '/(auth)/login': typeof authLoginRoute
   '/(auth)/signup': typeof authSignupRoute
+  '/(admin)/dashboard/rooms': typeof adminDashboardRoomsRoute
   '/(app)/rooms/$roomTypeId': typeof appRoomsRoomTypeIdRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
     | '/'
+    | '/gentrit'
     | '/dashboard'
     | '/about'
     | '/bookings'
@@ -168,10 +187,12 @@ export interface FileRouteTypes {
     | '/users'
     | '/login'
     | '/signup'
+    | '/dashboard/rooms'
     | '/rooms/$roomTypeId'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
+    | '/gentrit'
     | '/dashboard'
     | '/about'
     | '/bookings'
@@ -183,6 +204,7 @@ export interface FileRouteTypes {
     | '/users'
     | '/login'
     | '/signup'
+    | '/dashboard/rooms'
     | '/rooms/$roomTypeId'
   id:
     | '__root__'
@@ -190,6 +212,7 @@ export interface FileRouteTypes {
     | '/(admin)'
     | '/(app)'
     | '/(auth)'
+    | '/gentrit'
     | '/(admin)/dashboard'
     | '/(app)/about'
     | '/(app)/bookings'
@@ -201,6 +224,7 @@ export interface FileRouteTypes {
     | '/(app)/users'
     | '/(auth)/login'
     | '/(auth)/signup'
+    | '/(admin)/dashboard/rooms'
     | '/(app)/rooms/$roomTypeId'
   fileRoutesById: FileRoutesById
 }
@@ -209,10 +233,18 @@ export interface RootRouteChildren {
   adminRouteRoute: typeof adminRouteRouteWithChildren
   appRouteRoute: typeof appRouteRouteWithChildren
   authRouteRoute: typeof authRouteRouteWithChildren
+  GentritRoute: typeof GentritRoute
 }
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
+    '/gentrit': {
+      id: '/gentrit'
+      path: '/gentrit'
+      fullPath: '/gentrit'
+      preLoaderRoute: typeof GentritRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/(auth)': {
       id: '/(auth)'
       path: ''
@@ -325,15 +357,34 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof appRoomsRoomTypeIdRouteImport
       parentRoute: typeof appRoomsRoute
     }
+    '/(admin)/dashboard/rooms': {
+      id: '/(admin)/dashboard/rooms'
+      path: '/rooms'
+      fullPath: '/dashboard/rooms'
+      preLoaderRoute: typeof adminDashboardRoomsRouteImport
+      parentRoute: typeof adminDashboardRoute
+    }
   }
 }
 
+interface adminDashboardRouteChildren {
+  adminDashboardRoomsRoute: typeof adminDashboardRoomsRoute
+}
+
+const adminDashboardRouteChildren: adminDashboardRouteChildren = {
+  adminDashboardRoomsRoute: adminDashboardRoomsRoute,
+}
+
+const adminDashboardRouteWithChildren = adminDashboardRoute._addFileChildren(
+  adminDashboardRouteChildren,
+)
+
 interface adminRouteRouteChildren {
-  adminDashboardRoute: typeof adminDashboardRoute
+  adminDashboardRoute: typeof adminDashboardRouteWithChildren
 }
 
 const adminRouteRouteChildren: adminRouteRouteChildren = {
-  adminDashboardRoute: adminDashboardRoute,
+  adminDashboardRoute: adminDashboardRouteWithChildren,
 }
 
 const adminRouteRouteWithChildren = adminRouteRoute._addFileChildren(
@@ -397,6 +448,7 @@ const rootRouteChildren: RootRouteChildren = {
   adminRouteRoute: adminRouteRouteWithChildren,
   appRouteRoute: appRouteRouteWithChildren,
   authRouteRoute: authRouteRouteWithChildren,
+  GentritRoute: GentritRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)

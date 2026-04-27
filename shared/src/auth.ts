@@ -4,6 +4,5 @@ export type {
   RefreshTokenInput,
   LogoutInput,
   LoginUserResponse,
-} from '../../backend/src/modules/auth/auth.types.ts'
-
-
+  RegisterUserResponse,
+} from "../../backend/src/modules/auth/auth.types.ts";

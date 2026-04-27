@@ -12,8 +12,10 @@ import {
   RefreshTokenInput,
   LogoutInput,
   LoginUserResponse,
+  RegisterUserResponse,
 } from "./auth.types.ts";
 import { safeUserSelect } from "@lib/constants.ts";
+import { AuthUser } from "@lib/types.ts";
 
 const SALT_ROUNDS = 10;
 // dmth nr i perseritjeve te hashimit te passwordit, sa me i larte aq me i sigurt eshte passwordi, por edhe me shume kohe merr per tu hash-uar
@@ -21,7 +23,9 @@ const MAX_FAILED_ATTEMPTS = 5;
 const LOCKOUT_DURATION_MS = 15 * 60 * 1000; // 15 minuta
 
 export const AuthService = {
-  registerUser: async (data: RegisterUserInput) => {
+  registerUser: async (
+    data: RegisterUserInput,
+  ): Promise<RegisterUserResponse> => {
     const { first_name, last_name, email, password } = data;
 
     const existingUser = await prisma.user.findUnique({
@@ -63,7 +67,7 @@ export const AuthService = {
       },
     });
 
-    return user;
+    return { user };
   },
 
   loginUser: async (payload: LoginUserInput): Promise<LoginUserResponse> => {

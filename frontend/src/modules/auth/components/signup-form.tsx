@@ -1,25 +1,26 @@
 import { useForm } from 'react-hook-form'
-import { useLogin } from '../hooks/use-login'
-import type { LoginUserInput } from '@mansio/shared/auth'
-import { useNavigate, Link } from '@tanstack/react-router'
-import { LogIn } from 'lucide-react'
+import { Link, useNavigate } from '@tanstack/react-router'
+import { UserPlus } from 'lucide-react'
+import type { RegisterUserInput } from '@mansio/shared/auth'
+import { useRegister } from '../hooks/use-register'
 
 const inputClass =
   'w-full bg-white border border-mansio-linen/60 rounded-sm px-4 py-3 text-sm text-mansio-espresso placeholder-mansio-linen focus:outline-none focus:border-mansio-gold transition-colors'
 const labelClass =
   'text-xs font-medium tracking-widest uppercase text-mansio-taupe mb-1.5 block'
 
-export function LoginForm() {
+export function SignupForm() {
   const navigate = useNavigate()
-  const loginMutation = useLogin()
-  const loginForm = useForm<LoginUserInput>()
+  const registerMutation = useRegister()
+  const signupForm = useForm<RegisterUserInput>()
 
-  const handleSubmit = loginForm.handleSubmit(async (values) => {
+  const handleSubmit = signupForm.handleSubmit(async (values) => {
     try {
-      await loginMutation.mutateAsync(values)
-      navigate({ to: '/dashboard', replace: true })
+      await registerMutation.mutateAsync(values)
+      // Pas regjistrimit mund ta dërgosh te dashboad ose login
+      navigate({ to: '/login', replace: true })
     } catch (error) {
-      console.error('Login failed', error)
+      console.error('Registration failed', error)
     }
   })
 
@@ -28,51 +29,76 @@ export function LoginForm() {
       <div className="w-full max-w-md bg-white border border-mansio-linen/50 rounded-xl shadow-sm shadow-mansio-linen/40 px-8 py-10">
         <div className="text-center mb-8">
           <h2 className="font-serif font-normal text-mansio-espresso leading-tight mb-4 text-3xl md:text-4xl">
-            Welcome
+            Create Account
           </h2>
           <div className="h-px w-12 bg-mansio-gold mx-auto mb-4" />
           <p className="text-mansio-mocha text-sm leading-relaxed">
-            Sign in to manage your reservations and preferences.
+            Join Mansio and manage your reservations with ease.
           </p>
         </div>
 
         <form onSubmit={handleSubmit} className="space-y-5">
-          <div className="space-y-4">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
+            {/* First Name */}
             <div>
+              <label className={labelClass}>First Name</label>
+              <input
+                type="text"
+                placeholder="Jane"
+                className={inputClass}
+                {...signupForm.register('first_name', { required: true })}
+              />
+            </div>
+
+            {/* Last Name */}
+            <div>
+              <label className={labelClass}>Last Name</label>
+              <input
+                type="text"
+                placeholder="Doe"
+                className={inputClass}
+                {...signupForm.register('last_name', { required: true })}
+              />
+            </div>
+
+            {/* Email Address - Full Width */}
+            <div className="sm:col-span-2">
               <label className={labelClass}>Email Address</label>
               <input
                 type="email"
                 placeholder="jane@example.com"
                 className={inputClass}
-                {...loginForm.register('email', { required: true })}
+                {...signupForm.register('email', { required: true })}
               />
             </div>
 
-            <div>
+            {/* Password - Full Width */}
+            <div className="sm:col-span-2">
               <label className={labelClass}>Password</label>
               <input
                 type="password"
                 placeholder="••••••••"
                 className={inputClass}
-                {...loginForm.register('password', { required: true })}
+                {...signupForm.register('password', { required: true })}
               />
             </div>
           </div>
+
           <div className="pt-4 mt-2 border-t border-mansio-linen/40 flex justify-center">
             <button
               type="submit"
-              disabled={loginMutation.isPending}
+              disabled={registerMutation.isPending}
               className="bg-mansio-espresso text-white px-8 py-3 rounded-sm text-xs font-medium tracking-widest uppercase hover:bg-mansio-mocha transition-all flex items-center gap-2 disabled:opacity-50"
             >
-              {loginMutation.isPending ? (
+              {registerMutation.isPending ? (
                 <>
                   <SpinnerIcon />
-                  Logging in...
+                  Creating...
                 </>
               ) : (
                 <>
-                  Sign In
-                  <LogIn size={14} strokeWidth={1.5} />
+                  Sign Up
+                  <UserPlus size={14} strokeWidth={1.5} />
                 </>
               )}
             </button>
@@ -80,12 +106,12 @@ export function LoginForm() {
         </form>
 
         <p className="text-center text-xs text-mansio-taupe mt-6">
-          Don't have an account?{' '}
+          Already have an account?{' '}
           <Link
-            to="/signup"
+            to="/login"
             className="text-mansio-mocha underline underline-offset-4 hover:text-mansio-espresso transition-colors"
           >
-            Sign up
+            Sign in
           </Link>
         </p>
       </div>

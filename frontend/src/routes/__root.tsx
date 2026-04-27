@@ -14,16 +14,5 @@ export const Route = createRootRouteWithContext<RouterContext>()({
 })
 
 function RootComponent() {
-  const location = useLocation()
-  const hideLayout = ['/login', '/signup', '/dashboard'].includes(
-    location.pathname,
-  )
-
-  return (
-    <>
-      {!hideLayout && <Header />}
-      <Outlet />
-      {!hideLayout && <Footer />}
-    </>
-  )
+  return <Outlet />
 }

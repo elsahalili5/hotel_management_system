@@ -22,7 +22,10 @@ export type ApiClient = {
     body?: TBody,
     config?: AxiosRequestConfig<TBody>,
   ): Promise<TResponse>
-  delete<TResponse>(url: string, config?: AxiosRequestConfig): Promise<TResponse>
+  delete<TResponse>(
+    url: string,
+    config?: AxiosRequestConfig,
+  ): Promise<TResponse>
   request<TResponse, TBody = unknown>(
     config: AxiosRequestConfig<TBody>,
   ): Promise<TResponse>
