@@ -51,7 +51,8 @@ model User {
   guest_profile       Guest?
   user_roles          UserRole[]
   user_tokens         UserTokens[]
-  refresh_tokens RefreshTokens[]
+  refresh_tokens      RefreshTokens[]
+  assigned_tasks      CleaningTask[]  @relation("ManagerAssignments")
 }
 
 
@@ -80,6 +81,7 @@ model Staff {
 
   user_id      Int     @unique
   user         User    @relation(fields: [user_id], references: [id], onDelete: Cascade)
+  cleaning_tasks CleaningTask[] @relation("StaffCleaningTasks")
 }
 
 model Guest {
@@ -124,14 +126,35 @@ model Room {
   
   room_type_id Int
   room_type    RoomType   @relation(fields: [room_type_id], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  cleaning_tasks CleaningTask[]
 }
 
 enum RoomStatus {
   AVAILABLE
   OCCUPIED
+  DIRTY
   CLEANING
 }
+model CleaningTask {
+  id             Int        @id @default(autoincrement())
+  room_id        Int
+  staff_id       Int
+  assigned_by_id Int
+  status         TaskStatus @default(PENDING)
+  due_date       DateTime?
+  notes          String?    @db.Text
+  assigned_at    DateTime   @default(now())
+  finished_at    DateTime?
 
+  room        Room  @relation(fields: [room_id], references: [id])
+  staff       Staff @relation("StaffCleaningTasks", fields: [staff_id], references: [id])
+  assigned_by User  @relation("ManagerAssignments", fields: [assigned_by_id], references: [id])
+}
+enum TaskStatus {
+  PENDING      
+  IN_PROGRESS  
+  COMPLETED    
+}
 model RoomImage {
   id           Int      @id @default(autoincrement())
   url          String   @db.Text
