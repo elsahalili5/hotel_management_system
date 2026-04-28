@@ -13,7 +13,7 @@ import { Route as GentritRouteImport } from './routes/gentrit'
 import { Route as authRouteRouteImport } from './routes/(auth)/route'
 import { Route as appRouteRouteImport } from './routes/(app)/route'
 import { Route as adminRouteRouteImport } from './routes/(admin)/route'
-import { Route as IndexRouteImport } from './routes/index'
+import { Route as appIndexRouteImport } from './routes/(app)/index'
 import { Route as authSignupRouteImport } from './routes/(auth)/signup'
 import { Route as authLoginRouteImport } from './routes/(auth)/login'
 import { Route as appUsersRouteImport } from './routes/(app)/users'
@@ -45,10 +45,10 @@ const adminRouteRoute = adminRouteRouteImport.update({
   id: '/(admin)',
   getParentRoute: () => rootRouteImport,
 } as any)
-const IndexRoute = IndexRouteImport.update({
+const appIndexRoute = appIndexRouteImport.update({
   id: '/',
   path: '/',
-  getParentRoute: () => rootRouteImport,
+  getParentRoute: () => appRouteRoute,
 } as any)
 const authSignupRoute = authSignupRouteImport.update({
   id: '/signup',
@@ -117,7 +117,6 @@ const adminDashboardRoomsRoute = adminDashboardRoomsRouteImport.update({
 } as any)
 
 export interface FileRoutesByFullPath {
-  '/': typeof IndexRoute
   '/gentrit': typeof GentritRoute
   '/dashboard': typeof adminDashboardRouteWithChildren
   '/about': typeof appAboutRoute
@@ -130,11 +129,11 @@ export interface FileRoutesByFullPath {
   '/users': typeof appUsersRoute
   '/login': typeof authLoginRoute
   '/signup': typeof authSignupRoute
+  '/': typeof appIndexRoute
   '/dashboard/rooms': typeof adminDashboardRoomsRoute
   '/rooms/$roomTypeId': typeof appRoomsRoomTypeIdRoute
 }
 export interface FileRoutesByTo {
-  '/': typeof IndexRoute
   '/gentrit': typeof GentritRoute
   '/dashboard': typeof adminDashboardRouteWithChildren
   '/about': typeof appAboutRoute
@@ -147,12 +146,12 @@ export interface FileRoutesByTo {
   '/users': typeof appUsersRoute
   '/login': typeof authLoginRoute
   '/signup': typeof authSignupRoute
+  '/': typeof appIndexRoute
   '/dashboard/rooms': typeof adminDashboardRoomsRoute
   '/rooms/$roomTypeId': typeof appRoomsRoomTypeIdRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
-  '/': typeof IndexRoute
   '/(admin)': typeof adminRouteRouteWithChildren
   '/(app)': typeof appRouteRouteWithChildren
   '/(auth)': typeof authRouteRouteWithChildren
@@ -168,13 +167,13 @@ export interface FileRoutesById {
   '/(app)/users': typeof appUsersRoute
   '/(auth)/login': typeof authLoginRoute
   '/(auth)/signup': typeof authSignupRoute
+  '/(app)/': typeof appIndexRoute
   '/(admin)/dashboard/rooms': typeof adminDashboardRoomsRoute
   '/(app)/rooms/$roomTypeId': typeof appRoomsRoomTypeIdRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
-    | '/'
     | '/gentrit'
     | '/dashboard'
     | '/about'
@@ -187,11 +186,11 @@ export interface FileRouteTypes {
     | '/users'
     | '/login'
     | '/signup'
+    | '/'
     | '/dashboard/rooms'
     | '/rooms/$roomTypeId'
   fileRoutesByTo: FileRoutesByTo
   to:
-    | '/'
     | '/gentrit'
     | '/dashboard'
     | '/about'
@@ -204,11 +203,11 @@ export interface FileRouteTypes {
     | '/users'
     | '/login'
     | '/signup'
+    | '/'
     | '/dashboard/rooms'
     | '/rooms/$roomTypeId'
   id:
     | '__root__'
-    | '/'
     | '/(admin)'
     | '/(app)'
     | '/(auth)'
@@ -224,12 +223,12 @@ export interface FileRouteTypes {
     | '/(app)/users'
     | '/(auth)/login'
     | '/(auth)/signup'
+    | '/(app)/'
     | '/(admin)/dashboard/rooms'
     | '/(app)/rooms/$roomTypeId'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
-  IndexRoute: typeof IndexRoute
   adminRouteRoute: typeof adminRouteRouteWithChildren
   appRouteRoute: typeof appRouteRouteWithChildren
   authRouteRoute: typeof authRouteRouteWithChildren
@@ -266,12 +265,12 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof adminRouteRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/': {
-      id: '/'
+    '/(app)/': {
+      id: '/(app)/'
       path: '/'
       fullPath: '/'
-      preLoaderRoute: typeof IndexRouteImport
-      parentRoute: typeof rootRouteImport
+      preLoaderRoute: typeof appIndexRouteImport
+      parentRoute: typeof appRouteRoute
     }
     '/(auth)/signup': {
       id: '/(auth)/signup'
@@ -412,6 +411,7 @@ interface appRouteRouteChildren {
   appRoomsRoute: typeof appRoomsRouteWithChildren
   appSpaRoute: typeof appSpaRoute
   appUsersRoute: typeof appUsersRoute
+  appIndexRoute: typeof appIndexRoute
 }
 
 const appRouteRouteChildren: appRouteRouteChildren = {
@@ -423,6 +423,7 @@ const appRouteRouteChildren: appRouteRouteChildren = {
   appRoomsRoute: appRoomsRouteWithChildren,
   appSpaRoute: appSpaRoute,
   appUsersRoute: appUsersRoute,
+  appIndexRoute: appIndexRoute,
 }
 
 const appRouteRouteWithChildren = appRouteRoute._addFileChildren(
@@ -444,7 +445,6 @@ const authRouteRouteWithChildren = authRouteRoute._addFileChildren(
 )
 
 const rootRouteChildren: RootRouteChildren = {
-  IndexRoute: IndexRoute,
   adminRouteRoute: adminRouteRouteWithChildren,
   appRouteRoute: appRouteRouteWithChildren,
   authRouteRoute: authRouteRouteWithChildren,

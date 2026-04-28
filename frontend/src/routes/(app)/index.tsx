@@ -1,11 +1,11 @@
-import { createFileRoute } from '@tanstack/react-router'
-import { HeroSection } from '../components/HeroSection'
-import { TextSection } from '../components/TextSection'
-import { SplitSection } from '../components/SplitSection'
 import { useState } from 'react'
-import { AccordionItem } from '../components/AccordionItem'
-import { CallToAction } from '../components/CallToAction'
+import { createFileRoute } from '@tanstack/react-router'
 import { ArrowRight } from 'lucide-react'
+import { AccordionItem } from '#/components/AccordionItem'
+import { CallToAction } from '#/components/CallToAction'
+import { HeroSection } from '#/components/HeroSection'
+import { SplitSection } from '#/components/SplitSection'
+import { TextSection } from '#/components/TextSection'
 
 const faqs = [
   {
@@ -35,7 +35,7 @@ const faqs = [
   },
 ]
 
-export const Route = createFileRoute('/')({ component: App })
+export const Route = createFileRoute('/(app)/')({ component: App })
 
 function App() {
   const [openIndex, setOpenIndex] = useState<number | null>(null);

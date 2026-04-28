@@ -204,9 +204,7 @@ function RouteComponent() {
               ))}
             </div>
 
-            {/* Content grid */}
             <div className="grid grid-cols-3 gap-5">
-              {/* Recent Bookings */}
               <DataTable
                 title="Recent Bookings"
                 columns={bookingColumns}
@@ -216,9 +214,7 @@ function RouteComponent() {
                 className="col-span-2"
               />
 
-              {/* Right column */}
               <div className="flex flex-col gap-5">
-                {/* Occupancy */}
                 <DashboardCard className="p-5">
                   <h2
                     className="font-serif text-base mb-4"
@@ -233,7 +229,6 @@ function RouteComponent() {
                   </div>
                 </DashboardCard>
 
-                {/* Quick Actions */}
                 <DashboardCard className="p-5">
                   <h2
                     className="font-serif text-base mb-4"

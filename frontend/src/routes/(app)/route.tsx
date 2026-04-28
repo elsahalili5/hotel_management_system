@@ -3,7 +3,14 @@ import Footer from '#/components/Footer'
 import Header from '#/components/Header'
 export const Route = createFileRoute('/(app)')({
   beforeLoad: ({ context, location }) => {
-    const publicPaths = ['/rooms', '/about', '/restaurant', '/spa', '/contact']
+    const publicPaths = [
+      '/',
+      '/rooms',
+      '/about',
+      '/restaurant',
+      '/spa',
+      '/contact',
+    ]
     const isPublic = publicPaths.some((p) => location.pathname.startsWith(p))
     if (!context.auth.isAuthenticated && !isPublic) {
       throw redirect({ to: '/login' })
