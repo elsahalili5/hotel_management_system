@@ -1,9 +1,13 @@
-import { createFileRoute, Outlet, useChildMatches } from '@tanstack/react-router'
+import {
+  createFileRoute,
+  Outlet,
+  useChildMatches,
+} from '@tanstack/react-router'
 import { ArrowRight } from 'lucide-react'
 import { HeroSection } from '#/components/HeroSection'
 import { TextSection } from '#/components/TextSection'
 import { SplitSection } from '#/components/SplitSection'
-import { useRoomTypes } from '#/modules/rooms/hooks/use-room-types'
+import { useRoomTypes } from '#/modules/rooms/room-type/hooks/use-room-types'
 
 export const Route = createFileRoute('/(app)/rooms')({
   component: Rooms,
@@ -39,22 +43,33 @@ function Rooms() {
       )}
 
       {isError && (
-        <p className="text-center text-red-500 py-16">Failed to load rooms. Please try again.</p>
+        <p className="text-center text-red-500 py-16">
+          Failed to load rooms. Please try again.
+        </p>
       )}
 
       {roomTypes?.length === 0 && (
-        <p className="text-center text-mansio-taupe py-16">No rooms available at the moment.</p>
+        <p className="text-center text-mansio-taupe py-16">
+          No rooms available at the moment.
+        </p>
       )}
 
       {roomTypes?.map((room, index) => {
-        const primaryImage = room.images.find((img) => img.is_primary) ?? room.images[0]
+        const primaryImage =
+          room.images.find((img) => img.is_primary) ?? room.images[0]
 
         return (
           <SplitSection
             key={room.id}
             title={room.name}
-            text={room.description ?? `From $${room.base_price} / night · Up to ${room.max_occupancy} guests${room.size_m2 ? ` · ${room.size_m2} m²` : ''}`}
-            image={primaryImage?.url ?? 'https://www.epidamn.com/assets/images/room1.jpg'}
+            text={
+              room.description ??
+              `From $${room.base_price} / night · Up to ${room.max_occupancy} guests${room.size_m2 ? ` · ${room.size_m2} m²` : ''}`
+            }
+            image={
+              primaryImage?.url ??
+              'https://www.epidamn.com/assets/images/room1.jpg'
+            }
             buttonLabel="See More"
             buttonTo={`/rooms/${room.id}`}
             buttonEndIcon={<ArrowRight size={20} />}

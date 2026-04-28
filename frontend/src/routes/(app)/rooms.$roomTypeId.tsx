@@ -9,7 +9,7 @@ import { PoliciesStrip } from '#/components/room/PoliciesStrip'
 import { CallToAction } from '#/components/CallToAction'
 import { Container } from '#/components/Container'
 import { ChevronLeft } from 'lucide-react'
-import { useRoomTypeById } from '#/modules/rooms/hooks/use-room-types'
+import { useRoomTypeById } from '#/modules/rooms/room-type/hooks/use-room-types'
 
 export const Route = createFileRoute('/(app)/rooms/$roomTypeId')({
   component: RoomDetail,
@@ -35,16 +35,25 @@ function RoomDetail() {
     )
   }
 
-  const primaryImage = room.images.find((img) => img.is_primary) ?? room.images[0]
-  const galleryImages = room.images.filter((img) => !img.is_primary).map((img) => img.url)
+  const primaryImage =
+    room.images.find((img) => img.is_primary) ?? room.images[0]
+  const galleryImages = room.images
+    .filter((img) => !img.is_primary)
+    .map((img) => img.url)
   const beds = room.beds.map((b) => `${b.quantity}x ${b.bed.name}`)
-  const amenities = room.amenities.map((a) => ({ label: a.amenity.name, iconName: a.amenity.icon }))
+  const amenities = room.amenities.map((a) => ({
+    label: a.amenity.name,
+    iconName: a.amenity.icon,
+  }))
 
   return (
     <main className="min-h-screen bg-mansio-cream">
       <div className="relative">
         <HeroSection
-          image={primaryImage?.url ?? 'https://epidamn.com/assets/images/pamjedhoma.jpg'}
+          image={
+            primaryImage?.url ??
+            'https://epidamn.com/assets/images/pamjedhoma.jpg'
+          }
           title={room.name}
           height="500px"
         />
@@ -87,9 +96,7 @@ function RoomDetail() {
             <RoomGallery images={galleryImages} roomName={room.name} />
           )}
 
-          {amenities.length > 0 && (
-            <RoomAmenities amenities={amenities} />
-          )}
+          {amenities.length > 0 && <RoomAmenities amenities={amenities} />}
         </div>
 
         <div className="lg:col-span-1">

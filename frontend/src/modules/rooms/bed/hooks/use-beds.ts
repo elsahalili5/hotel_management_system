@@ -37,7 +37,7 @@ export function useUpdateBed() {
 export function useDeleteBed() {
   const queryClient = useQueryClient()
   return useMutation({
-    mutationFn: bedApi.delete,
+    mutationFn: (id: number) => bedApi.delete(id), 
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: bedKeys.all })
     },
