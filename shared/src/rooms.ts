@@ -17,5 +17,12 @@ export type {
   BedResponse
 } from "../../backend/src/modules/rooms/bed/bed.types.ts";
 
+export type {
+  CreateRoomInput,
+  UpdateRoomInput,
+  UpdateRoomStatusInput,
+  RoomResponse,
+} from "../../backend/src/modules/rooms/room/room.types.ts";
+
 
 

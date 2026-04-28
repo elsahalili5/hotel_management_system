@@ -5,8 +5,22 @@ import {
   updateRoomStatusSchema,
   roomIdSchema,
 } from "./room.schema.ts";
+import type { RoomStatus } from "@generated/prisma/enums.ts";
 
 export type CreateRoomInput = z.infer<typeof createRoomSchema>;
 export type UpdateRoomInput = z.infer<typeof updateRoomSchema>;
 export type RoomIdParam = z.infer<typeof roomIdSchema>;
 export type UpdateRoomStatusInput = z.infer<typeof updateRoomStatusSchema>;
+
+export type RoomResponse = {
+  id: number
+  room_number: string
+  floor: number
+  status: RoomStatus
+  room_type: {
+    id: number
+    name: string
+    base_price: string
+    max_occupancy: number
+  }
+}
