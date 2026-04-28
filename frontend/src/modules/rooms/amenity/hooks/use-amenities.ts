@@ -37,8 +37,7 @@ export function useUpdateAmenity() {
 export function useDeleteAmenity() {
   const queryClient = useQueryClient()
   return useMutation({
-   
-    mutationFn: (id: number) => amenityApi.delete(id), 
+    mutationFn: (id: number) => amenityApi.delete(id),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: amenityKeys.all })
     },
