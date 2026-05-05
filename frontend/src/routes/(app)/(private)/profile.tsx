@@ -1,5 +1,5 @@
 import { ProfileHeader } from '#/components/profile/ProfileHeader'
-import { createFileRoute } from '@tanstack/react-router'
+import { createFileRoute, useNavigate } from '@tanstack/react-router'
 import { Container } from '#/components/Container'
 import { CallToAction } from '#/components/CallToAction'
 import { PersonalInfoCard } from '#/components/profile/PersonalInfoCard'
@@ -8,7 +8,7 @@ import { ReservationsCard } from '#/components/profile/ReservationsCard'
 import { QuickStatsCard } from '#/components/profile/QuickStatsCard'
 import { requireAuthenticated } from '#/lib/route-guard'
 import { useAuth } from '#/modules/auth/hooks/use-auth'
-import { toDate } from '#/lib/dates'
+import { formatDate } from '#/lib/dates'
 
 export const Route = createFileRoute('/(app)/(private)/profile')({
     beforeLoad: ({ context }) => {
@@ -18,29 +18,25 @@ export const Route = createFileRoute('/(app)/(private)/profile')({
 })
 
 
-
 function RouteComponent() {
     const auth = useAuth();
+    const navigate = useNavigate()
     const user = auth.user;
-    const createdAt = toDate(user?.created_at)
-    const memberSince = createdAt ? createdAt.toLocaleDateString() : 'N/A'
+    const memberSince = formatDate(user?.created_at) ?? 'N/A'
+    const handleLogout = () => {
+      auth.logout()
+      navigate({ to: '/login' })
+    }
 
     if(!user) {
         return null;
     }
-
-    console.log(user)
-
-    
     return (
       <main className="min-h-screen bg-mansio-cream">
   
         <ProfileHeader
-          firstName={user.first_name}
-          lastName={user.last_name}
-          email={user.email}
-          status={user.status}
-          memberSince={memberSince}
+          user={user}
+          onLogout={handleLogout}
         />
   
         <div className="h-px bg-mansio-gold/20" />

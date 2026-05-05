@@ -7,6 +7,7 @@ import {
   logoutSchema,
 } from "./auth.schema.ts";
 import { validateRequestMiddleware } from "@shared/middleware/validateRequest.middleware.ts";
+import { authMiddleware } from "@shared/middleware/authMiddleware.ts";
 
 const router = Router();
 
@@ -33,5 +34,7 @@ router.post(
   validateRequestMiddleware(logoutSchema),
   AuthController.logoutUser,
 );
+
+router.get("/me", authMiddleware, AuthController.me);
 
 export default router;

@@ -4,6 +4,8 @@ import { ArrowRight, Menu, X, UserCircle } from 'lucide-react'
 import { Logo } from './Logo'
 import { Container } from './Container'
 import { Button } from './Button'
+import { useAuth } from '#/modules/auth/hooks/use-auth'
+import { getUserFullName } from '#/lib/helpers'
 
 const navLinks = [
   { label: 'ABOUT', to: '/about' },
@@ -14,7 +16,7 @@ const navLinks = [
 ] as const
 
 export default function Header() {
-  const [menuOpen, setMenuOpen] = useState(false)
+  const [menuOpen, setMenuOpen] = useState(false);
 
   return (
     <>
@@ -46,11 +48,9 @@ export default function Header() {
               <Link to="/contact" className="hidden lg:inline-flex no-underline">
                 <Button endIcon={<ArrowRight size={16} />}>BOOK NOW</Button>
               </Link>
-              <Link to="/profile" className="hidden lg:inline-flex no-underline">
-                <Button isIcon variant="ghost" aria-label="Profile">
-                  <UserCircle size={22} />
-                </Button>
-              </Link>
+
+
+              <ProfileLink />
 
               <Button
                 isIcon
@@ -115,5 +115,24 @@ export default function Header() {
         </div>
       </div>
     </>
+  )
+}
+
+
+function ProfileLink () {
+  const auth = useAuth();
+  const user = auth.user;
+
+  if(!user) {
+    return null;
+  }
+
+  return (
+    <Link to="/profile" className="hidden lg:inline-flex no-underline items-center gap-1">
+      <span className="text-mansio-espresso">{getUserFullName(user)}</span>
+      <Button isIcon variant="ghost" aria-label="Profile">
+        <UserCircle size={22} />
+      </Button>
+    </Link>
   )
 }

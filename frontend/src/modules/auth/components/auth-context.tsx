@@ -1,4 +1,4 @@
-import { createContext,  useMemo, useState } from 'react'
+import { createContext, useEffect, useMemo, useState } from 'react'
 import type { ReactNode } from 'react'
 import {
   type AuthUser,
@@ -7,13 +7,13 @@ import {
   type RoleType,
 } from '@mansio/shared'
 import { authApi } from '../api/auth-api'
+import LoadingUser from './loading-user'
 
-const AUTH_STORAGE_KEY = 'mansio-auth'
+export const AUTH_STORAGE_KEY = 'mansio-auth'
 
 type StoredAuth = {
   accessToken: string
   refreshToken: string
-  user: AuthUser
 }
 
 export type AuthContextValue = {
@@ -41,11 +41,42 @@ function readStoredAuth(): StoredAuth | null {
 }
 
 export function AuthProvider({ children }: { children: ReactNode }) {
-  const initialState = readStoredAuth()
-  const [user, setUser] = useState<AuthUser | null>(initialState?.user ?? null)
+  const [initialState] = useState<StoredAuth | null>(() => readStoredAuth())
+  const [user, setUser] = useState<AuthUser | null>(null)
+  const [isLoading, setIsLoading] = useState(Boolean(initialState?.accessToken))
   const [accessToken, setAccessToken] = useState<string | null>(
     initialState?.accessToken ?? null,
   )
+
+  useEffect(() => {
+    if (!initialState?.accessToken || user) {
+      return
+    }
+
+    setIsLoading(true)
+
+    const loadCurrentUser = async () => {
+      try {
+        const currentUser = await authApi.me()
+
+        setUser(currentUser)
+        localStorage.setItem(
+          AUTH_STORAGE_KEY,
+          JSON.stringify({
+            accessToken: initialState.accessToken,
+            refreshToken: initialState.refreshToken,
+          }),
+        )
+      } catch {
+        logout()
+      } finally {
+        setIsLoading(false)
+      }
+    }
+
+    loadCurrentUser();
+
+  }, [initialState?.accessToken, user])
 
   const hasRole = (role: RoleType) => {
     return user?.user_roles.some((userRole) => userRole.role?.name === role) ?? false
@@ -55,7 +86,6 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     const stored: StoredAuth = {
       accessToken: session.accessToken,
       refreshToken: session.refreshToken,
-      user: session.user,
     }
     setUser(session.user)
     setAccessToken(session.accessToken)
@@ -85,7 +115,12 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       hasRole,
     }),
     [accessToken, user, hasRole],
-  )
+  );
+
+
+  if(isLoading) {
+    return <LoadingUser />
+  }
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>
 }

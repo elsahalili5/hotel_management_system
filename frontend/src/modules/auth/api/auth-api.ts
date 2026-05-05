@@ -1,5 +1,6 @@
 import { apiClient } from '#/api/client'
 import type {
+  AuthUser,
   LoginUserInput,
   LoginUserResponse,
   RegisterUserInput,
@@ -14,4 +15,5 @@ export const authApi = {
       '/auth/register',
       payload,
     ),
+  me: () => apiClient.get<AuthUser>('/auth/me'),
 }

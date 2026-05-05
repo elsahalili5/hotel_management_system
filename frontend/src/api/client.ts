@@ -5,6 +5,8 @@ import axios, {
   type AxiosResponse,
 } from 'axios'
 
+import { AUTH_STORAGE_KEY } from '#/modules/auth/components/auth-context'
+
 export type ApiClient = {
   get<TResponse>(url: string, config?: AxiosRequestConfig): Promise<TResponse>
   post<TResponse, TBody = unknown>(
@@ -36,6 +38,16 @@ export const axiosClient: AxiosInstance = axios.create({
   headers: {
     'Content-Type': 'application/json',
   },
+})
+
+axiosClient.interceptors.request.use((config) => {
+  const authStorage = localStorage.getItem(AUTH_STORAGE_KEY);
+  const authToken = authStorage ? JSON.parse(authStorage).accessToken : null;
+  
+  if (authToken) {
+    config.headers.Authorization = `Bearer ${authToken}`
+  }
+  return config
 })
 
 type ApiEnvelope<TResponse> = {

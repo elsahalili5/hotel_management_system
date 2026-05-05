@@ -270,4 +270,20 @@ export const AuthService = {
       message: "Logged out successfully",
     };
   },
+  getCurrentUser: async (userId: number): Promise<AuthUser> => {
+    const user = await prisma.user.findUnique({
+      where: { id: userId },
+      include: {
+        user_roles: { include: { role: true } },
+        guest_profile: true,
+        staff_profile: true,
+      },
+    });
+
+    if (!user) {
+      throw { status: 404, message: "User not found" };
+    }
+
+    return user;
+  },
 };

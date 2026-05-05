@@ -6,7 +6,7 @@ import {
   RefreshTokenInput,
   LogoutInput,
 } from "./auth.types.ts";
-import { TypedRequest } from "@lib/types.ts";
+import { AuthRequest, TypedRequest } from "@lib/types.ts";
 
 export const AuthController = {
   registerUser: async (req: TypedRequest<RegisterUserInput>, res: Response) => {
@@ -84,6 +84,32 @@ export const AuthController = {
       return res.status(500).json({
         error: "Logout failed",
       });
+    }
+  },
+  me: async (req: AuthRequest, res: Response) => {
+    try {
+      const userId = req.user?.id;
+
+      if (!userId) {
+        return res.status(401).json({
+          error: "Unauthorized",
+        });
+      }
+
+      const user = await AuthService.getCurrentUser(userId);
+
+      return res.status(200).json({
+        message: "Current user fetched",
+        data: user,
+      });
+    } catch (error: any) {
+      console.error(error);
+
+      if (error.status) {
+        return res.status(error.status).json({ error: error.message });
+      }
+
+      return res.status(500).json({ error: "Failed to fetch current user" });
     }
   },
 };

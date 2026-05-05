@@ -39,6 +39,8 @@ export const authMiddleware = async (
       where: { id: decoded.userId },
       include: {
         user_roles: { include: { role: true } },
+        guest_profile: true,
+        staff_profile: true,
       },
     });
 

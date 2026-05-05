@@ -4,6 +4,7 @@ import { Button } from '../Button'
 import { FormSection } from '../Form'
 import type { FieldDef } from '../Form'
 import type { AuthUser } from '@mansio/shared'
+import { formatDate } from '#/lib/dates'
 
 const profileFields: FieldDef[] = [
   { name: 'phone_number', label: 'Phone Number', type: 'tel', placeholder: '+383 44 000 000' },
@@ -20,11 +21,7 @@ interface PersonalInfoCardProps {
   user: AuthUser
 }
 
-function formatDate(value: Date | string | null | undefined) {
-  if (!value) return null
-  const date = value instanceof Date ? value : new Date(value)
-  return Number.isNaN(date.getTime()) ? null : date.toLocaleDateString()
-}
+ 
 
 export function PersonalInfoCard({ user }: PersonalInfoCardProps) {
   const [editing, setEditing] = useState(false)

@@ -1,6 +1,5 @@
-export function toDate(value: Date | string | null | undefined) {
+export function formatDate(value: Date | string | null | undefined) {
   if (!value) return null
-  if (value instanceof Date) return Number.isNaN(value.getTime()) ? null : value
-  const parsed = new Date(value)
-  return Number.isNaN(parsed.getTime()) ? null : parsed
+  const date = value instanceof Date ? value : new Date(value)
+  return Number.isNaN(date.getTime()) ? null : date.toLocaleDateString()
 }
