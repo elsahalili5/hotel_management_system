@@ -1,0 +1,53 @@
+import { useForm } from 'react-hook-form'
+import { Modal } from '#/modules/admin/components/Modal'
+import { Button } from '#/components/Button'
+import type { CreateAmenityInput, AmenityResponse } from '@mansio/shared'
+
+interface AmenityModalProps {
+  onClose: () => void
+  onSubmit: (data: CreateAmenityInput) => Promise<void>
+  defaultValues?: Partial<AmenityResponse>
+  isPending?: boolean
+  isError?: boolean
+  title?: string
+}
+
+const field = 'w-full border border-mansio-ink/10 rounded px-3 py-2 text-sm focus:outline-none'
+const lbl = 'text-xs tracking-widest uppercase mb-1 block text-mansio-mocha'
+
+export function AmenityModal({ onClose, onSubmit, defaultValues, isPending, isError, title = 'Add Amenity' }: AmenityModalProps) {
+  const { register, handleSubmit, formState: { errors } } = useForm<CreateAmenityInput>({
+    defaultValues: defaultValues
+      ? { name: defaultValues.name, icon: defaultValues.icon ?? undefined }
+      : undefined,
+  })
+
+  const handleFormSubmit = handleSubmit(async (values) => {
+    await onSubmit(values)
+  })
+
+  return (
+    <Modal title={title} onClose={onClose} maxWidth="max-w-sm">
+      <form onSubmit={handleFormSubmit} className="flex flex-col gap-4">
+        <div>
+          <label className={lbl}>Name *</label>
+          <input {...register('name', { required: true })} className={field}
+            style={{ borderColor: errors.name ? '#f87171' : undefined }} placeholder="e.g. Free WiFi" />
+        </div>
+
+        <div>
+          <label className={lbl}>Icon</label>
+          <input {...register('icon')} className={field} placeholder="e.g. Wifi, Wind, Tv" />
+          <p className="text-xs mt-1 text-mansio-mocha">Lucide icon name (PascalCase)</p>
+        </div>
+
+        {isError && <p className="text-xs text-red-500">Something went wrong. Please try again.</p>}
+
+        <div className="flex justify-end gap-3 mt-2">
+          <Button type="button" variant="ghost" onClick={onClose}>Cancel</Button>
+          <Button type="submit" disabled={isPending}>{isPending ? 'Saving...' : 'Save'}</Button>
+        </div>
+      </form>
+    </Modal>
+  )
+}

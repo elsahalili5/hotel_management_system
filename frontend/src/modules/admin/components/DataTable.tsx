@@ -1,6 +1,8 @@
 import type { ReactNode } from 'react'
 import { Link } from '@tanstack/react-router'
+import { Pencil, Trash2 } from 'lucide-react'
 import { DashboardCard } from './DashboardCard'
+import type { FileRoutesByTo } from '#/routeTree.gen'
 
 export interface Column<T> {
   key: string
@@ -13,69 +15,64 @@ interface DataTableProps<T> {
   columns: Column<T>[]
   rows: T[]
   getRowKey: (row: T) => string
-  viewAllTo?: '/bookings' | '/rooms' | '/dashboard'
-  className?: string
+  onEdit?: (row: T) => void
+  onDelete?: (row: T) => void
+  viewAllTo?: keyof FileRoutesByTo
 }
 
-export function DataTable<T>({
-  title,
-  columns,
-  rows,
-  getRowKey,
-  viewAllTo,
-  className = '',
-}: DataTableProps<T>) {
+export function DataTable<T>({ title, columns, rows, getRowKey, onEdit, onDelete, viewAllTo }: DataTableProps<T>) {
   return (
-    <DashboardCard className={`overflow-hidden ${className}`}>
-      <div
-        className="flex items-center justify-between px-6 py-4 border-b"
-        style={{ borderColor: 'var(--border)' }}
-      >
-        <h2 className="font-serif text-base" style={{ color: 'var(--text)' }}>
-          {title}
-        </h2>
+    <DashboardCard className="overflow-hidden">
+      <div className="flex items-center justify-between px-6 py-4 border-b border-mansio-ink/10">
+        <h2 className="font-serif text-base text-mansio-ink">{title}</h2>
         {viewAllTo && (
-          <Link
-            to={viewAllTo}
-            className="text-xs tracking-widest uppercase hover:opacity-70 transition-opacity"
-            style={{ color: 'var(--gold-deep)' }}
-          >
+          <Link to={viewAllTo} className="text-xs tracking-widest uppercase text-mansio-gold hover:opacity-70 transition-opacity">
             View all →
           </Link>
         )}
       </div>
 
-      <table className="w-full text-sm">
-        <thead>
-          <tr style={{ borderBottom: '1px solid var(--border)' }}>
-            {columns.map((col) => (
-              <th
-                key={col.key}
-                className="px-6 py-3 text-left text-xs tracking-widest uppercase font-medium"
-                style={{ color: 'var(--text-muted)' }}
-              >
-                {col.header}
-              </th>
-            ))}
-          </tr>
-        </thead>
-        <tbody>
-          {rows.map((row, i) => (
-            <tr
-              key={getRowKey(row)}
-              style={{
-                borderBottom: i < rows.length - 1 ? '1px solid var(--border)' : 'none',
-              }}
-            >
+      {rows.length === 0 ? (
+        <p className="text-sm text-center py-10 text-mansio-mocha">No records found.</p>
+      ) : (
+        <table className="w-full text-sm">
+          <thead>
+            <tr className="border-b border-mansio-ink/10">
               {columns.map((col) => (
-                <td key={col.key} className="px-6 py-3.5">
-                  {col.render(row)}
-                </td>
+                <th key={col.key} className="px-6 py-3 text-left text-xs tracking-widest uppercase font-medium text-mansio-mocha">
+                  {col.header}
+                </th>
               ))}
+              {(onEdit || onDelete) && <th className="px-6 py-3" />}
             </tr>
-          ))}
-        </tbody>
-      </table>
+          </thead>
+          <tbody>
+            {rows.map((row, i) => (
+              <tr key={getRowKey(row)} className={i < rows.length - 1 ? 'border-b border-mansio-ink/10' : ''}>
+                {columns.map((col) => (
+                  <td key={col.key} className="px-6 py-3.5">{col.render(row)}</td>
+                ))}
+                {(onEdit || onDelete) && (
+                  <td className="px-6 py-3.5">
+                    <div className="flex items-center gap-2 justify-end">
+                      {onEdit && (
+                        <button className="p-1.5 rounded hover:opacity-70 transition-opacity text-mansio-mocha" onClick={() => onEdit(row)}>
+                          <Pencil size={14} />
+                        </button>
+                      )}
+                      {onDelete && (
+                        <button className="p-1.5 rounded hover:opacity-70 transition-opacity text-red-400" onClick={() => onDelete(row)}>
+                          <Trash2 size={14} />
+                        </button>
+                      )}
+                    </div>
+                  </td>
+                )}
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      )}
     </DashboardCard>
   )
 }
