@@ -8,17 +8,26 @@ import {
   Star,
   UserCog,
   Users,
+  type LucideIcon,
 } from 'lucide-react'
 import { Logo } from '../Logo'
 import { useAuth } from '#/modules/auth/hooks/use-auth';
+import type { FileRoutesByTo } from '#/routeTree.gen';
 
-const navItems = [
-  { label: 'Dashboard', icon: LayoutDashboard, path: '/dashboard' as const },
-  { label: 'Rooms', icon: BedDouble, path: '/rooms' as const },
-  { label: 'Bookings', icon: BookOpen, path: '/bookings' as const },
-  { label: 'Guests', icon: Users, path: null },
-  { label: 'Staff', icon: UserCog, path: null },
-  { label: 'Reviews', icon: Star, path: null },
+
+interface NavItem {
+  label: string;
+  icon: LucideIcon;
+  path: keyof FileRoutesByTo | null;
+}
+
+const navItems: Array<NavItem> = [
+  { label: 'Dashboard', icon: LayoutDashboard, path: '/dashboard' },
+  { label: 'Rooms', icon: BedDouble, path: '/dashboard/rooms' },
+  { label: 'Bookings', icon: BookOpen, path: '/dashboard/bookings' },
+  { label: 'Guests', icon: Users, path: '/dashboard/guests' },
+  { label: 'Staff', icon: UserCog, path: '/dashboard/staff' },
+  { label: 'Reviews', icon: Star, path: '/dashboard/reviews' },
 ]
 
 export function DashboardSidebar() {

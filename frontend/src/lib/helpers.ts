@@ -17,10 +17,11 @@ export function getUserFullName(user?: AuthUser) {
   return `${firstName} ${lastName}`.trim();
 }
 
-export function getUserInitials(user?: AuthUser) {
+export function getUserInitials(user?: AuthUser | null) {
   if(!user) {
     return '';
   }
+  
   return `${capitalizeFirst(user.first_name ?? '')[0]}${capitalizeFirst(user.last_name ?? '')[0]}`;
 }
 

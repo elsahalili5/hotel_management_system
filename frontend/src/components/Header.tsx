@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import { Link } from '@tanstack/react-router'
-import { ArrowRight, Menu, X, UserCircle } from 'lucide-react'
+import { ArrowRight, Menu, X, UserCircle, UserPlus } from 'lucide-react'
 import { Logo } from './Logo'
 import { Container } from './Container'
 import { Button } from './Button'
@@ -24,12 +24,12 @@ export default function Header() {
         <Container className="relative py-3">
           <div className="flex items-center h-16 border-t border-b border-mansio-espresso">
 
-           
+
             <Link to="/" className="flex items-center no-underline flex-shrink-0">
               <Logo size={120} />
             </Link>
 
-           
+
             <nav className="hidden lg:flex items-center gap-5 absolute left-1/2 -translate-x-1/2">
               {navLinks.map((link) => (
                 <Link
@@ -43,7 +43,7 @@ export default function Header() {
               ))}
             </nav>
 
-           
+
             <div className="ml-auto flex items-center gap-3">
               <Link to="/contact" className="hidden lg:inline-flex no-underline">
                 <Button endIcon={<ArrowRight size={16} />}>BOOK NOW</Button>
@@ -67,15 +67,14 @@ export default function Header() {
         </Container>
       </header>
 
-     
+
       <div
-        className={`lg:hidden fixed inset-0 z-[60] flex flex-col px-8 py-10 gap-6 bg-mansio-cream transition-all duration-500 ease-in-out ${
-          menuOpen
+        className={`lg:hidden fixed inset-0 z-[60] flex flex-col px-8 py-10 gap-6 bg-mansio-cream transition-all duration-500 ease-in-out ${menuOpen
             ? 'opacity-100 translate-y-0 pointer-events-auto'
             : 'opacity-0 -translate-y-4 pointer-events-none'
-        }`}
+          }`}
       >
-       
+
         <div className="flex items-center justify-between mb-4">
           <Link to="/" onClick={() => setMenuOpen(false)}>
             <Logo size={120} />
@@ -119,12 +118,26 @@ export default function Header() {
 }
 
 
-function ProfileLink () {
+function ProfileLink() {
   const auth = useAuth();
   const user = auth.user;
 
-  if(!user) {
-    return null;
+  if (!user) {
+    return <div className="flex items-center gap-1">
+      <Link to="/login" className="hidden lg:inline-flex no-underline items-center gap-1">
+        <span className="text-mansio-espresso">Login</span>
+        <Button isIcon variant="ghost" aria-label="Login">
+          <UserCircle size={22} />
+        </Button>
+      </Link>
+
+      <Link to="/signup" className="hidden lg:inline-flex no-underline items-center gap-1">
+        <span className="text-mansio-espresso">Signup</span>
+        <Button isIcon variant="ghost" aria-label="Login">
+          <UserPlus size={22} />
+        </Button>
+      </Link>
+    </div>
   }
 
   return (

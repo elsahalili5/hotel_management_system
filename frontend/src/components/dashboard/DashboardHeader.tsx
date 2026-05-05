@@ -1,4 +1,6 @@
+import { useAuth } from '#/modules/auth/hooks/use-auth'
 import { Bell } from 'lucide-react'
+import { getUserInitials } from '#/lib/helpers'
 
 interface DashboardHeaderProps {
   title: string
@@ -6,6 +8,8 @@ interface DashboardHeaderProps {
 }
 
 export function DashboardHeader({ title, subtitle }: DashboardHeaderProps) {
+  const auth = useAuth();
+
   return (
     <header
       className="shrink-0 flex items-center justify-between px-8 py-4 border-b"
@@ -15,6 +19,7 @@ export function DashboardHeader({ title, subtitle }: DashboardHeaderProps) {
         <h1 className="font-serif text-xl" style={{ color: 'var(--text)' }}>
           {title}
         </h1>
+        
         {subtitle && (
           <p className="text-xs mt-0.5" style={{ color: 'var(--text-muted)' }}>
             {subtitle}
@@ -41,7 +46,7 @@ export function DashboardHeader({ title, subtitle }: DashboardHeaderProps) {
             color: 'var(--color-mansio-cream)',
           }}
         >
-          M
+          {getUserInitials(auth.user)}
         </div>
       </div>
     </header>
