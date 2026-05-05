@@ -15,7 +15,7 @@ import { useAuth } from '#/modules/auth/hooks/use-auth';
 import type { FileRoutesByTo } from '#/routeTree.gen';
 
 
-interface NavItem {
+type NavItem  = {
   label: string;
   icon: LucideIcon;
   path: keyof FileRoutesByTo | null;
@@ -23,7 +23,7 @@ interface NavItem {
 
 const navItems: Array<NavItem> = [
   { label: 'Dashboard', icon: LayoutDashboard, path: '/dashboard' },
-  { label: 'Rooms', icon: BedDouble, path: '/dashboard/rooms' },
+  { label: 'Rooms', icon: BedDouble, path: '/dashboard/rooms', },
   { label: 'Bookings', icon: BookOpen, path: '/dashboard/bookings' },
   { label: 'Guests', icon: Users, path: '/dashboard/guests' },
   { label: 'Staff', icon: UserCog, path: '/dashboard/staff' },

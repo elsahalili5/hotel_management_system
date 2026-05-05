@@ -1,12 +1,12 @@
-import { createFileRoute } from '@tanstack/react-router'
+import { createFileRoute, } from '@tanstack/react-router'
 import { useRooms } from '#/modules/rooms/room/hooks/use-rooms'
 
 export const Route = createFileRoute('/dashboard/rooms')({
   component: RouteComponent,
 })
 
-function RouteComponent() {
-  const { data: rooms, isLoading } = useRooms()
+function RouteComponent() { 
+  const { data: rooms, isLoading } = useRooms();
 
   if (isLoading) {
     return <div>Loading...</div>

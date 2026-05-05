@@ -5,6 +5,7 @@ import { RouterProvider } from '@tanstack/react-router'
 import { AuthProvider } from './modules/auth/components/auth-context'
 import { useAuth } from './modules/auth/hooks/use-auth'
 import { getRouter } from './router'
+import { ReactQueryDevtools } from '@tanstack/react-query-devtools'
 
 const router = getRouter()
 
@@ -21,6 +22,9 @@ if (!rootElement.innerHTML) {
     <QueryClientProvider client={queryClient}>
       <AuthProvider>
         <AppRouter />
+
+        
+        <ReactQueryDevtools  />
       </AuthProvider>
     </QueryClientProvider>,
   )

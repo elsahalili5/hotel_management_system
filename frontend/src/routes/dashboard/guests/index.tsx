@@ -1,12 +1,14 @@
 import { createFileRoute } from '@tanstack/react-router'
-import { useGuests } from '#/modules/guest/hooks/use-guests'
+import {  useGuests } from '#/modules/guest/hooks/use-guests'
+import { Link } from '@tanstack/react-router'
 
-export const Route = createFileRoute('/dashboard/guests')({
+export const Route = createFileRoute('/dashboard/guests/')({
   component: RouteComponent,
 })
 
 function RouteComponent() {
   const { data: guests, isLoading } = useGuests()
+  
 
   if (isLoading) {
     return <div>Loading...</div>
@@ -20,7 +22,11 @@ function RouteComponent() {
     <h1>Guests</h1>
     <ul>
       {guests.map((guest) => (
-        <li key={guest.id}>{guest.user.first_name} {guest.user.last_name}</li>
+        <li key={guest.id}>
+          <Link to="/dashboard/guests/$id" params={{ id: guest.id.toString() }}>
+            {guest.user.first_name} {guest.user.last_name}
+          </Link>
+        </li>
       ))}
     </ul>
   </div>

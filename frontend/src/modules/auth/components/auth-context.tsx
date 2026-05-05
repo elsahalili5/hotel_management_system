@@ -22,11 +22,13 @@ export type AuthContextValue = {
   accessToken: string | null
   login: (payload: LoginUserInput) => Promise<LoginUserResponse>
   logout: () => void
-  setSession: (session: LoginUserResponse) => void,
+  setSession: (session: LoginUserResponse) => void
   hasRole: (role: RoleType) => boolean
 }
 
-export const AuthContext = createContext<AuthContextValue | undefined>(undefined)
+export const AuthContext = createContext<AuthContextValue | undefined>(
+  undefined,
+)
 
 function readStoredAuth(): StoredAuth | null {
   const rawValue = localStorage.getItem(AUTH_STORAGE_KEY)
@@ -58,7 +60,6 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     const loadCurrentUser = async () => {
       try {
         const currentUser = await authApi.me()
-
         setUser(currentUser)
         localStorage.setItem(
           AUTH_STORAGE_KEY,
@@ -74,12 +75,13 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       }
     }
 
-    loadCurrentUser();
-
+    loadCurrentUser()
   }, [initialState?.accessToken, user])
 
   const hasRole = (role: RoleType) => {
-    return user?.user_roles.some((userRole) => userRole.role?.name === role) ?? false
+    return (
+      user?.user_roles.some((userRole) => userRole.role?.name === role) ?? false
+    )
   }
 
   const setSession = (session: LoginUserResponse) => {
@@ -115,14 +117,11 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       hasRole,
     }),
     [accessToken, user, hasRole],
-  );
+  )
 
-
-  if(isLoading) {
+  if (isLoading) {
     return <LoadingUser />
   }
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>
 }
-
- 
