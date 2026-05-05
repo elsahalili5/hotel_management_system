@@ -10,7 +10,7 @@ import {
   Users,
 } from 'lucide-react'
 import { Logo } from '../Logo'
-import { useAuth } from '#/modules/auth/auth-context';
+import { useAuth } from '#/modules/auth/hooks/use-auth';
 
 const navItems = [
   { label: 'Dashboard', icon: LayoutDashboard, path: '/dashboard' as const },

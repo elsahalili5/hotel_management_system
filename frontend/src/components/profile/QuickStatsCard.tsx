@@ -2,8 +2,8 @@ import { Clock, Globe, BedDouble } from 'lucide-react'
 
 interface QuickStatsCardProps {
   memberSince: string
-  country: string
-  totalStays: number
+  country?: string
+  totalStays?: string
 }
 
 export function QuickStatsCard({ memberSince, country, totalStays }: QuickStatsCardProps) {

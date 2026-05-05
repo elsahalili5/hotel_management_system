@@ -2,7 +2,8 @@ import ReactDOM from 'react-dom/client'
 import { QueryClientProvider } from '@tanstack/react-query'
 import { queryClient } from './api/query-client'
 import { RouterProvider } from '@tanstack/react-router'
-import { AuthProvider, useAuth } from './modules/auth/auth-context'
+import { AuthProvider } from './modules/auth/components/auth-context'
+import { useAuth } from './modules/auth/hooks/use-auth'
 import { getRouter } from './router'
 
 const router = getRouter()

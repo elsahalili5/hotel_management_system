@@ -1,11 +1,12 @@
-import { createContext, useContext, useMemo, useState } from 'react'
+import { createContext,  useMemo, useState } from 'react'
 import type { ReactNode } from 'react'
-import type {
-  AuthUser,
-  LoginUserInput,
-  LoginUserResponse,
-} from '@mansio/shared/'
-import { authApi } from './api/auth-api'
+import {
+  type AuthUser,
+  type LoginUserInput,
+  type LoginUserResponse,
+  type RoleType,
+} from '@mansio/shared'
+import { authApi } from '../api/auth-api'
 
 const AUTH_STORAGE_KEY = 'mansio-auth'
 
@@ -21,10 +22,11 @@ export type AuthContextValue = {
   accessToken: string | null
   login: (payload: LoginUserInput) => Promise<LoginUserResponse>
   logout: () => void
-  setSession: (session: LoginUserResponse) => void
+  setSession: (session: LoginUserResponse) => void,
+  hasRole: (role: RoleType) => boolean
 }
 
-const AuthContext = createContext<AuthContextValue | undefined>(undefined)
+export const AuthContext = createContext<AuthContextValue | undefined>(undefined)
 
 function readStoredAuth(): StoredAuth | null {
   const rawValue = localStorage.getItem(AUTH_STORAGE_KEY)
@@ -45,14 +47,16 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     initialState?.accessToken ?? null,
   )
 
+  const hasRole = (role: RoleType) => {
+    return user?.user_roles.some((userRole) => userRole.role?.name === role) ?? false
+  }
+
   const setSession = (session: LoginUserResponse) => {
     const stored: StoredAuth = {
       accessToken: session.accessToken,
       refreshToken: session.refreshToken,
       user: session.user,
     }
-
-    console.log('setSession', stored)
     setUser(session.user)
     setAccessToken(session.accessToken)
     localStorage.setItem(AUTH_STORAGE_KEY, JSON.stringify(stored))
@@ -78,19 +82,12 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       login,
       logout,
       setSession,
+      hasRole,
     }),
-    [accessToken, user],
+    [accessToken, user, hasRole],
   )
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>
 }
 
-export function useAuth() {
-  const context = useContext(AuthContext)
-
-  if (!context) {
-    throw new Error('useAuth must be used within AuthProvider')
-  }
-
-  return context
-}
+ 

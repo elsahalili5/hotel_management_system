@@ -9,7 +9,6 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
-import { Route as GentritRouteImport } from './routes/gentrit'
 import { Route as authRouteRouteImport } from './routes/(auth)/route'
 import { Route as appRouteRouteImport } from './routes/(app)/route'
 import { Route as adminRouteRouteImport } from './routes/(admin)/route'
@@ -20,19 +19,15 @@ import { Route as appUsersRouteImport } from './routes/(app)/users'
 import { Route as appSpaRouteImport } from './routes/(app)/spa'
 import { Route as appRoomsRouteImport } from './routes/(app)/rooms'
 import { Route as appRestaurantRouteImport } from './routes/(app)/restaurant'
-import { Route as appProfileRouteImport } from './routes/(app)/profile'
 import { Route as appContactRouteImport } from './routes/(app)/contact'
 import { Route as appBookingsRouteImport } from './routes/(app)/bookings'
 import { Route as appAboutRouteImport } from './routes/(app)/about'
 import { Route as adminDashboardRouteImport } from './routes/(admin)/dashboard'
+import { Route as appprivateRouteRouteImport } from './routes/(app)/(private)/route'
 import { Route as appRoomsRoomTypeIdRouteImport } from './routes/(app)/rooms.$roomTypeId'
+import { Route as appprivateProfileRouteImport } from './routes/(app)/(private)/profile'
 import { Route as adminDashboardRoomsRouteImport } from './routes/(admin)/dashboard.rooms'
 
-const GentritRoute = GentritRouteImport.update({
-  id: '/gentrit',
-  path: '/gentrit',
-  getParentRoute: () => rootRouteImport,
-} as any)
 const authRouteRoute = authRouteRouteImport.update({
   id: '/(auth)',
   getParentRoute: () => rootRouteImport,
@@ -80,11 +75,6 @@ const appRestaurantRoute = appRestaurantRouteImport.update({
   path: '/restaurant',
   getParentRoute: () => appRouteRoute,
 } as any)
-const appProfileRoute = appProfileRouteImport.update({
-  id: '/profile',
-  path: '/profile',
-  getParentRoute: () => appRouteRoute,
-} as any)
 const appContactRoute = appContactRouteImport.update({
   id: '/contact',
   path: '/contact',
@@ -105,10 +95,19 @@ const adminDashboardRoute = adminDashboardRouteImport.update({
   path: '/dashboard',
   getParentRoute: () => adminRouteRoute,
 } as any)
+const appprivateRouteRoute = appprivateRouteRouteImport.update({
+  id: '/(private)',
+  getParentRoute: () => appRouteRoute,
+} as any)
 const appRoomsRoomTypeIdRoute = appRoomsRoomTypeIdRouteImport.update({
   id: '/$roomTypeId',
   path: '/$roomTypeId',
   getParentRoute: () => appRoomsRoute,
+} as any)
+const appprivateProfileRoute = appprivateProfileRouteImport.update({
+  id: '/profile',
+  path: '/profile',
+  getParentRoute: () => appprivateRouteRoute,
 } as any)
 const adminDashboardRoomsRoute = adminDashboardRoomsRouteImport.update({
   id: '/rooms',
@@ -117,12 +116,10 @@ const adminDashboardRoomsRoute = adminDashboardRoomsRouteImport.update({
 } as any)
 
 export interface FileRoutesByFullPath {
-  '/gentrit': typeof GentritRoute
   '/dashboard': typeof adminDashboardRouteWithChildren
   '/about': typeof appAboutRoute
   '/bookings': typeof appBookingsRoute
   '/contact': typeof appContactRoute
-  '/profile': typeof appProfileRoute
   '/restaurant': typeof appRestaurantRoute
   '/rooms': typeof appRoomsRouteWithChildren
   '/spa': typeof appSpaRoute
@@ -131,15 +128,14 @@ export interface FileRoutesByFullPath {
   '/signup': typeof authSignupRoute
   '/': typeof appIndexRoute
   '/dashboard/rooms': typeof adminDashboardRoomsRoute
+  '/profile': typeof appprivateProfileRoute
   '/rooms/$roomTypeId': typeof appRoomsRoomTypeIdRoute
 }
 export interface FileRoutesByTo {
-  '/gentrit': typeof GentritRoute
   '/dashboard': typeof adminDashboardRouteWithChildren
   '/about': typeof appAboutRoute
   '/bookings': typeof appBookingsRoute
   '/contact': typeof appContactRoute
-  '/profile': typeof appProfileRoute
   '/restaurant': typeof appRestaurantRoute
   '/rooms': typeof appRoomsRouteWithChildren
   '/spa': typeof appSpaRoute
@@ -148,6 +144,7 @@ export interface FileRoutesByTo {
   '/signup': typeof authSignupRoute
   '/': typeof appIndexRoute
   '/dashboard/rooms': typeof adminDashboardRoomsRoute
+  '/profile': typeof appprivateProfileRoute
   '/rooms/$roomTypeId': typeof appRoomsRoomTypeIdRoute
 }
 export interface FileRoutesById {
@@ -155,12 +152,11 @@ export interface FileRoutesById {
   '/(admin)': typeof adminRouteRouteWithChildren
   '/(app)': typeof appRouteRouteWithChildren
   '/(auth)': typeof authRouteRouteWithChildren
-  '/gentrit': typeof GentritRoute
+  '/(app)/(private)': typeof appprivateRouteRouteWithChildren
   '/(admin)/dashboard': typeof adminDashboardRouteWithChildren
   '/(app)/about': typeof appAboutRoute
   '/(app)/bookings': typeof appBookingsRoute
   '/(app)/contact': typeof appContactRoute
-  '/(app)/profile': typeof appProfileRoute
   '/(app)/restaurant': typeof appRestaurantRoute
   '/(app)/rooms': typeof appRoomsRouteWithChildren
   '/(app)/spa': typeof appSpaRoute
@@ -169,17 +165,16 @@ export interface FileRoutesById {
   '/(auth)/signup': typeof authSignupRoute
   '/(app)/': typeof appIndexRoute
   '/(admin)/dashboard/rooms': typeof adminDashboardRoomsRoute
+  '/(app)/(private)/profile': typeof appprivateProfileRoute
   '/(app)/rooms/$roomTypeId': typeof appRoomsRoomTypeIdRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
-    | '/gentrit'
     | '/dashboard'
     | '/about'
     | '/bookings'
     | '/contact'
-    | '/profile'
     | '/restaurant'
     | '/rooms'
     | '/spa'
@@ -188,15 +183,14 @@ export interface FileRouteTypes {
     | '/signup'
     | '/'
     | '/dashboard/rooms'
+    | '/profile'
     | '/rooms/$roomTypeId'
   fileRoutesByTo: FileRoutesByTo
   to:
-    | '/gentrit'
     | '/dashboard'
     | '/about'
     | '/bookings'
     | '/contact'
-    | '/profile'
     | '/restaurant'
     | '/rooms'
     | '/spa'
@@ -205,18 +199,18 @@ export interface FileRouteTypes {
     | '/signup'
     | '/'
     | '/dashboard/rooms'
+    | '/profile'
     | '/rooms/$roomTypeId'
   id:
     | '__root__'
     | '/(admin)'
     | '/(app)'
     | '/(auth)'
-    | '/gentrit'
+    | '/(app)/(private)'
     | '/(admin)/dashboard'
     | '/(app)/about'
     | '/(app)/bookings'
     | '/(app)/contact'
-    | '/(app)/profile'
     | '/(app)/restaurant'
     | '/(app)/rooms'
     | '/(app)/spa'
@@ -225,6 +219,7 @@ export interface FileRouteTypes {
     | '/(auth)/signup'
     | '/(app)/'
     | '/(admin)/dashboard/rooms'
+    | '/(app)/(private)/profile'
     | '/(app)/rooms/$roomTypeId'
   fileRoutesById: FileRoutesById
 }
@@ -232,18 +227,10 @@ export interface RootRouteChildren {
   adminRouteRoute: typeof adminRouteRouteWithChildren
   appRouteRoute: typeof appRouteRouteWithChildren
   authRouteRoute: typeof authRouteRouteWithChildren
-  GentritRoute: typeof GentritRoute
 }
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
-    '/gentrit': {
-      id: '/gentrit'
-      path: '/gentrit'
-      fullPath: '/gentrit'
-      preLoaderRoute: typeof GentritRouteImport
-      parentRoute: typeof rootRouteImport
-    }
     '/(auth)': {
       id: '/(auth)'
       path: ''
@@ -314,13 +301,6 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof appRestaurantRouteImport
       parentRoute: typeof appRouteRoute
     }
-    '/(app)/profile': {
-      id: '/(app)/profile'
-      path: '/profile'
-      fullPath: '/profile'
-      preLoaderRoute: typeof appProfileRouteImport
-      parentRoute: typeof appRouteRoute
-    }
     '/(app)/contact': {
       id: '/(app)/contact'
       path: '/contact'
@@ -349,12 +329,26 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof adminDashboardRouteImport
       parentRoute: typeof adminRouteRoute
     }
+    '/(app)/(private)': {
+      id: '/(app)/(private)'
+      path: ''
+      fullPath: ''
+      preLoaderRoute: typeof appprivateRouteRouteImport
+      parentRoute: typeof appRouteRoute
+    }
     '/(app)/rooms/$roomTypeId': {
       id: '/(app)/rooms/$roomTypeId'
       path: '/$roomTypeId'
       fullPath: '/rooms/$roomTypeId'
       preLoaderRoute: typeof appRoomsRoomTypeIdRouteImport
       parentRoute: typeof appRoomsRoute
+    }
+    '/(app)/(private)/profile': {
+      id: '/(app)/(private)/profile'
+      path: '/profile'
+      fullPath: '/profile'
+      preLoaderRoute: typeof appprivateProfileRouteImport
+      parentRoute: typeof appprivateRouteRoute
     }
     '/(admin)/dashboard/rooms': {
       id: '/(admin)/dashboard/rooms'
@@ -390,6 +384,18 @@ const adminRouteRouteWithChildren = adminRouteRoute._addFileChildren(
   adminRouteRouteChildren,
 )
 
+interface appprivateRouteRouteChildren {
+  appprivateProfileRoute: typeof appprivateProfileRoute
+}
+
+const appprivateRouteRouteChildren: appprivateRouteRouteChildren = {
+  appprivateProfileRoute: appprivateProfileRoute,
+}
+
+const appprivateRouteRouteWithChildren = appprivateRouteRoute._addFileChildren(
+  appprivateRouteRouteChildren,
+)
+
 interface appRoomsRouteChildren {
   appRoomsRoomTypeIdRoute: typeof appRoomsRoomTypeIdRoute
 }
@@ -403,10 +409,10 @@ const appRoomsRouteWithChildren = appRoomsRoute._addFileChildren(
 )
 
 interface appRouteRouteChildren {
+  appprivateRouteRoute: typeof appprivateRouteRouteWithChildren
   appAboutRoute: typeof appAboutRoute
   appBookingsRoute: typeof appBookingsRoute
   appContactRoute: typeof appContactRoute
-  appProfileRoute: typeof appProfileRoute
   appRestaurantRoute: typeof appRestaurantRoute
   appRoomsRoute: typeof appRoomsRouteWithChildren
   appSpaRoute: typeof appSpaRoute
@@ -415,10 +421,10 @@ interface appRouteRouteChildren {
 }
 
 const appRouteRouteChildren: appRouteRouteChildren = {
+  appprivateRouteRoute: appprivateRouteRouteWithChildren,
   appAboutRoute: appAboutRoute,
   appBookingsRoute: appBookingsRoute,
   appContactRoute: appContactRoute,
-  appProfileRoute: appProfileRoute,
   appRestaurantRoute: appRestaurantRoute,
   appRoomsRoute: appRoomsRouteWithChildren,
   appSpaRoute: appSpaRoute,
@@ -448,7 +454,6 @@ const rootRouteChildren: RootRouteChildren = {
   adminRouteRoute: adminRouteRouteWithChildren,
   appRouteRoute: appRouteRouteWithChildren,
   authRouteRoute: authRouteRouteWithChildren,
-  GentritRoute: GentritRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)

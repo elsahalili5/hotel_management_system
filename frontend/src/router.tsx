@@ -1,6 +1,6 @@
 import { createRouter as createTanStackRouter } from '@tanstack/react-router'
 import { routeTree } from './routeTree.gen'
-import type { AuthContextValue } from './modules/auth/auth-context'
+import type { AuthContextValue } from './modules/auth/components/auth-context'
 
 export type RouterContext = {
   auth: AuthContextValue

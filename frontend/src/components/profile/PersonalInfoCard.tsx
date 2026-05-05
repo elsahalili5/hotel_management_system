@@ -3,6 +3,7 @@ import { Phone, Calendar, MapPin, Globe, Edit3, X } from 'lucide-react'
 import { Button } from '../Button'
 import { FormSection } from '../Form'
 import type { FieldDef } from '../Form'
+import type { AuthUser } from '@mansio/shared'
 
 const profileFields: FieldDef[] = [
   { name: 'phone_number', label: 'Phone Number', type: 'tel', placeholder: '+383 44 000 000' },
@@ -13,19 +14,19 @@ const profileFields: FieldDef[] = [
   { name: 'passport_number', label: 'Passport Number', type: 'text', placeholder: 'XK000000' },
 ]
 
-interface Guest {
-  phone: string
-  dateOfBirth: string
-  address: string
-  city: string
-  country: string
-}
+ 
 
 interface PersonalInfoCardProps {
-  guest: Guest
+  user: AuthUser
 }
 
-export function PersonalInfoCard({ guest }: PersonalInfoCardProps) {
+function formatDate(value: Date | string | null | undefined) {
+  if (!value) return null
+  const date = value instanceof Date ? value : new Date(value)
+  return Number.isNaN(date.getTime()) ? null : date.toLocaleDateString()
+}
+
+export function PersonalInfoCard({ user }: PersonalInfoCardProps) {
   const [editing, setEditing] = useState(false)
 
   if (editing) {
@@ -67,11 +68,11 @@ export function PersonalInfoCard({ guest }: PersonalInfoCardProps) {
 
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-8">
         {[
-          { Icon: Phone, label: 'Phone Number', value: guest.phone },
-          { Icon: Calendar, label: 'Date of Birth', value: guest.dateOfBirth },
-          { Icon: MapPin, label: 'Address', value: guest.address },
-          { Icon: MapPin, label: 'City', value: guest.city },
-          { Icon: Globe, label: 'Country', value: guest.country },
+          { Icon: Phone, label: 'Phone Number', value: user.guest_profile?.phone_number },
+          { Icon: Calendar, label: 'Date of Birth', value: formatDate(user.guest_profile?.date_of_birth) },
+          { Icon: MapPin, label: 'Address', value: user.guest_profile?.address },
+          { Icon: MapPin, label: 'City', value: user.guest_profile?.city },
+          { Icon: Globe, label: 'Country', value: user.guest_profile?.country },
         ].map(({ Icon, label, value }) => (
           <div key={label} className="flex flex-col gap-2">
             <div className="flex items-center gap-2">

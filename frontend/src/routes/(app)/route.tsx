@@ -1,20 +1,17 @@
-import { createFileRoute, Outlet, redirect } from '@tanstack/react-router'
+import { createFileRoute, Outlet } from '@tanstack/react-router'
 import Footer from '#/components/Footer'
 import Header from '#/components/Header'
+// import { requireAuthenticated } from '#/lib/route-guard'
+// import { ROLES } from '@mansio/shared'
+
+
 export const Route = createFileRoute('/(app)')({
-  beforeLoad: ({ context, location }) => {
-    const publicPaths = [
-      '/',
-      '/rooms',
-      '/about',
-      '/restaurant',
-      '/spa',
-      '/contact',
-    ]
-    const isPublic = publicPaths.some((p) => location.pathname.startsWith(p))
-    if (!context.auth.isAuthenticated && !isPublic) {
-      throw redirect({ to: '/login' })
-    }
+  beforeLoad: ({ context }) => {
+    // requireAuthenticated(context.auth)
+
+    // if(context.auth.hasRole(ROLES.ADMIN)) {
+    //   throw redirect({ to: '/dashboard' })
+    // }
   },
   component: RouteComponent,
 })

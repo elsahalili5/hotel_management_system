@@ -3,7 +3,7 @@ import { Request } from "express";
 
 export type AuthUser = Prisma.UserGetPayload<{
   include: {
-    user_roles: true;
+    user_roles: { include: { role: true } };
     guest_profile: true;
     staff_profile: true;
   };

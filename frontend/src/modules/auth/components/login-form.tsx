@@ -17,7 +17,7 @@ export function LoginForm() {
   const handleSubmit = loginForm.handleSubmit(async (values) => {
     try {
       await loginMutation.mutateAsync(values)
-      navigate({ to: '/dashboard', replace: true })
+      navigate({ to: '/', replace: true })
     } catch (error) {
       console.error('Login failed', error)
     }

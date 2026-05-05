@@ -1,6 +1,6 @@
 import { authApi } from '../api/auth-api'
 import { useMutation } from '@tanstack/react-query'
-import { useAuth } from '../auth-context'
+import { useAuth } from './use-auth'
 
 export function useRegister() {
   const auth = useAuth()
