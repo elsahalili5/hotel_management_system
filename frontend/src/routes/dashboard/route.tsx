@@ -1,8 +1,8 @@
 import { requireAuthenticated, requireRole } from '#/lib/route-guard';
 import { ROLES } from '@mansio/shared';
 import { createFileRoute, Outlet } from '@tanstack/react-router'
-import { DashboardHeader } from '../../components/dashboard/DashboardHeader'
-import { DashboardSidebar } from '../../components/dashboard/DashboardSidebar'
+import { DashboardHeader } from '#/modules/admin/components/DashboardHeader'
+import { DashboardSidebar } from '#/modules/admin/components/DashboardSidebar'
  
 export const Route = createFileRoute('/dashboard')({
   beforeLoad: ({ context }) => {

@@ -10,14 +10,13 @@ import {
   Users,
   XCircle,
 } from 'lucide-react'
-import { Container } from '../../components/Container'
-import { DashboardCard } from '../../components/dashboard/DashboardCard'
-import { DataTable } from '../../components/dashboard/DataTable'
-import type { Column } from '../../components/dashboard/DataTable'
-import { OccupancyBar } from '../../components/dashboard/OccupancyBar'
-import { StatCard } from '../../components/dashboard/StatCard'
-import { StatusBadge } from '../../components/dashboard/StatusBadge'
-import type { BookingStatus } from '../../components/dashboard/StatusBadge'
+import { DashboardCard } from '#/modules/admin/components/DashboardCard'
+import { DataTable } from '#/modules/admin/components/DataTable'
+import type { Column } from '#/modules/admin/components/DataTable'
+import { OccupancyBar } from '#/modules/admin/components/OccupancyBar'
+import { StatCard } from '#/modules/admin/components/StatCard'
+import { StatusBadge } from '#/modules/admin/components/StatusBadge'
+import type { BookingStatus } from '#/modules/admin/components/StatusBadge'
 
 export const Route = createFileRoute('/dashboard/')({
   component: RouteComponent,

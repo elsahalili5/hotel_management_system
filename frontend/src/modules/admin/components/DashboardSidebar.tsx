@@ -10,7 +10,7 @@ import {
   Users,
   type LucideIcon,
 } from 'lucide-react'
-import { Logo } from '../Logo'
+import { Logo } from '#/components/Logo'
 import { useAuth } from '#/modules/auth/hooks/use-auth';
 import type { FileRoutesByTo } from '#/routeTree.gen';
 
