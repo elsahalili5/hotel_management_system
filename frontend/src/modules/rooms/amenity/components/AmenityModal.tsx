@@ -22,17 +22,12 @@ export function AmenityModal({ onClose, onSubmit, defaultValues, isPending, isEr
       : undefined,
   })
 
-  const handleFormSubmit = handleSubmit(async (values) => {
-    await onSubmit(values)
-  })
-
   return (
     <Modal title={title} onClose={onClose} maxWidth="max-w-sm">
-      <form onSubmit={handleFormSubmit} className="flex flex-col gap-4">
+      <form onSubmit={handleSubmit(async (values) => await onSubmit(values))} className="flex flex-col gap-4">
         <div>
           <label className={lbl}>Name *</label>
-          <input {...register('name', { required: true })} className={field}
-            style={{ borderColor: errors.name ? '#f87171' : undefined }} placeholder="e.g. Free WiFi" />
+          <input {...register('name', { required: true })} className={`${field} ${errors.name ? 'border-red-400' : ''}`} placeholder="e.g. Free WiFi" />
         </div>
 
         <div>

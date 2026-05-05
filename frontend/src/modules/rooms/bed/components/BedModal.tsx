@@ -22,23 +22,18 @@ export function BedModal({ onClose, onSubmit, defaultValues, isPending, isError,
       : undefined,
   })
 
-  const handleFormSubmit = handleSubmit(async (values) => {
-    await onSubmit(values)
-  })
-
   return (
     <Modal title={title} onClose={onClose} maxWidth="max-w-sm">
-      <form onSubmit={handleFormSubmit} className="flex flex-col gap-4">
+      <form onSubmit={handleSubmit(async (values) => await onSubmit(values))} className="flex flex-col gap-4">
         <div>
           <label className={lbl}>Name *</label>
-          <input {...register('name', { required: true })} className={field}
-            style={{ borderColor: errors.name ? '#f87171' : undefined }} placeholder="e.g. King Bed" />
+          <input {...register('name', { required: true })} className={`${field} ${errors.name ? 'border-red-400' : ''}`} placeholder="e.g. King Bed" />
         </div>
 
         <div>
           <label className={lbl}>Capacity *</label>
           <input type="number" min={1} {...register('capacity', { required: true, valueAsNumber: true, min: 1 })}
-            className={field} style={{ borderColor: errors.capacity ? '#f87171' : undefined }} placeholder="2" />
+            className={`${field} ${errors.capacity ? 'border-red-400' : ''}`} placeholder="2" />
           <p className="text-xs mt-1 text-mansio-mocha">Number of persons this bed fits</p>
         </div>
 
