@@ -7,7 +7,7 @@ import { DashboardSidebar } from '#/modules/admin/components/DashboardSidebar'
 export const Route = createFileRoute('/dashboard')({
   beforeLoad: ({ context }) => {
     requireAuthenticated(context.auth)
-    requireRole(context.auth, { role: [ROLES.ADMIN, ROLES.MANAGER, ROLES.RECEPTIONIST], redirectTo: '/' })
+    requireRole(context.auth, { role: [ROLES.ADMIN, ROLES.MANAGER, ROLES.RECEPTIONIST,ROLES.HOUSEKEEPING], redirectTo: '/' })
   },
   component: RouteComponent,
 })

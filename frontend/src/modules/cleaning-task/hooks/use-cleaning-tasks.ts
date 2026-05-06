@@ -3,14 +3,13 @@ import { cleaningTaskApi } from '../api/cleaning-task-api'
 
 export const cleaningTaskKeys = {
   all: ['cleaning-tasks'] as const,
-  filtered: (status?: string) => ['cleaning-tasks', { status }] as const,
   myTasks: ['cleaning-tasks', 'my-tasks'] as const,
 }
 
-export function useCleaningTasks(status?: string) {
+export function useCleaningTasks() {
   return useQuery({
-    queryKey: cleaningTaskKeys.filtered(status),
-    queryFn: () => cleaningTaskApi.getAll(status),
+    queryKey: cleaningTaskKeys.all,
+    queryFn: cleaningTaskApi.getAll,
   })
 }
 

@@ -3,4 +3,6 @@ export type {
   UpdateCleaningTaskStatusInput,
   GetCleaningTasksQuery,
   CleaningTaskResponse,
-} from '../../backend/src/modules/cleaningTask/cleaningTask.types.ts'
+} from "../../backend/src/modules/cleaningTask/cleaningTask.types.ts";
+
+export { TaskStatus } from "../../backend/src/generated/prisma/enums.ts";

@@ -44,9 +44,8 @@ const taskSelect = {
 };
 
 export const CleaningTaskService = {
-  getAll: async (status?: TaskStatus) => {
+  getAll: async () => {
     return await prisma.cleaningTask.findMany({
-      where: status ? { status } : undefined,
       orderBy: { assigned_at: "desc" },
       select: taskSelect,
     });

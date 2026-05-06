@@ -7,7 +7,6 @@ import {
   cleaningTaskIdSchema,
   createCleaningTaskSchema,
   updateCleaningTaskStatusSchema,
-  getCleaningTasksQuerySchema,
 } from "./cleaningTask.schema.ts";
 import { ROLES } from "@lib/roles.ts";
 
@@ -18,7 +17,6 @@ router.get(
   "/",
   authMiddleware,
   roleMiddleware([ROLES.ADMIN, ROLES.MANAGER]),
-  validateRequestMiddleware(getCleaningTasksQuerySchema, "query"),
   CleaningTaskController.getAll,
 );
 

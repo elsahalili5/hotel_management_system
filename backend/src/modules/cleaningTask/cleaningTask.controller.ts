@@ -1,4 +1,4 @@
-import { Response } from "express";
+import { Request, Response } from "express";
 import { CleaningTaskService } from "./cleaningTask.service.ts";
 import {
   CreateCleaningTaskInput,
@@ -6,12 +6,12 @@ import {
   CleaningTaskIdParam,
 } from "./cleaningTask.types.ts";
 import { TypedRequest, AuthRequest } from "@lib/types.ts";
-import { GetCleaningTasksQuery } from "./cleaningTask.types.ts";
 
 export const CleaningTaskController = {
-  getAll: async (req: TypedRequest<unknown, unknown, GetCleaningTasksQuery>, res: Response) => {
+  getAll: async (_req: Request, res: Response) => {
     try {
-      const data = await CleaningTaskService.getAll(req.query.status);
+      // Nuk dërgojmë asnjë parametër te Service
+      const data = await CleaningTaskService.getAll();
       res.status(200).json({ data });
     } catch (error: any) {
       if (error.status) return res.status(error.status).json({ error: error.message });

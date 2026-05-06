@@ -3,11 +3,23 @@ import { UpdateStaffInput } from "./staff.types";
 import { safeUserSelect } from "@lib/constants.ts";
 
 export const StaffService = {
-  getAllStaff: async () => {
-    return prisma.staff.findMany({
-      include: { user: { select: safeUserSelect } },
-    });
-  },
+ 
+getAllStaff: async () => {
+  return prisma.staff.findMany({
+    include: { 
+      user: { 
+        select: {
+          ...safeUserSelect,
+          user_roles: {
+            include: {
+              role: true 
+            }
+          }
+        } 
+      } 
+    },
+  });
+},
 
   getStaffById: async (id: number) => {
     const staff = await prisma.staff.findUnique({

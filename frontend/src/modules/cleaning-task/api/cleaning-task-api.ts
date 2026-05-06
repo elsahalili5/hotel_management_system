@@ -6,10 +6,8 @@ import type {
 } from '@mansio/shared'
 
 export const cleaningTaskApi = {
-  getAll: (status?: string) =>
-    apiClient.get<CleaningTaskResponse[]>('/cleaning-tasks', {
-      params: status ? { status } : undefined,
-    }),
+  getAll: () =>
+    apiClient.get<CleaningTaskResponse[]>('/cleaning-tasks'),
   getMyTasks: () =>
     apiClient.get<CleaningTaskResponse[]>('/cleaning-tasks/my-tasks'),
   create: (data: CreateCleaningTaskInput) =>
