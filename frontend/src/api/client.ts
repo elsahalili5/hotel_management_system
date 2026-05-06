@@ -41,14 +41,95 @@ export const axiosClient: AxiosInstance = axios.create({
 })
 
 axiosClient.interceptors.request.use((config) => {
-  const authStorage = localStorage.getItem(AUTH_STORAGE_KEY);
-  const authToken = authStorage ? JSON.parse(authStorage).accessToken : null;
-  
+  const authStorage = localStorage.getItem(AUTH_STORAGE_KEY)
+  const authToken = authStorage ? JSON.parse(authStorage).accessToken : null
+
   if (authToken) {
     config.headers.Authorization = `Bearer ${authToken}`
   }
   return config
 })
+
+// let isRefreshing = false
+// let failedQueue: Array<{
+//   resolve: (token: string) => void
+//   reject: (err: unknown) => void
+// }> = []
+
+// const processQueue = (error: unknown, token: string | null) => {
+//   failedQueue.forEach((p) => (error ? p.reject(error) : p.resolve(token!)))
+//   failedQueue = []
+// }
+
+// axiosClient.interceptors.response.use(
+//   (response) => response,
+//   async (error: AxiosError) => {
+//     const original = error.config as AxiosRequestConfig & { _retry?: boolean }
+
+//     if (error.response?.status !== 401 || original._retry) {
+//       return Promise.reject(error)
+//     }
+
+//     if (isRefreshing) {
+//       return new Promise<string>((resolve, reject) => {
+//         failedQueue.push({ resolve, reject })
+//       }).then((token) => {
+//         original.headers = {
+//           ...original.headers,
+//           Authorization: `Bearer ${token}`,
+//         }
+//         return axiosClient(original)
+//       })
+//     }
+
+//     original._retry = true
+//     isRefreshing = true
+
+//     const stored = localStorage.getItem(AUTH_STORAGE_KEY)
+//     const refreshToken = stored ? JSON.parse(stored).refreshToken : null
+
+//     if (!refreshToken) {
+//       isRefreshing = false
+//       localStorage.removeItem(AUTH_STORAGE_KEY)
+//       window.location.href = '/login'
+//       return Promise.reject(error)
+//     }
+
+//     try {
+//       const res = await axiosClient.post<{
+//         data: { accessToken: string; refreshToken: string }
+//       }>('/auth/refresh-token', { refreshToken })
+//       const tokens = res.data?.data ?? (res.data as any)
+//       const newAccess: string = tokens.accessToken
+//       const newRefresh: string = tokens.refreshToken
+
+//       const parsed = stored ? JSON.parse(stored) : {}
+//       localStorage.setItem(
+//         AUTH_STORAGE_KEY,
+//         JSON.stringify({
+//           ...parsed,
+//           accessToken: newAccess,
+//           refreshToken: newRefresh,
+//         }),
+//       )
+
+//       axiosClient.defaults.headers.common.Authorization = `Bearer ${newAccess}`
+//       original.headers = {
+//         ...original.headers,
+//         Authorization: `Bearer ${newAccess}`,
+//       }
+//       processQueue(null, newAccess)
+//       return axiosClient(original)
+//     } catch (refreshError) {
+//       processQueue(refreshError, null)
+//       localStorage.removeItem(AUTH_STORAGE_KEY)
+//       window.location.href = '/login'
+//       return Promise.reject(refreshError)
+//     } finally {
+//       isRefreshing = false
+//     }
+//   },
+// )
 
 type ApiEnvelope<TResponse> = {
   data: TResponse
