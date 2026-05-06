@@ -6,6 +6,7 @@ import { useState } from 'react'
 import { Button } from '#/components/Button'
 import { DataTable } from '#/modules/admin/components/DataTable'
 import { CleaningTaskModal } from '#/modules/cleaning-task/components/cleaningTaskModal'
+import { ConfirmModal } from '#/modules/admin/components/ConfirmModal'
 import type { Column } from '#/modules/admin/components/DataTable'
 import {
   useCleaningTasks,
@@ -44,6 +45,7 @@ function StatusBadge({ status }: { status: TaskStatus }) {
 
 function CleaningTasksPage() {
   const [showAdd, setShowAdd] = useState(false)
+  const [deleteTarget, setDeleteTarget] = useState<CleaningTaskResponse | null>(null)
   const { data: tasks, isLoading, isError } = useCleaningTasks()
   const createMutation = useCreateCleaningTask()
   const deleteMutation = useDeleteCleaningTask()
@@ -96,6 +98,16 @@ function CleaningTasksPage() {
           isError={createMutation.isError}
         />
       )}
+      {deleteTarget && (
+        <ConfirmModal
+          message={`Cancel cleaning task for Room ${deleteTarget.room.room_number}?`}
+          onClose={() => setDeleteTarget(null)}
+          onConfirm={() => {
+            deleteMutation.mutate(deleteTarget.id)
+            setDeleteTarget(null)
+          }}
+        />
+      )}
 
       <div className="flex items-center justify-between mb-6">
         <p className="text-sm text-mansio-mocha">
@@ -111,7 +123,7 @@ function CleaningTasksPage() {
           Fetching cleaning schedule...
         </p>
       )}
-      
+
       {isError && (
         <p className="text-sm text-center py-10 text-red-500 font-medium">
           Failed to load cleaning tasks.
@@ -124,11 +136,7 @@ function CleaningTasksPage() {
           columns={columns}
           rows={tasks}
           getRowKey={(t) => String(t.id)}
-          onDelete={(t) => {
-            if (confirm(`Cancel cleaning task for Room ${t.room.room_number}?`)) {
-              deleteMutation.mutate(t.id)
-            }
-          }}
+          onDelete={(t) => setDeleteTarget(t)}
         />
       )}
     </>

@@ -6,6 +6,7 @@ import { useState } from 'react'
 import { Button } from '#/components/Button'
 import { DataTable } from '#/modules/admin/components/DataTable'
 import { BedModal } from '#/modules/rooms/bed/components/BedModal'
+import { ConfirmModal } from '#/modules/admin/components/ConfirmModal'
 import type { Column } from '#/modules/admin/components/DataTable'
 import {
   useBeds,
@@ -32,6 +33,7 @@ const cell = (value: string | number) => (
 function BedsPage() {
   const [showAdd, setShowAdd] = useState(false)
   const [editTarget, setEditTarget] = useState<BedResponse | null>(null)
+  const [deleteTarget, setDeleteTarget] = useState<BedResponse | null>(null)
   const { data: beds, isLoading, isError } = useBeds()
   const createMutation = useCreateBed()
   const updateMutation = useUpdateBed()
@@ -64,6 +66,16 @@ function BedsPage() {
           }}
           isPending={createMutation.isPending}
           isError={createMutation.isError}
+        />
+      )}
+      {deleteTarget && (
+        <ConfirmModal
+          message={`Are you sure you want to delete "${deleteTarget.name}"?`}
+          onClose={() => setDeleteTarget(null)}
+          onConfirm={() => {
+            deleteMutation.mutate(deleteTarget.id)
+            setDeleteTarget(null)
+          }}
         />
       )}
       {editTarget && (
@@ -106,9 +118,7 @@ function BedsPage() {
           rows={beds}
           getRowKey={(r) => String(r.id)}
           onEdit={(r) => setEditTarget(r)}
-          onDelete={(r) => {
-            if (confirm(`Delete "${r.name}"?`)) deleteMutation.mutate(r.id)
-          }}
+          onDelete={(r) => setDeleteTarget(r)}
         />
       )}
     </>

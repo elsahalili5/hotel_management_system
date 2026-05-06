@@ -7,6 +7,7 @@ import { Button } from '#/components/Button'
 import { useAuth } from '#/modules/auth/hooks/use-auth'
 import { DataTable } from '#/modules/admin/components/DataTable'
 import { RoomTypeModal } from '#/modules/rooms/room-type/components/RoomTypeModal'
+import { ConfirmModal } from '#/modules/admin/components/ConfirmModal'
 import type { Column } from '#/modules/admin/components/DataTable'
 import {
   useRoomTypes,
@@ -35,6 +36,7 @@ function RoomTypesPage() {
   const canManage = hasRole(ROLES.ADMIN) || hasRole(ROLES.MANAGER)
   const [showAdd, setShowAdd] = useState(false)
   const [editTarget, setEditTarget] = useState<RoomTypeResponse | null>(null)
+  const [deleteTarget, setDeleteTarget] = useState<RoomTypeResponse | null>(null)
   const { data: roomTypes, isLoading, isError } = useRoomTypes()
   const createMutation = useCreateRoomType()
   const updateMutation = useUpdateRoomType()
@@ -85,6 +87,16 @@ function RoomTypesPage() {
           isError={createMutation.isError}
         />
       )}
+      {deleteTarget && (
+        <ConfirmModal
+          message={`Are you sure you want to delete "${deleteTarget.name}"?`}
+          onClose={() => setDeleteTarget(null)}
+          onConfirm={() => {
+            deleteMutation.mutate(deleteTarget.id)
+            setDeleteTarget(null)
+          }}
+        />
+      )}
       {editTarget && (
         <RoomTypeModal
           title="Edit Room Type"
@@ -130,14 +142,7 @@ function RoomTypesPage() {
           rows={roomTypes}
           getRowKey={(r) => String(r.id)}
           onEdit={canManage ? (r) => setEditTarget(r) : undefined}
-          onDelete={
-            canManage
-              ? (r) => {
-                  if (confirm(`Delete "${r.name}"?`))
-                    deleteMutation.mutate(r.id)
-                }
-              : undefined
-          }
+          onDelete={canManage ? (r) => setDeleteTarget(r) : undefined}
         />
       )}
     </>

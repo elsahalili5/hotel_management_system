@@ -6,6 +6,7 @@ import { useState } from 'react'
 import { Button } from '#/components/Button'
 import { DataTable } from '#/modules/admin/components/DataTable'
 import { RoomModal } from '#/modules/rooms/room/components/RoomModal'
+import { ConfirmModal } from '#/modules/admin/components/ConfirmModal'
 import type { Column } from '#/modules/admin/components/DataTable'
 import {
   useRooms,
@@ -39,6 +40,7 @@ const statusColors: Record<string, string> = {
 function RoomsPage() {
   const [showAdd, setShowAdd] = useState(false)
   const [editTarget, setEditTarget] = useState<RoomResponse | null>(null)
+  const [deleteTarget, setDeleteTarget] = useState<RoomResponse | null>(null)
   const { data: rooms, isLoading, isError } = useRooms()
   const createMutation = useCreateRoom()
   const updateMutation = useUpdateRoom()
@@ -93,6 +95,16 @@ function RoomsPage() {
           isError={createMutation.isError}
         />
       )}
+      {deleteTarget && (
+        <ConfirmModal
+          message={`Are you sure you want to delete room #${deleteTarget.room_number}?`}
+          onClose={() => setDeleteTarget(null)}
+          onConfirm={() => {
+            deleteMutation.mutate(deleteTarget.id)
+            setDeleteTarget(null)
+          }}
+        />
+      )}
       {editTarget && (
         <RoomModal
           title="Edit Room"
@@ -136,10 +148,7 @@ function RoomsPage() {
           rows={rooms}
           getRowKey={(r) => String(r.id)}
           onEdit={(r) => setEditTarget(r)}
-          onDelete={(r) => {
-            if (confirm(`Delete room #${r.room_number}?`))
-              deleteMutation.mutate(r.id)
-          }}
+          onDelete={(r) => setDeleteTarget(r)}
         />
       )}
     </>
