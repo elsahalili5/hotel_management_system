@@ -186,6 +186,23 @@ export const UserService = {
       data.password_hash = await bcrypt.hash(updateData.password, SALT_ROUNDS);
     }
 
+    if (updateData.status) data.status = updateData.status;
+
+    if (updateData.role) {
+      const roleRecord = await prisma.role.findUnique({
+        where: { name: updateData.role },
+      });
+
+      if (!roleRecord) {
+        throwError(404, "Role not found");
+      }
+
+      data.user_roles = {
+        deleteMany: {},
+        create: { role_id: roleRecord!.id },
+      };
+    }
+
     if (Object.keys(data).length === 0) {
       throwError(400, "No fields to update");
     }
@@ -193,7 +210,10 @@ export const UserService = {
     return prisma.user.update({
       where: { id: userId },
       data,
-      select: safeUserSelect,
+      select: {
+        ...safeUserSelect,
+        user_roles: { include: { role: true } },
+      },
     });
   },
 

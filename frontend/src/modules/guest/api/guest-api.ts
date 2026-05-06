@@ -6,4 +6,5 @@ export const guestApi = {
   getById: (id: number) => apiClient.get<GuestResponse>(`/guests/${id}`),
   update: ({ id, data }: { id: number; data: UpdateGuestInput }) =>
     apiClient.put<GuestResponse, UpdateGuestInput>(`/guests/${id}`, data),
+  deleteUser: (userId: number) => apiClient.delete<void>(`/users/${userId}`),
 }

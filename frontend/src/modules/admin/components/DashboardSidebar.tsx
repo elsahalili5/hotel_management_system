@@ -66,8 +66,24 @@ const navItems: NavItem[] = [
     roles: [ROLES.HOUSEKEEPING],
   },
   { label: 'Bookings', icon: BookOpen, path: '/dashboard/bookings' },
-  { label: 'Guests', icon: Users, path: '/dashboard/guests' },
-  { label: 'Staff', icon: UserCog, path: '/dashboard/staff' },
+  {
+    label: 'Users',
+    icon: Users,
+    path: '/dashboard/users',
+    roles: [ROLES.ADMIN, ROLES.MANAGER],
+  },
+  {
+    label: 'Guests',
+    icon: Users,
+    path: '/dashboard/guests',
+    roles: [ROLES.ADMIN, ROLES.MANAGER, ROLES.RECEPTIONIST],
+  },
+  {
+    label: 'Staff',
+    icon: UserCog,
+    path: '/dashboard/staff',
+    roles: [ROLES.ADMIN, ROLES.MANAGER],
+  },
   { label: 'Reviews', icon: Star, path: '/dashboard/reviews' },
 ]
 

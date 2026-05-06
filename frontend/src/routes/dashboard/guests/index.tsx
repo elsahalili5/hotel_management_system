@@ -4,7 +4,7 @@ import { requireRole } from '#/lib/route-guard'
 import { ROLES } from '@mansio/shared'
 import { DataTable } from '#/modules/admin/components/DataTable'
 import type { Column } from '#/modules/admin/components/DataTable'
-import { useGuests, useUpdateGuest } from '#/modules/guest/hooks/use-guests'
+import { useGuests, useUpdateGuest, useDeleteGuest } from '#/modules/guest/hooks/use-guests'
 import { GuestModal } from '#/modules/guest/components/GuestModal'
 import type { GuestResponse, UpdateGuestInput } from '@mansio/shared'
 
@@ -26,6 +26,7 @@ function GuestsPage() {
   const [editTarget, setEditTarget] = useState<GuestResponse | null>(null)
   const { data: guests, isLoading, isError } = useGuests()
   const updateMutation = useUpdateGuest()
+  const deleteMutation = useDeleteGuest()
 
   const columns: Column<GuestResponse>[] = [
     {
@@ -114,6 +115,11 @@ function GuestsPage() {
           rows={guests}
           getRowKey={(r) => String(r.id)}
           onEdit={(r) => setEditTarget(r)}
+          onDelete={(r) => {
+            if (confirm(`Delete guest ${r.user.first_name} ${r.user.last_name}?`)) {
+              deleteMutation.mutate(r.user_id)
+            }
+          }}
         />
       )}
     </>

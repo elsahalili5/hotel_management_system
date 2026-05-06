@@ -30,3 +30,13 @@ export function useUpdateStaff() {
     },
   })
 }
+
+export function useDeleteStaff() {
+  const queryClient = useQueryClient()
+  return useMutation({
+    mutationFn: staffApi.deleteUser,
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: staffKeys.all })
+    },
+  })
+}

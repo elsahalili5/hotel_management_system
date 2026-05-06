@@ -30,3 +30,13 @@ export function useUpdateGuest() {
     },
   })
 }
+
+export function useDeleteGuest() {
+  const queryClient = useQueryClient()
+  return useMutation({
+    mutationFn: guestApi.deleteUser,
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: guestKeys.all })
+    },
+  })
+}

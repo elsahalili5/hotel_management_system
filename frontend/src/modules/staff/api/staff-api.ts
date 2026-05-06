@@ -6,4 +6,5 @@ export const staffApi = {
   getById: (id: number) => apiClient.get<StaffResponse>(`/staff/${id}`),
   update: ({ id, data }: { id: number; data: UpdateStaffInput }) =>
     apiClient.put<StaffResponse, UpdateStaffInput>(`/staff/${id}`, data),
+  deleteUser: (userId: number) => apiClient.delete<void>(`/users/${userId}`),
 }

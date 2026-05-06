@@ -4,7 +4,7 @@ import { requireRole } from '#/lib/route-guard'
 import { ROLES } from '@mansio/shared'
 import { DataTable } from '#/modules/admin/components/DataTable'
 import type { Column } from '#/modules/admin/components/DataTable'
-import { useStaff, useUpdateStaff } from '#/modules/staff/hooks/use-staff'
+import { useStaff, useUpdateStaff, useDeleteStaff } from '#/modules/staff/hooks/use-staff'
 import { StaffModal } from '#/modules/staff/components/StaffModal'
 import type { StaffResponse, UpdateStaffInput } from '@mansio/shared'
 
@@ -26,6 +26,7 @@ function StaffPage() {
   const [editTarget, setEditTarget] = useState<StaffResponse | null>(null)
   const { data: staff, isLoading, isError } = useStaff()
   const updateMutation = useUpdateStaff()
+  const deleteMutation = useDeleteStaff()
 
   const columns: Column<StaffResponse>[] = [
     {
@@ -56,15 +57,6 @@ function StaffPage() {
         </span>
       ),
     },
-    {
-      key: 'status',
-      header: 'Status',
-      render: (r) => (
-        <span className="text-sm text-mansio-mocha capitalize">
-          {r.user.status.toLowerCase()}
-        </span>
-      ),
-    },
   ]
 
   return (
@@ -90,7 +82,9 @@ function StaffPage() {
       </div>
 
       {isLoading && (
-        <p className="text-sm text-center py-10 text-mansio-mocha">Loading...</p>
+        <p className="text-sm text-center py-10 text-mansio-mocha">
+          Loading...
+        </p>
       )}
       {isError && (
         <p className="text-sm text-center py-10 text-red-500">
@@ -104,6 +98,11 @@ function StaffPage() {
           rows={staff}
           getRowKey={(r) => String(r.id)}
           onEdit={(r) => setEditTarget(r)}
+          onDelete={(r) => {
+            if (confirm(`Delete staff ${r.user.first_name} ${r.user.last_name}?`)) {
+              deleteMutation.mutate(r.user_id)
+            }
+          }}
         />
       )}
     </>
