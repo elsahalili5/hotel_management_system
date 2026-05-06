@@ -57,7 +57,7 @@ export const CleaningTaskService = {
 
     return await prisma.cleaningTask.findMany({
       where: { staff_id: staff.id },
-      orderBy: { assigned_at: "desc" },
+      orderBy: { due_date: "asc" },
       select: taskSelect,
     });
   },

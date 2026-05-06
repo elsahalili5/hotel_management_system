@@ -30,6 +30,7 @@ import { Route as appprivateRouteRouteImport } from './routes/(app)/(private)/ro
 import { Route as DashboardStaffIndexRouteImport } from './routes/dashboard/staff/index'
 import { Route as DashboardRoomsIndexRouteImport } from './routes/dashboard/rooms/index'
 import { Route as DashboardRoomTypesIndexRouteImport } from './routes/dashboard/room-types/index'
+import { Route as DashboardMyTasksIndexRouteImport } from './routes/dashboard/my-tasks/index'
 import { Route as DashboardGuestsIndexRouteImport } from './routes/dashboard/guests/index'
 import { Route as DashboardCleaningTasksIndexRouteImport } from './routes/dashboard/cleaning-tasks/index'
 import { Route as DashboardBedsIndexRouteImport } from './routes/dashboard/beds/index'
@@ -141,6 +142,11 @@ const DashboardRoomTypesIndexRoute = DashboardRoomTypesIndexRouteImport.update({
   path: '/room-types/',
   getParentRoute: () => DashboardRouteRoute,
 } as any)
+const DashboardMyTasksIndexRoute = DashboardMyTasksIndexRouteImport.update({
+  id: '/my-tasks/',
+  path: '/my-tasks/',
+  getParentRoute: () => DashboardRouteRoute,
+} as any)
 const DashboardGuestsIndexRoute = DashboardGuestsIndexRouteImport.update({
   id: '/guests/',
   path: '/guests/',
@@ -207,6 +213,7 @@ export interface FileRoutesByFullPath {
   '/dashboard/beds/': typeof DashboardBedsIndexRoute
   '/dashboard/cleaning-tasks/': typeof DashboardCleaningTasksIndexRoute
   '/dashboard/guests/': typeof DashboardGuestsIndexRoute
+  '/dashboard/my-tasks/': typeof DashboardMyTasksIndexRoute
   '/dashboard/room-types/': typeof DashboardRoomTypesIndexRoute
   '/dashboard/rooms/': typeof DashboardRoomsIndexRoute
   '/dashboard/staff/': typeof DashboardStaffIndexRoute
@@ -234,6 +241,7 @@ export interface FileRoutesByTo {
   '/dashboard/beds': typeof DashboardBedsIndexRoute
   '/dashboard/cleaning-tasks': typeof DashboardCleaningTasksIndexRoute
   '/dashboard/guests': typeof DashboardGuestsIndexRoute
+  '/dashboard/my-tasks': typeof DashboardMyTasksIndexRoute
   '/dashboard/room-types': typeof DashboardRoomTypesIndexRoute
   '/dashboard/rooms': typeof DashboardRoomsIndexRoute
   '/dashboard/staff': typeof DashboardStaffIndexRoute
@@ -266,6 +274,7 @@ export interface FileRoutesById {
   '/dashboard/beds/': typeof DashboardBedsIndexRoute
   '/dashboard/cleaning-tasks/': typeof DashboardCleaningTasksIndexRoute
   '/dashboard/guests/': typeof DashboardGuestsIndexRoute
+  '/dashboard/my-tasks/': typeof DashboardMyTasksIndexRoute
   '/dashboard/room-types/': typeof DashboardRoomTypesIndexRoute
   '/dashboard/rooms/': typeof DashboardRoomsIndexRoute
   '/dashboard/staff/': typeof DashboardStaffIndexRoute
@@ -296,6 +305,7 @@ export interface FileRouteTypes {
     | '/dashboard/beds/'
     | '/dashboard/cleaning-tasks/'
     | '/dashboard/guests/'
+    | '/dashboard/my-tasks/'
     | '/dashboard/room-types/'
     | '/dashboard/rooms/'
     | '/dashboard/staff/'
@@ -323,6 +333,7 @@ export interface FileRouteTypes {
     | '/dashboard/beds'
     | '/dashboard/cleaning-tasks'
     | '/dashboard/guests'
+    | '/dashboard/my-tasks'
     | '/dashboard/room-types'
     | '/dashboard/rooms'
     | '/dashboard/staff'
@@ -354,6 +365,7 @@ export interface FileRouteTypes {
     | '/dashboard/beds/'
     | '/dashboard/cleaning-tasks/'
     | '/dashboard/guests/'
+    | '/dashboard/my-tasks/'
     | '/dashboard/room-types/'
     | '/dashboard/rooms/'
     | '/dashboard/staff/'
@@ -514,6 +526,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof DashboardRoomTypesIndexRouteImport
       parentRoute: typeof DashboardRouteRoute
     }
+    '/dashboard/my-tasks/': {
+      id: '/dashboard/my-tasks/'
+      path: '/my-tasks'
+      fullPath: '/dashboard/my-tasks/'
+      preLoaderRoute: typeof DashboardMyTasksIndexRouteImport
+      parentRoute: typeof DashboardRouteRoute
+    }
     '/dashboard/guests/': {
       id: '/dashboard/guests/'
       path: '/guests'
@@ -650,6 +669,7 @@ interface DashboardRouteRouteChildren {
   DashboardBedsIndexRoute: typeof DashboardBedsIndexRoute
   DashboardCleaningTasksIndexRoute: typeof DashboardCleaningTasksIndexRoute
   DashboardGuestsIndexRoute: typeof DashboardGuestsIndexRoute
+  DashboardMyTasksIndexRoute: typeof DashboardMyTasksIndexRoute
   DashboardRoomTypesIndexRoute: typeof DashboardRoomTypesIndexRoute
   DashboardRoomsIndexRoute: typeof DashboardRoomsIndexRoute
   DashboardStaffIndexRoute: typeof DashboardStaffIndexRoute
@@ -666,6 +686,7 @@ const DashboardRouteRouteChildren: DashboardRouteRouteChildren = {
   DashboardBedsIndexRoute: DashboardBedsIndexRoute,
   DashboardCleaningTasksIndexRoute: DashboardCleaningTasksIndexRoute,
   DashboardGuestsIndexRoute: DashboardGuestsIndexRoute,
+  DashboardMyTasksIndexRoute: DashboardMyTasksIndexRoute,
   DashboardRoomTypesIndexRoute: DashboardRoomTypesIndexRoute,
   DashboardRoomsIndexRoute: DashboardRoomsIndexRoute,
   DashboardStaffIndexRoute: DashboardStaffIndexRoute,
