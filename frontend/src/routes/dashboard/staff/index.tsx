@@ -4,30 +4,30 @@ import { requireRole } from '#/lib/route-guard'
 import { ROLES } from '@mansio/shared'
 import { DataTable } from '#/modules/admin/components/DataTable'
 import type { Column } from '#/modules/admin/components/DataTable'
-import { useGuests, useUpdateGuest } from '#/modules/guest/hooks/use-guests'
-import { GuestModal } from '#/modules/guest/components/GuestModal'
-import type { GuestResponse, UpdateGuestInput } from '@mansio/shared'
+import { useStaff, useUpdateStaff } from '#/modules/staff/hooks/use-staff'
+import { StaffModal } from '#/modules/staff/components/StaffModal'
+import type { StaffResponse, UpdateStaffInput } from '@mansio/shared'
 
-export const Route = createFileRoute('/dashboard/guests/')({
+export const Route = createFileRoute('/dashboard/staff/')({
   beforeLoad: ({ context }) => {
     requireRole(context.auth, {
-      role: [ROLES.ADMIN, ROLES.MANAGER,],
+      role: [ROLES.ADMIN, ROLES.MANAGER],
       redirectTo: '/dashboard',
     })
   },
-  component: GuestsPage,
+  component: StaffPage,
 })
 
 const cell = (value: string | null | undefined) => (
   <span className="text-sm text-mansio-mocha">{value ?? '—'}</span>
 )
 
-function GuestsPage() {
-  const [editTarget, setEditTarget] = useState<GuestResponse | null>(null)
-  const { data: guests, isLoading, isError } = useGuests()
-  const updateMutation = useUpdateGuest()
+function StaffPage() {
+  const [editTarget, setEditTarget] = useState<StaffResponse | null>(null)
+  const { data: staff, isLoading, isError } = useStaff()
+  const updateMutation = useUpdateStaff()
 
-  const columns: Column<GuestResponse>[] = [
+  const columns: Column<StaffResponse>[] = [
     {
       key: 'name',
       header: 'Name',
@@ -48,43 +48,33 @@ function GuestsPage() {
       render: (r) => cell(r.phone_number),
     },
     {
-      key: 'city',
-      header: 'City',
-      render: (r) => cell(r.city),
+      key: 'shift',
+      header: 'Shift',
+      render: (r) => (
+        <span className="text-sm text-mansio-mocha capitalize">
+          {r.shift.toLowerCase()}
+        </span>
+      ),
     },
     {
-      key: 'country',
-      header: 'Country',
-      render: (r) => cell(r.country),
-    },
-    {
-      key: 'address',
-      header: 'Address',
-      render: (r) => cell(r.address),
-    },
-    {
-      key: 'passport_number',
-      header: 'Passport',
-      render: (r) => cell(r.passport_number),
-    },
-    {
-      key: 'date_of_birth',
-      header: 'Date of Birth',
-      render: (r) =>
-        r.date_of_birth
-          ? cell(new Date(r.date_of_birth).toLocaleDateString())
-          : cell(null),
+      key: 'status',
+      header: 'Status',
+      render: (r) => (
+        <span className="text-sm text-mansio-mocha capitalize">
+          {r.user.status.toLowerCase()}
+        </span>
+      ),
     },
   ]
 
   return (
     <>
       {editTarget && (
-        <GuestModal
-          title="Edit Guest"
+        <StaffModal
+          title="Edit Staff"
           defaultValues={editTarget}
           onClose={() => setEditTarget(null)}
-          onSubmit={async (data: UpdateGuestInput) => {
+          onSubmit={async (data: UpdateStaffInput) => {
             await updateMutation.mutateAsync({ id: editTarget.id, data })
             setEditTarget(null)
           }}
@@ -95,7 +85,7 @@ function GuestsPage() {
 
       <div className="flex items-center justify-between mb-6">
         <p className="text-sm text-mansio-mocha">
-          {guests ? `${guests.length} guests total` : ''}
+          {staff ? `${staff.length} staff total` : ''}
         </p>
       </div>
 
@@ -104,14 +94,14 @@ function GuestsPage() {
       )}
       {isError && (
         <p className="text-sm text-center py-10 text-red-500">
-          Failed to load guests.
+          Failed to load staff.
         </p>
       )}
-      {guests && (
+      {staff && (
         <DataTable
-          title="All Guests"
+          title="All Staff"
           columns={columns}
-          rows={guests}
+          rows={staff}
           getRowKey={(r) => String(r.id)}
           onEdit={(r) => setEditTarget(r)}
         />
