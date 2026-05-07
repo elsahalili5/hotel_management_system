@@ -19,7 +19,6 @@ import { Route as DashboardReviewsRouteImport } from './routes/dashboard/reviews
 import { Route as DashboardBookingsRouteImport } from './routes/dashboard/bookings'
 import { Route as authSignupRouteImport } from './routes/(auth)/signup'
 import { Route as authLoginRouteImport } from './routes/(auth)/login'
-import { Route as appUsersRouteImport } from './routes/(app)/users'
 import { Route as appSpaRouteImport } from './routes/(app)/spa'
 import { Route as appRoomsRouteImport } from './routes/(app)/rooms'
 import { Route as appRestaurantRouteImport } from './routes/(app)/restaurant'
@@ -27,6 +26,7 @@ import { Route as appContactRouteImport } from './routes/(app)/contact'
 import { Route as appBookingsRouteImport } from './routes/(app)/bookings'
 import { Route as appAboutRouteImport } from './routes/(app)/about'
 import { Route as appprivateRouteRouteImport } from './routes/(app)/(private)/route'
+import { Route as DashboardUsersIndexRouteImport } from './routes/dashboard/users/index'
 import { Route as DashboardStaffIndexRouteImport } from './routes/dashboard/staff/index'
 import { Route as DashboardRoomsIndexRouteImport } from './routes/dashboard/rooms/index'
 import { Route as DashboardRoomTypesIndexRouteImport } from './routes/dashboard/room-types/index'
@@ -88,11 +88,6 @@ const authLoginRoute = authLoginRouteImport.update({
   path: '/login',
   getParentRoute: () => authRouteRoute,
 } as any)
-const appUsersRoute = appUsersRouteImport.update({
-  id: '/users',
-  path: '/users',
-  getParentRoute: () => appRouteRoute,
-} as any)
 const appSpaRoute = appSpaRouteImport.update({
   id: '/spa',
   path: '/spa',
@@ -126,6 +121,11 @@ const appAboutRoute = appAboutRouteImport.update({
 const appprivateRouteRoute = appprivateRouteRouteImport.update({
   id: '/(private)',
   getParentRoute: () => appRouteRoute,
+} as any)
+const DashboardUsersIndexRoute = DashboardUsersIndexRouteImport.update({
+  id: '/users/',
+  path: '/users/',
+  getParentRoute: () => DashboardRouteRoute,
 } as any)
 const DashboardStaffIndexRoute = DashboardStaffIndexRouteImport.update({
   id: '/staff/',
@@ -197,7 +197,6 @@ export interface FileRoutesByFullPath {
   '/restaurant': typeof appRestaurantRoute
   '/rooms': typeof appRoomsRouteWithChildren
   '/spa': typeof appSpaRoute
-  '/users': typeof appUsersRoute
   '/login': typeof authLoginRoute
   '/signup': typeof authSignupRoute
   '/dashboard/bookings': typeof DashboardBookingsRoute
@@ -217,6 +216,7 @@ export interface FileRoutesByFullPath {
   '/dashboard/room-types/': typeof DashboardRoomTypesIndexRoute
   '/dashboard/rooms/': typeof DashboardRoomsIndexRoute
   '/dashboard/staff/': typeof DashboardStaffIndexRoute
+  '/dashboard/users/': typeof DashboardUsersIndexRoute
 }
 export interface FileRoutesByTo {
   '/about': typeof appAboutRoute
@@ -225,7 +225,6 @@ export interface FileRoutesByTo {
   '/restaurant': typeof appRestaurantRoute
   '/rooms': typeof appRoomsRouteWithChildren
   '/spa': typeof appSpaRoute
-  '/users': typeof appUsersRoute
   '/login': typeof authLoginRoute
   '/signup': typeof authSignupRoute
   '/dashboard/bookings': typeof DashboardBookingsRoute
@@ -245,6 +244,7 @@ export interface FileRoutesByTo {
   '/dashboard/room-types': typeof DashboardRoomTypesIndexRoute
   '/dashboard/rooms': typeof DashboardRoomsIndexRoute
   '/dashboard/staff': typeof DashboardStaffIndexRoute
+  '/dashboard/users': typeof DashboardUsersIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -258,7 +258,6 @@ export interface FileRoutesById {
   '/(app)/restaurant': typeof appRestaurantRoute
   '/(app)/rooms': typeof appRoomsRouteWithChildren
   '/(app)/spa': typeof appSpaRoute
-  '/(app)/users': typeof appUsersRoute
   '/(auth)/login': typeof authLoginRoute
   '/(auth)/signup': typeof authSignupRoute
   '/dashboard/bookings': typeof DashboardBookingsRoute
@@ -278,6 +277,7 @@ export interface FileRoutesById {
   '/dashboard/room-types/': typeof DashboardRoomTypesIndexRoute
   '/dashboard/rooms/': typeof DashboardRoomsIndexRoute
   '/dashboard/staff/': typeof DashboardStaffIndexRoute
+  '/dashboard/users/': typeof DashboardUsersIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -289,7 +289,6 @@ export interface FileRouteTypes {
     | '/restaurant'
     | '/rooms'
     | '/spa'
-    | '/users'
     | '/login'
     | '/signup'
     | '/dashboard/bookings'
@@ -309,6 +308,7 @@ export interface FileRouteTypes {
     | '/dashboard/room-types/'
     | '/dashboard/rooms/'
     | '/dashboard/staff/'
+    | '/dashboard/users/'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/about'
@@ -317,7 +317,6 @@ export interface FileRouteTypes {
     | '/restaurant'
     | '/rooms'
     | '/spa'
-    | '/users'
     | '/login'
     | '/signup'
     | '/dashboard/bookings'
@@ -337,6 +336,7 @@ export interface FileRouteTypes {
     | '/dashboard/room-types'
     | '/dashboard/rooms'
     | '/dashboard/staff'
+    | '/dashboard/users'
   id:
     | '__root__'
     | '/(app)'
@@ -349,7 +349,6 @@ export interface FileRouteTypes {
     | '/(app)/restaurant'
     | '/(app)/rooms'
     | '/(app)/spa'
-    | '/(app)/users'
     | '/(auth)/login'
     | '/(auth)/signup'
     | '/dashboard/bookings'
@@ -369,6 +368,7 @@ export interface FileRouteTypes {
     | '/dashboard/room-types/'
     | '/dashboard/rooms/'
     | '/dashboard/staff/'
+    | '/dashboard/users/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -449,13 +449,6 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof authLoginRouteImport
       parentRoute: typeof authRouteRoute
     }
-    '/(app)/users': {
-      id: '/(app)/users'
-      path: '/users'
-      fullPath: '/users'
-      preLoaderRoute: typeof appUsersRouteImport
-      parentRoute: typeof appRouteRoute
-    }
     '/(app)/spa': {
       id: '/(app)/spa'
       path: '/spa'
@@ -504,6 +497,13 @@ declare module '@tanstack/react-router' {
       fullPath: ''
       preLoaderRoute: typeof appprivateRouteRouteImport
       parentRoute: typeof appRouteRoute
+    }
+    '/dashboard/users/': {
+      id: '/dashboard/users/'
+      path: '/users'
+      fullPath: '/dashboard/users/'
+      preLoaderRoute: typeof DashboardUsersIndexRouteImport
+      parentRoute: typeof DashboardRouteRoute
     }
     '/dashboard/staff/': {
       id: '/dashboard/staff/'
@@ -624,7 +624,6 @@ interface appRouteRouteChildren {
   appRestaurantRoute: typeof appRestaurantRoute
   appRoomsRoute: typeof appRoomsRouteWithChildren
   appSpaRoute: typeof appSpaRoute
-  appUsersRoute: typeof appUsersRoute
   appIndexRoute: typeof appIndexRoute
 }
 
@@ -636,7 +635,6 @@ const appRouteRouteChildren: appRouteRouteChildren = {
   appRestaurantRoute: appRestaurantRoute,
   appRoomsRoute: appRoomsRouteWithChildren,
   appSpaRoute: appSpaRoute,
-  appUsersRoute: appUsersRoute,
   appIndexRoute: appIndexRoute,
 }
 
@@ -673,6 +671,7 @@ interface DashboardRouteRouteChildren {
   DashboardRoomTypesIndexRoute: typeof DashboardRoomTypesIndexRoute
   DashboardRoomsIndexRoute: typeof DashboardRoomsIndexRoute
   DashboardStaffIndexRoute: typeof DashboardStaffIndexRoute
+  DashboardUsersIndexRoute: typeof DashboardUsersIndexRoute
 }
 
 const DashboardRouteRouteChildren: DashboardRouteRouteChildren = {
@@ -690,6 +689,7 @@ const DashboardRouteRouteChildren: DashboardRouteRouteChildren = {
   DashboardRoomTypesIndexRoute: DashboardRoomTypesIndexRoute,
   DashboardRoomsIndexRoute: DashboardRoomsIndexRoute,
   DashboardStaffIndexRoute: DashboardStaffIndexRoute,
+  DashboardUsersIndexRoute: DashboardUsersIndexRoute,
 }
 
 const DashboardRouteRouteWithChildren = DashboardRouteRoute._addFileChildren(

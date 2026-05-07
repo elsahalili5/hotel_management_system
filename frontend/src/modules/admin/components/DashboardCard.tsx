@@ -8,20 +8,7 @@ interface DashboardCardProps {
 
 export function DashboardCard({ children, className = '', dark = false }: DashboardCardProps) {
   return (
-    <div
-      className={`rounded-xl border ${className}`}
-      style={
-        dark
-          ? {
-              backgroundColor: 'var(--color-mansio-espresso)',
-              borderColor: 'rgba(196,168,130,0.15)',
-            }
-          : {
-              backgroundColor: 'var(--cream)',
-              borderColor: 'var(--border)',
-            }
-      }
-    >
+    <div className={`rounded-xl border ${dark ? 'bg-mansio-espresso border-mansio-gold/15' : 'bg-mansio-cream border-mansio-ink/10'} ${className}`}>
       {children}
     </div>
   )

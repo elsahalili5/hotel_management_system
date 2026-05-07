@@ -13,6 +13,7 @@ import {
   Star,
   UserCog,
   Users,
+  X,
   type LucideIcon,
 } from 'lucide-react'
 import { Logo } from '#/components/Logo'
@@ -87,15 +88,32 @@ const navItems: NavItem[] = [
   { label: 'Reviews', icon: Star, path: '/dashboard/reviews' },
 ]
 
-export function DashboardSidebar() {
+interface DashboardSidebarProps {
+  isOpen?: boolean
+  onClose?: () => void
+}
+
+export function DashboardSidebar({ isOpen, onClose }: DashboardSidebarProps) {
   const navigate = useNavigate()
   const location = useLocation()
   const { logout, hasRole } = useAuth()
 
   return (
-    <aside className="w-60 flex flex-col shrink-0 h-full bg-mansio-espresso">
+    <>
+      {isOpen && (
+        <div
+          className="fixed inset-0 z-40 bg-black/50 md:hidden"
+          onClick={onClose}
+        />
+      )}
+      <aside className={`fixed inset-y-0 left-0 z-50 w-60 flex flex-col h-full bg-mansio-espresso transition-transform duration-300 md:static md:translate-x-0 md:z-auto ${isOpen ? 'translate-x-0' : '-translate-x-full'}`}>
       <div className="px-5 py-5 border-b border-mansio-gold/15">
-        <Logo size={36} />
+        <div className="flex items-center justify-between">
+          <Logo size={36} />
+          <button onClick={onClose} className="md:hidden text-mansio-gold/50 hover:opacity-70 transition-opacity">
+            <X size={18} />
+          </button>
+        </div>
         <p className="text-xs tracking-widest uppercase mt-2 font-medium text-mansio-gold/60">
           Management
         </p>
@@ -132,6 +150,7 @@ export function DashboardSidebar() {
           Sign Out
         </button>
       </div>
-    </aside>
+      </aside>
+    </>
   )
 }
