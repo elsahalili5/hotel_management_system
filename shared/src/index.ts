@@ -5,3 +5,4 @@ export * from './cleaningTask';
 export * from './guest';
 export * from './staff';
 export * from './users';
+export * from './extraServices';

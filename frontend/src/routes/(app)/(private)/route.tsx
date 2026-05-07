@@ -6,7 +6,7 @@ export const Route = createFileRoute('/(app)/(private)')({
   beforeLoad: ({ context }) => {
     requireAuthenticated(context.auth);
 
-    if(context.auth.hasRole(ROLES.ADMIN)) {
+    if (!context.auth.hasRole(ROLES.GUEST)) {
       throw redirect({ to: '/dashboard' })
     }
   },

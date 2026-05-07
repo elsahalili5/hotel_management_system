@@ -28,6 +28,7 @@ import { Route as appAboutRouteImport } from './routes/(app)/about'
 import { Route as appprivateRouteRouteImport } from './routes/(app)/(private)/route'
 import { Route as DashboardUsersIndexRouteImport } from './routes/dashboard/users/index'
 import { Route as DashboardStaffIndexRouteImport } from './routes/dashboard/staff/index'
+import { Route as DashboardServiceCategoriesIndexRouteImport } from './routes/dashboard/service-categories/index'
 import { Route as DashboardRoomsIndexRouteImport } from './routes/dashboard/rooms/index'
 import { Route as DashboardRoomTypesIndexRouteImport } from './routes/dashboard/room-types/index'
 import { Route as DashboardMyTasksIndexRouteImport } from './routes/dashboard/my-tasks/index'
@@ -132,6 +133,12 @@ const DashboardStaffIndexRoute = DashboardStaffIndexRouteImport.update({
   path: '/staff/',
   getParentRoute: () => DashboardRouteRoute,
 } as any)
+const DashboardServiceCategoriesIndexRoute =
+  DashboardServiceCategoriesIndexRouteImport.update({
+    id: '/service-categories/',
+    path: '/service-categories/',
+    getParentRoute: () => DashboardRouteRoute,
+  } as any)
 const DashboardRoomsIndexRoute = DashboardRoomsIndexRouteImport.update({
   id: '/rooms/',
   path: '/rooms/',
@@ -215,6 +222,7 @@ export interface FileRoutesByFullPath {
   '/dashboard/my-tasks/': typeof DashboardMyTasksIndexRoute
   '/dashboard/room-types/': typeof DashboardRoomTypesIndexRoute
   '/dashboard/rooms/': typeof DashboardRoomsIndexRoute
+  '/dashboard/service-categories/': typeof DashboardServiceCategoriesIndexRoute
   '/dashboard/staff/': typeof DashboardStaffIndexRoute
   '/dashboard/users/': typeof DashboardUsersIndexRoute
 }
@@ -243,6 +251,7 @@ export interface FileRoutesByTo {
   '/dashboard/my-tasks': typeof DashboardMyTasksIndexRoute
   '/dashboard/room-types': typeof DashboardRoomTypesIndexRoute
   '/dashboard/rooms': typeof DashboardRoomsIndexRoute
+  '/dashboard/service-categories': typeof DashboardServiceCategoriesIndexRoute
   '/dashboard/staff': typeof DashboardStaffIndexRoute
   '/dashboard/users': typeof DashboardUsersIndexRoute
 }
@@ -276,6 +285,7 @@ export interface FileRoutesById {
   '/dashboard/my-tasks/': typeof DashboardMyTasksIndexRoute
   '/dashboard/room-types/': typeof DashboardRoomTypesIndexRoute
   '/dashboard/rooms/': typeof DashboardRoomsIndexRoute
+  '/dashboard/service-categories/': typeof DashboardServiceCategoriesIndexRoute
   '/dashboard/staff/': typeof DashboardStaffIndexRoute
   '/dashboard/users/': typeof DashboardUsersIndexRoute
 }
@@ -307,6 +317,7 @@ export interface FileRouteTypes {
     | '/dashboard/my-tasks/'
     | '/dashboard/room-types/'
     | '/dashboard/rooms/'
+    | '/dashboard/service-categories/'
     | '/dashboard/staff/'
     | '/dashboard/users/'
   fileRoutesByTo: FileRoutesByTo
@@ -335,6 +346,7 @@ export interface FileRouteTypes {
     | '/dashboard/my-tasks'
     | '/dashboard/room-types'
     | '/dashboard/rooms'
+    | '/dashboard/service-categories'
     | '/dashboard/staff'
     | '/dashboard/users'
   id:
@@ -367,6 +379,7 @@ export interface FileRouteTypes {
     | '/dashboard/my-tasks/'
     | '/dashboard/room-types/'
     | '/dashboard/rooms/'
+    | '/dashboard/service-categories/'
     | '/dashboard/staff/'
     | '/dashboard/users/'
   fileRoutesById: FileRoutesById
@@ -510,6 +523,13 @@ declare module '@tanstack/react-router' {
       path: '/staff'
       fullPath: '/dashboard/staff/'
       preLoaderRoute: typeof DashboardStaffIndexRouteImport
+      parentRoute: typeof DashboardRouteRoute
+    }
+    '/dashboard/service-categories/': {
+      id: '/dashboard/service-categories/'
+      path: '/service-categories'
+      fullPath: '/dashboard/service-categories/'
+      preLoaderRoute: typeof DashboardServiceCategoriesIndexRouteImport
       parentRoute: typeof DashboardRouteRoute
     }
     '/dashboard/rooms/': {
@@ -670,6 +690,7 @@ interface DashboardRouteRouteChildren {
   DashboardMyTasksIndexRoute: typeof DashboardMyTasksIndexRoute
   DashboardRoomTypesIndexRoute: typeof DashboardRoomTypesIndexRoute
   DashboardRoomsIndexRoute: typeof DashboardRoomsIndexRoute
+  DashboardServiceCategoriesIndexRoute: typeof DashboardServiceCategoriesIndexRoute
   DashboardStaffIndexRoute: typeof DashboardStaffIndexRoute
   DashboardUsersIndexRoute: typeof DashboardUsersIndexRoute
 }
@@ -688,6 +709,7 @@ const DashboardRouteRouteChildren: DashboardRouteRouteChildren = {
   DashboardMyTasksIndexRoute: DashboardMyTasksIndexRoute,
   DashboardRoomTypesIndexRoute: DashboardRoomTypesIndexRoute,
   DashboardRoomsIndexRoute: DashboardRoomsIndexRoute,
+  DashboardServiceCategoriesIndexRoute: DashboardServiceCategoriesIndexRoute,
   DashboardStaffIndexRoute: DashboardStaffIndexRoute,
   DashboardUsersIndexRoute: DashboardUsersIndexRoute,
 }

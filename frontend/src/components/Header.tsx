@@ -6,6 +6,7 @@ import { Container } from './Container'
 import { Button } from './Button'
 import { useAuth } from '#/modules/auth/hooks/use-auth'
 import { getUserFullName } from '#/lib/helpers'
+import { ROLES } from '@mansio/shared'
 
 const navLinks = [
   { label: 'ABOUT', to: '/about' },
@@ -141,7 +142,7 @@ function ProfileLink() {
   }
 
   return (
-    <Link to="/profile" className="hidden lg:inline-flex no-underline items-center gap-1">
+    <Link to={auth.hasRole(ROLES.GUEST) ? '/profile' : '/dashboard'} className="hidden lg:inline-flex no-underline items-center gap-1">
       <span className="text-mansio-espresso">{getUserFullName(user)}</span>
       <Button isIcon variant="ghost" aria-label="Profile">
         <UserCircle size={22} />
