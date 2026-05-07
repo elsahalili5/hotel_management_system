@@ -1,30 +1,64 @@
 import { useState } from 'react'
+import { useForm } from 'react-hook-form'
 import { Phone, Calendar, MapPin, Globe, Edit3, X } from 'lucide-react'
 import { Button } from '../Button'
-import { FormSection } from '../Form'
-import type { FieldDef } from '../Form'
 import type { AuthUser } from '@mansio/shared'
 import { formatDate } from '#/lib/dates'
+import { useUpdateGuest } from '#/modules/guest/hooks/use-guests'
+import { useAuth } from '#/modules/auth/hooks/use-auth'
 
-const profileFields: FieldDef[] = [
-  { name: 'phone_number', label: 'Phone Number', type: 'tel', placeholder: '+383 44 000 000' },
-  { name: 'date_of_birth', label: 'Date of Birth', type: 'date' },
-  { name: 'address', label: 'Address', type: 'text', placeholder: 'Street address', colSpan: 'full' },
-  { name: 'city', label: 'City', type: 'text', placeholder: 'City' },
-  { name: 'country', label: 'Country', type: 'text', placeholder: 'Country' },
-  { name: 'passport_number', label: 'Passport Number', type: 'text', placeholder: 'XK000000' },
-]
+const inputClass =
+  'w-full bg-white border border-mansio-linen/60 rounded-sm px-4 py-3 text-sm text-mansio-espresso placeholder-mansio-linen focus:outline-none focus:border-mansio-gold transition-colors'
+const labelClass =
+  'text-xs font-medium tracking-widest uppercase text-mansio-taupe mb-1.5 block'
 
- 
+type EditForm = {
+  phone_number: string
+  date_of_birth: string
+  address: string
+  city: string
+  country: string
+  passport_number: string
+}
 
 interface PersonalInfoCardProps {
   user: AuthUser
 }
 
- 
-
 export function PersonalInfoCard({ user }: PersonalInfoCardProps) {
   const [editing, setEditing] = useState(false)
+  const updateGuest = useUpdateGuest()
+  const { refreshUser } = useAuth()
+
+  const { register, handleSubmit } = useForm<EditForm>({
+    defaultValues: {
+      phone_number: user.guest_profile?.phone_number ?? '',
+      date_of_birth: user.guest_profile?.date_of_birth
+        ? new Date(user.guest_profile.date_of_birth).toISOString().split('T')[0]
+        : '',
+      address: user.guest_profile?.address ?? '',
+      city: user.guest_profile?.city ?? '',
+      country: user.guest_profile?.country ?? '',
+      passport_number: user.guest_profile?.passport_number ?? '',
+    },
+  })
+
+  async function onSubmit(values: EditForm) {
+    if (!user.guest_profile?.id) return
+    await updateGuest.mutateAsync({
+      id: user.guest_profile.id,
+      data: {
+        phone_number: values.phone_number || undefined,
+        date_of_birth: values.date_of_birth ? new Date(values.date_of_birth) : undefined,
+        address: values.address || undefined,
+        city: values.city || undefined,
+        country: values.country || undefined,
+        passport_number: values.passport_number || undefined,
+      },
+    })
+    await refreshUser()
+    setEditing(false)
+  }
 
   if (editing) {
     return (
@@ -39,14 +73,39 @@ export function PersonalInfoCard({ user }: PersonalInfoCardProps) {
           </Button>
         </div>
 
-        <FormSection
-          inline
-          fields={profileFields}
-          submitLabel="Save Changes"
-          successTitle="Profile Updated"
-          successMessage="Your information has been saved successfully."
-          onSubmit={async () => setEditing(false)}
-        />
+        <form onSubmit={handleSubmit(onSubmit)} className="space-y-5">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
+            <div>
+              <label className={labelClass}>Phone Number</label>
+              <input type="tel" {...register('phone_number')} className={inputClass} placeholder="+383 44 000 000" />
+            </div>
+            <div>
+              <label className={labelClass}>Date of Birth</label>
+              <input type="date" {...register('date_of_birth')} className={inputClass} />
+            </div>
+            <div className="sm:col-span-2">
+              <label className={labelClass}>Address</label>
+              <input type="text" {...register('address')} className={inputClass} placeholder="Street address" />
+            </div>
+            <div>
+              <label className={labelClass}>City</label>
+              <input type="text" {...register('city')} className={inputClass} placeholder="City" />
+            </div>
+            <div>
+              <label className={labelClass}>Country</label>
+              <input type="text" {...register('country')} className={inputClass} placeholder="Country" />
+            </div>
+            <div>
+              <label className={labelClass}>Passport Number</label>
+              <input type="text" {...register('passport_number')} className={inputClass} placeholder="XK000000" />
+            </div>
+          </div>
+          <div className="pt-4 flex justify-center">
+            <Button type="submit" disabled={updateGuest.isPending}>
+              {updateGuest.isPending ? 'Saving…' : 'Save Changes'}
+            </Button>
+          </div>
+        </form>
       </div>
     )
   }

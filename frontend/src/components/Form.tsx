@@ -34,6 +34,7 @@ export interface FormSectionProps {
   title?: string
   subtitle?: string
   fields: FieldDef[]
+  defaultValues?: Record<string, string>
   submitLabel?: string
   submitIcon?: ReactNode
   successTitle?: string

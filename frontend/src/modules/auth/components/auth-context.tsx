@@ -24,6 +24,7 @@ export type AuthContextValue = {
   logout: () => void
   setSession: (session: LoginUserResponse) => void
   hasRole: (role: RoleType) => boolean
+  refreshUser: () => Promise<void>
 }
 
 export const AuthContext = createContext<AuthContextValue | undefined>(
@@ -106,6 +107,11 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     return session
   }
 
+  const refreshUser = async () => {
+    const currentUser = await authApi.me()
+    setUser(currentUser)
+  }
+
   const value = useMemo<AuthContextValue>(
     () => ({
       isAuthenticated: Boolean(user && accessToken),
@@ -115,6 +121,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       logout,
       setSession,
       hasRole,
+      refreshUser,
     }),
     [accessToken, user, hasRole],
   )
