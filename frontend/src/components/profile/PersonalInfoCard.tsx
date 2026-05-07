@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import { useForm } from 'react-hook-form'
-import { Phone, Calendar, MapPin, Globe, Edit3, X } from 'lucide-react'
+import { Phone, Calendar, MapPin, Globe, Edit3, X, FileText } from 'lucide-react'
 import { Button } from '../Button'
 import type { AuthUser } from '@mansio/shared'
 import { formatDate } from '#/lib/dates'
@@ -129,6 +129,7 @@ export function PersonalInfoCard({ user }: PersonalInfoCardProps) {
           { Icon: MapPin, label: 'Address', value: user.guest_profile?.address },
           { Icon: MapPin, label: 'City', value: user.guest_profile?.city },
           { Icon: Globe, label: 'Country', value: user.guest_profile?.country },
+          { Icon: FileText, label: 'Passport Number', value: user.guest_profile?.passport_number },
         ].map(({ Icon, label, value }) => (
           <div key={label} className="flex flex-col gap-2">
             <div className="flex items-center gap-2">

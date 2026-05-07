@@ -4,14 +4,19 @@ import { requireRole } from '#/lib/route-guard'
 import { ROLES } from '@mansio/shared'
 import { DataTable } from '#/modules/admin/components/DataTable'
 import type { Column } from '#/modules/admin/components/DataTable'
-import { useGuests, useUpdateGuest, useDeleteGuest } from '#/modules/guest/hooks/use-guests'
+import {
+  useGuests,
+  useUpdateGuest,
+  useDeleteGuest,
+} from '#/modules/guest/hooks/use-guests'
 import { GuestModal } from '#/modules/guest/components/GuestModal'
+import { ConfirmModal } from '#/modules/admin/components/ConfirmModal'
 import type { GuestResponse, UpdateGuestInput } from '@mansio/shared'
 
 export const Route = createFileRoute('/dashboard/guests/')({
   beforeLoad: ({ context }) => {
     requireRole(context.auth, {
-      role: [ROLES.ADMIN, ROLES.MANAGER,],
+      role: [ROLES.ADMIN, ROLES.MANAGER],
       redirectTo: '/dashboard',
     })
   },
@@ -24,6 +29,7 @@ const cell = (value: string | null | undefined) => (
 
 function GuestsPage() {
   const [editTarget, setEditTarget] = useState<GuestResponse | null>(null)
+  const [deleteTarget, setDeleteTarget] = useState<GuestResponse | null>(null)
   const { data: guests, isLoading, isError } = useGuests()
   const updateMutation = useUpdateGuest()
   const deleteMutation = useDeleteGuest()
@@ -80,6 +86,16 @@ function GuestsPage() {
 
   return (
     <>
+      {deleteTarget && (
+        <ConfirmModal
+          message={`Are you sure you want to delete guest ${deleteTarget.user.first_name} ${deleteTarget.user.last_name}?`}
+          onConfirm={() => {
+            deleteMutation.mutate(deleteTarget.user_id)
+            setDeleteTarget(null)
+          }}
+          onClose={() => setDeleteTarget(null)}
+        />
+      )}
       {editTarget && (
         <GuestModal
           title="Edit Guest"
@@ -101,7 +117,9 @@ function GuestsPage() {
       </div>
 
       {isLoading && (
-        <p className="text-sm text-center py-10 text-mansio-mocha">Loading...</p>
+        <p className="text-sm text-center py-10 text-mansio-mocha">
+          Loading...
+        </p>
       )}
       {isError && (
         <p className="text-sm text-center py-10 text-red-500">
@@ -115,11 +133,7 @@ function GuestsPage() {
           rows={guests}
           getRowKey={(r) => String(r.id)}
           onEdit={(r) => setEditTarget(r)}
-          onDelete={(r) => {
-            if (confirm(`Delete guest ${r.user.first_name} ${r.user.last_name}?`)) {
-              deleteMutation.mutate(r.user_id)
-            }
-          }}
+          onDelete={(r) => setDeleteTarget(r)}
         />
       )}
     </>

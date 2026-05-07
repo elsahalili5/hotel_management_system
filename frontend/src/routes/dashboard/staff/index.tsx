@@ -4,8 +4,13 @@ import { requireRole } from '#/lib/route-guard'
 import { ROLES } from '@mansio/shared'
 import { DataTable } from '#/modules/admin/components/DataTable'
 import type { Column } from '#/modules/admin/components/DataTable'
-import { useStaff, useUpdateStaff, useDeleteStaff } from '#/modules/staff/hooks/use-staff'
+import {
+  useStaff,
+  useUpdateStaff,
+  useDeleteStaff,
+} from '#/modules/staff/hooks/use-staff'
 import { StaffModal } from '#/modules/staff/components/StaffModal'
+import { ConfirmModal } from '#/modules/admin/components/ConfirmModal'
 import type { StaffResponse, UpdateStaffInput } from '@mansio/shared'
 
 export const Route = createFileRoute('/dashboard/staff/')({
@@ -24,6 +29,7 @@ const cell = (value: string | null | undefined) => (
 
 function StaffPage() {
   const [editTarget, setEditTarget] = useState<StaffResponse | null>(null)
+  const [deleteTarget, setDeleteTarget] = useState<StaffResponse | null>(null)
   const { data: staff, isLoading, isError } = useStaff()
   const updateMutation = useUpdateStaff()
   const deleteMutation = useDeleteStaff()
@@ -61,6 +67,16 @@ function StaffPage() {
 
   return (
     <>
+      {deleteTarget && (
+        <ConfirmModal
+          message={`Are you sure you want to delete staff ${deleteTarget.user.first_name} ${deleteTarget.user.last_name}?`}
+          onConfirm={() => {
+            deleteMutation.mutate(deleteTarget.user_id)
+            setDeleteTarget(null)
+          }}
+          onClose={() => setDeleteTarget(null)}
+        />
+      )}
       {editTarget && (
         <StaffModal
           title="Edit Staff"
@@ -98,11 +114,7 @@ function StaffPage() {
           rows={staff}
           getRowKey={(r) => String(r.id)}
           onEdit={(r) => setEditTarget(r)}
-          onDelete={(r) => {
-            if (confirm(`Delete staff ${r.user.first_name} ${r.user.last_name}?`)) {
-              deleteMutation.mutate(r.user_id)
-            }
-          }}
+          onDelete={(r) => setDeleteTarget(r)}
         />
       )}
     </>

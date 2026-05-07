@@ -15,6 +15,7 @@ import {
 } from '#/modules/users/hooks/use-users'
 import { useUpdateStaff } from '#/modules/staff/hooks/use-staff'
 import { UserModal } from '#/modules/users/components/UserModal'
+import { ConfirmModal } from '#/modules/admin/components/ConfirmModal'
 import type { UserEditPayload } from '#/modules/users/components/UserModal'
 import type {
   CreateGuestInput,
@@ -39,6 +40,7 @@ const cell = (value: string | null | undefined) => (
 function UsersPage() {
   const [showAdd, setShowAdd] = useState(false)
   const [editTarget, setEditTarget] = useState<UserResponse | null>(null)
+  const [deleteTarget, setDeleteTarget] = useState<UserResponse | null>(null)
   const { data: users, isLoading, isError } = useUsers()
   const createGuestMutation = useCreateGuest()
   const createStaffMutation = useCreateStaff()
@@ -109,6 +111,16 @@ function UsersPage() {
 
   return (
     <>
+      {deleteTarget && (
+        <ConfirmModal
+          message={`Are you sure you want to delete user ${deleteTarget.first_name} ${deleteTarget.last_name}?`}
+          onConfirm={() => {
+            deleteMutation.mutate(deleteTarget.id)
+            setDeleteTarget(null)
+          }}
+          onClose={() => setDeleteTarget(null)}
+        />
+      )}
       {showAdd && (
         <UserModal
           mode="create"
@@ -162,11 +174,7 @@ function UsersPage() {
           rows={users}
           getRowKey={(r) => String(r.id)}
           onEdit={(r) => setEditTarget(r)}
-          onDelete={(r) => {
-            if (confirm(`Delete user ${r.first_name} ${r.last_name}?`)) {
-              deleteMutation.mutate(r.id)
-            }
-          }}
+          onDelete={(r) => setDeleteTarget(r)}
         />
       )}
     </>
