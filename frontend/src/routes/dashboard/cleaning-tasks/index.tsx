@@ -1,10 +1,11 @@
 import { createFileRoute } from '@tanstack/react-router'
 import { requireRole } from '#/lib/route-guard'
 import { ROLES } from '@mansio/shared'
-import { Plus, Clock, CheckCircle2, Circle } from 'lucide-react'
+import { Plus, Clock, CheckCircle2, Circle, AlertTriangle } from 'lucide-react'
 import { useState } from 'react'
 import { Button } from '#/components/Button'
 import { DataTable } from '#/modules/admin/components/DataTable'
+import { DashboardCard } from '#/modules/admin/components/DashboardCard'
 import { CleaningTaskModal } from '#/modules/cleaning-task/components/cleaningTaskModal'
 import { ConfirmModal } from '#/modules/admin/components/ConfirmModal'
 import type { Column } from '#/modules/admin/components/DataTable'
@@ -13,6 +14,7 @@ import {
   useCreateCleaningTask,
   useDeleteCleaningTask,
 } from '#/modules/cleaning-task/hooks/use-cleaning-tasks'
+import { useRoomStats } from '#/modules/rooms/room/hooks/use-rooms'
 import type { CleaningTaskResponse } from '@mansio/shared'
 import { TaskStatus } from '@mansio/shared'
 
@@ -47,6 +49,8 @@ function CleaningTasksPage() {
   const [showAdd, setShowAdd] = useState(false)
   const [deleteTarget, setDeleteTarget] = useState<CleaningTaskResponse | null>(null)
   const { data: tasks, isLoading, isError } = useCleaningTasks()
+  const { data: stats } = useRoomStats()
+  const dirtyCount = stats?.DIRTY ?? 0
   const createMutation = useCreateCleaningTask()
   const deleteMutation = useDeleteCleaningTask()
 
@@ -107,6 +111,15 @@ function CleaningTasksPage() {
             setDeleteTarget(null)
           }}
         />
+      )}
+
+      {dirtyCount > 0 && (
+        <DashboardCard className="flex items-center gap-3 px-5 py-4 mb-6">
+          <AlertTriangle size={16} className="text-orange-500 shrink-0" />
+          <p className="text-sm text-mansio-mocha">
+            <span className="font-semibold text-mansio-ink">{dirtyCount}</span> {dirtyCount === 1 ? 'room needs' : 'rooms need'} cleaning — assign a task.
+          </p>
+        </DashboardCard>
       )}
 
       <div className="flex items-center justify-between mb-6">

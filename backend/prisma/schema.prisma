@@ -220,3 +220,38 @@ model UserTokens {
 
   user            User     @relation(fields: [user_id], references: [id], onDelete: Cascade)
 }
+
+// ─────────────────────────────────────────
+// SERVICES
+// ─────────────────────────────────────────
+enum ServiceOrderStatus {
+  PENDING
+  IN_PROGRESS
+  DELIVERED
+  CANCELLED
+}
+
+model ServiceCategory {
+  id          Int            @id @default(autoincrement())
+  name        String         @unique
+  description String?
+  sort_order  Int            @default(0)
+  is_active   Boolean        @default(true)
+
+  services    ExtraService[]
+}
+
+model ExtraService {
+  id               Int             @id @default(autoincrement())
+  name             String
+  description      String?         @db.Text
+  price            Decimal         @db.Decimal(10, 2)
+  is_active        Boolean         @default(true)
+  is_available_24h Boolean         @default(false)
+  available_from   String?
+  available_until  String?
+  category_id      Int
+
+  category         ServiceCategory      @relation(fields: [category_id], references: [id], onDelete: Cascade)
+ 
+}

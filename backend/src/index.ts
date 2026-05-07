@@ -14,6 +14,8 @@ import roomTypeRoutes from "@modules/rooms/roomType/roomType.routes.ts";
 import roomRoutes from "@modules/rooms/room/room.routes.ts";
 import bedRoutes from "@modules/rooms/bed/bed.routes.ts";
 import cleaningTaskRoutes from "@modules/cleaningTask/cleaningTask.routes.ts";
+import serviceCategoryRoutes from "@modules/extraServices/serviceCategory/serviceCategory.routes.ts";
+
 
 const app = express();
 
@@ -29,6 +31,8 @@ app.use("/api/guests", guestRoutes);
 app.use("/api/staff", staffRoutes);
 app.use("/api/rooms", roomRoutes);
 app.use("/api/cleaning-tasks", cleaningTaskRoutes);
+app.use("/api/service-categories", serviceCategoryRoutes);
+
 
 const PORT = process.env.PORT || 5000;
 
