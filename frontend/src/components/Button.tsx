@@ -55,7 +55,14 @@ export function Button({
   const cls = isIcon ? `${iconBase} ${className}` : `${base} ${className}`
 
   return (
-    <button onClick={onClick} type={type} disabled={disabled} className={cls} style={{ ...variantStyle, ...(color && { color }) }} aria-label={ariaLabel}>
+    <button
+      onClick={onClick}
+      type={type}
+      disabled={disabled}
+      className={cls}
+      style={{ ...variantStyle, ...(color && { color }) }}
+      aria-label={ariaLabel}
+    >
       {!isIcon && startIcon}
       {children}
       {!isIcon && endIcon}

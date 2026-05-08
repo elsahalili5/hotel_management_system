@@ -29,7 +29,9 @@ export function useUpdateServiceCategory() {
     mutationFn: serviceCategoryApi.update,
     onSuccess: (_, { id }) => {
       queryClient.invalidateQueries({ queryKey: serviceCategoryKeys.all })
-      queryClient.invalidateQueries({ queryKey: serviceCategoryKeys.detail(id) })
+      queryClient.invalidateQueries({
+        queryKey: serviceCategoryKeys.detail(id),
+      })
     },
   })
 }

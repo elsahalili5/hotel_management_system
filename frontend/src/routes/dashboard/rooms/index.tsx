@@ -95,6 +95,7 @@ function RoomsPage() {
           isError={createMutation.isError}
         />
       )}
+
       {deleteTarget && (
         <ConfirmModal
           message={`Are you sure you want to delete room #${deleteTarget.room_number}?`}
@@ -105,6 +106,7 @@ function RoomsPage() {
           }}
         />
       )}
+
       {editTarget && (
         <RoomModal
           title="Edit Room"

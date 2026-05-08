@@ -1,7 +1,10 @@
 import { useForm } from 'react-hook-form'
 import { Modal } from '#/modules/admin/components/Modal'
 import { Button } from '#/components/Button'
-import type { CreateServiceCategoryInput, ServiceCategoryResponse } from '@mansio/shared'
+import type {
+  CreateServiceCategoryInput,
+  ServiceCategoryResponse,
+} from '@mansio/shared'
 
 interface ServiceCategoryModalProps {
   onClose: () => void
@@ -12,7 +15,8 @@ interface ServiceCategoryModalProps {
   title?: string
 }
 
-const field = 'w-full border border-mansio-ink/10 rounded px-3 py-2 text-sm focus:outline-none'
+const field =
+  'w-full border border-mansio-ink/10 rounded px-3 py-2 text-sm focus:outline-none'
 const lbl = 'text-xs tracking-widest uppercase mb-1 block text-mansio-mocha'
 
 export function ServiceCategoryModal({
@@ -40,7 +44,10 @@ export function ServiceCategoryModal({
 
   return (
     <Modal title={title} onClose={onClose} maxWidth="max-w-sm">
-      <form onSubmit={handleSubmit(async (values) => await onSubmit(values))} className="flex flex-col gap-4">
+      <form
+        onSubmit={handleSubmit(async (values) => await onSubmit(values))}
+        className="flex flex-col gap-4"
+      >
         <div>
           <label className={lbl}>Name *</label>
           <input
@@ -71,18 +78,31 @@ export function ServiceCategoryModal({
             />
           </div>
           <div className="flex items-center gap-2 pt-5">
-            <input type="checkbox" {...register('is_active')} id="is_active" className="accent-mansio-gold" />
-            <label htmlFor="is_active" className="text-sm text-mansio-ink">Active</label>
+            <input
+              type="checkbox"
+              {...register('is_active')}
+              id="is_active"
+              className="accent-mansio-gold"
+            />
+            <label htmlFor="is_active" className="text-sm text-mansio-ink">
+              Active
+            </label>
           </div>
         </div>
 
         {isError && (
-          <p className="text-xs text-red-500">Something went wrong. Please try again.</p>
+          <p className="text-xs text-red-500">
+            Something went wrong. Please try again.
+          </p>
         )}
 
         <div className="flex justify-end gap-3 mt-2">
-          <Button type="button" variant="ghost" onClick={onClose}>Cancel</Button>
-          <Button type="submit" disabled={isPending}>{isPending ? 'Saving...' : 'Save'}</Button>
+          <Button type="button" variant="ghost" onClick={onClose}>
+            Cancel
+          </Button>
+          <Button type="submit" disabled={isPending}>
+            {isPending ? 'Saving...' : 'Save'}
+          </Button>
         </div>
       </form>
     </Modal>

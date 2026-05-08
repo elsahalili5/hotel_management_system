@@ -6,7 +6,7 @@ import { Button } from '#/components/Button'
 import { useAmenities } from '#/modules/rooms/amenity/hooks/use-amenities'
 import { useBeds } from '#/modules/rooms/bed/hooks/use-beds'
 import type { CreateRoomTypeInput, RoomTypeResponse } from '@mansio/shared'
-
+import { useRoomTypeById } from '#/modules/rooms/room-type/hooks/use-room-types'
 type ImageEntry = { url: string; is_primary: boolean; alt_text: string }
 
 interface Props {

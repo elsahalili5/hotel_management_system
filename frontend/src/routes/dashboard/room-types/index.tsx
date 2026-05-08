@@ -14,6 +14,7 @@ import {
   useCreateRoomType,
   useUpdateRoomType,
   useDeleteRoomType,
+  roomTypeKeys,
 } from '#/modules/rooms/room-type/hooks/use-room-types'
 import type { RoomTypeResponse } from '@mansio/shared'
 
@@ -33,10 +34,12 @@ const cell = (value: string | number) => (
 
 function RoomTypesPage() {
   const { hasRole } = useAuth()
-  const canManage = hasRole(ROLES.ADMIN) || hasRole(ROLES.MANAGER)
+  const canManage = hasRole([ROLES.ADMIN, ROLES.MANAGER])
   const [showAdd, setShowAdd] = useState(false)
   const [editTarget, setEditTarget] = useState<RoomTypeResponse | null>(null)
-  const [deleteTarget, setDeleteTarget] = useState<RoomTypeResponse | null>(null)
+  const [deleteTarget, setDeleteTarget] = useState<RoomTypeResponse | null>(
+    null,
+  )
   const { data: roomTypes, isLoading, isError } = useRoomTypes()
   const createMutation = useCreateRoomType()
   const updateMutation = useUpdateRoomType()
@@ -87,6 +90,7 @@ function RoomTypesPage() {
           isError={createMutation.isError}
         />
       )}
+
       {deleteTarget && (
         <ConfirmModal
           message={`Are you sure you want to delete "${deleteTarget.name}"?`}
@@ -97,6 +101,7 @@ function RoomTypesPage() {
           }}
         />
       )}
+
       {editTarget && (
         <RoomTypeModal
           title="Edit Room Type"

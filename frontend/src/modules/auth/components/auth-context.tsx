@@ -23,7 +23,7 @@ export type AuthContextValue = {
   login: (payload: LoginUserInput) => Promise<LoginUserResponse>
   logout: () => void
   setSession: (session: LoginUserResponse) => void
-  hasRole: (role: RoleType) => boolean
+  hasRole: (role: RoleType | RoleType[]) => boolean
   refreshUser: () => Promise<void>
 }
 
@@ -79,9 +79,14 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     loadCurrentUser()
   }, [initialState?.accessToken, user])
 
-  const hasRole = (role: RoleType) => {
+  const hasRole = (role: RoleType | RoleType[]) => {
     return (
-      user?.user_roles.some((userRole) => userRole.role?.name === role) ?? false
+      user?.user_roles.some((userRole) => {
+        if (Array.isArray(role)) {
+          return role.includes(userRole.role?.name as RoleType)
+        }
+        return userRole.role?.name === role
+      }) ?? false
     )
   }
 

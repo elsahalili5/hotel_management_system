@@ -43,6 +43,7 @@ export function useUpdateRoomType() {
 
 export function useDeleteRoomType() {
   const queryClient = useQueryClient()
+
   return useMutation({
     mutationFn: roomTypeApi.delete,
     onSuccess: () => {
