@@ -17,6 +17,7 @@ import cleaningTaskRoutes from "@modules/cleaningTask/cleaningTask.routes.ts";
 import serviceCategoryRoutes from "@modules/extraServices/serviceCategory/serviceCategory.routes.ts";
 import extraServiceRoutes from "@modules/extraServices/extraService/extraService.routes.ts";
 import mealPlanRoutes from "@modules/mealPlan/mealPlan.routes.ts";
+import reservationRoutes from "@modules/reservation/reservation.routes.ts";
 
 
 const app = express();
@@ -36,6 +37,7 @@ app.use("/api/cleaning-tasks", cleaningTaskRoutes);
 app.use("/api/service-categories", serviceCategoryRoutes);
 app.use("/api/extra-services", extraServiceRoutes);
 app.use("/api/meal-plans", mealPlanRoutes);
+app.use("/api/reservations", reservationRoutes);
 
 
 const PORT = process.env.PORT || 5000;
