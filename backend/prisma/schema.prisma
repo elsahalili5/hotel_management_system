@@ -82,6 +82,7 @@ model Staff {
   user_id      Int     @unique
   user         User    @relation(fields: [user_id], references: [id], onDelete: Cascade)
   cleaning_tasks CleaningTask[] @relation("StaffCleaningTasks")
+  service_orders ServiceOrders[]
 }
 
 model Guest {
@@ -99,11 +100,7 @@ model Guest {
   reservations    Reservation[]
 }
 
-model Reservation {
-  id       Int   @id @default(autoincrement())
-  guest_id Int
-  guest    Guest @relation(fields: [guest_id], references: [id])
-}
+
 model RoomType {
   id            Int               @id @default(autoincrement())
   name          String            @unique
@@ -127,6 +124,7 @@ model Room {
   room_type_id Int
   room_type    RoomType   @relation(fields: [room_type_id], references: [id], onDelete: Cascade, onUpdate: Cascade)
   cleaning_tasks CleaningTask[]
+  reservations   Reservation[]
 }
 
 enum RoomStatus {
@@ -224,12 +222,6 @@ model UserTokens {
 // ─────────────────────────────────────────
 // SERVICES
 // ─────────────────────────────────────────
-enum ServiceOrderStatus {
-  PENDING
-  IN_PROGRESS
-  DELIVERED
-  CANCELLED
-}
 
 model ServiceCategory {
   id          Int            @id @default(autoincrement())
@@ -253,5 +245,150 @@ model ExtraService {
   category_id      Int
 
   category         ServiceCategory      @relation(fields: [category_id], references: [id], onDelete: Cascade)
+  orders           ServiceOrders[]
  
+}
+// ─────────────────────────────────────────
+// MEAL PLANS
+// ─────────────────────────────────────────
+
+model MealPlan {
+  id              Int     @id @default(autoincrement())
+  name            String  @unique
+  description     String? @db.Text
+  price_per_night Decimal @db.Decimal(10, 2)
+  is_active       Boolean @default(true)
+
+  reservations    Reservation[]
+}
+// ─────────────────────────────────────────
+// RESERVATION
+// ─────────────────────────────────────────
+
+enum ReservationStatus {
+  PENDING
+  CONFIRMED
+  CHECKED_IN
+  CHECKED_OUT
+  CANCELLED
+  NO_SHOW
+}
+model Reservation {
+  id               Int               @id @default(autoincrement())
+  guest_id         Int
+  room_id          Int
+  meal_plan_id     Int?
+  status           ReservationStatus @default(PENDING)
+  check_in_date    DateTime
+  check_out_date   DateTime
+  adults           Int               @default(1)
+  children         Int               @default(0)
+
+  checked_in_at    DateTime?
+  checked_in_by    Int?
+  check_in_notes   String?           @db.Text
+
+  checked_out_at   DateTime?
+  checked_out_by   Int?
+  check_out_notes  String?           @db.Text
+
+  created_at       DateTime          @default(now())
+
+  guest            Guest                @relation(fields: [guest_id], references: [id], onDelete: Cascade)
+  room             Room                 @relation(fields: [room_id], references: [id])
+  meal_plan        MealPlan?            @relation(fields: [meal_plan_id], references: [id], onDelete: SetNull)
+  orders         ServiceOrders[]
+  invoice          Invoice?
+
+}
+// ─────────────────────────────────────────
+// SERVICE ORDERS
+// ─────────────────────────────────────────
+enum ServiceOrderStatus {
+  PENDING
+  IN_PROGRESS
+  DELIVERED
+  CANCELLED
+}
+
+
+model ServiceOrders {
+  id               Int                @id @default(autoincrement())
+  reservation_id   Int
+  service_id       Int
+  quantity         Int                @default(1)
+  unit_price       Decimal            @db.Decimal(10, 2)
+  notes            String?            @db.Text
+  scheduled_at     DateTime?
+  ordered_at       DateTime           @default(now())
+  status           ServiceOrderStatus @default(PENDING)
+  ordered_by_guest Boolean            @default(false)
+  staff_id         Int?
+
+  reservation      Reservation  @relation(fields: [reservation_id], references: [id])
+  service          ExtraService @relation(fields: [service_id], references: [id])
+  staff            Staff?       @relation(fields: [staff_id], references: [id])
+  invoice_item     InvoiceItem?
+}
+// ─────────────────────────────────────────
+// INVOICE & PAYMENT
+// ─────────────────────────────────────────
+
+enum InvoiceStatus {
+  DRAFT
+  ISSUED
+  PAID
+  CANCELLED
+}
+
+model Invoice {
+  id             Int           @id @default(autoincrement())
+  reservation_id Int           @unique
+  status         InvoiceStatus @default(DRAFT)
+  notes          String?       @db.Text
+  issued_at      DateTime?
+  due_date       DateTime?
+  created_at     DateTime      @default(now())
+
+  reservation    Reservation @relation(fields: [reservation_id], references: [id])
+  items          InvoiceItem[]
+  payments       Payment[]
+}
+
+model InvoiceItem {
+  id                     Int      @id @default(autoincrement())
+  invoice_id             Int
+  description            String
+  quantity               Int      @default(1)
+  unit_price             Decimal  @db.Decimal(10, 2)
+  total                  Decimal  @db.Decimal(10, 2)
+  order_id Int?     @unique
+
+  invoice              Invoice             @relation(fields: [invoice_id], references: [id])
+  orders  ServiceOrders? @relation(fields: [order_id], references: [id])
+}
+
+
+enum PaymentStatus {
+  PENDING
+  COMPLETED
+  FAILED
+  REFUNDED
+}
+
+enum PaymentMethod {
+  CASH
+  CARD
+}
+
+model Payment {
+  id         Int           @id @default(autoincrement())
+  invoice_id Int
+  amount     Decimal       @db.Decimal(10, 2)
+  method     PaymentMethod
+  status     PaymentStatus @default(PENDING)
+  notes      String?
+  paid_at    DateTime      @default(now())
+
+  invoice    Invoice       @relation(fields: [invoice_id], references: [id])
 }
