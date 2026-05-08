@@ -20,6 +20,7 @@ import { Route as DashboardBookingsRouteImport } from './routes/dashboard/bookin
 import { Route as authSignupRouteImport } from './routes/(auth)/signup'
 import { Route as authLoginRouteImport } from './routes/(auth)/login'
 import { Route as appSpaRouteImport } from './routes/(app)/spa'
+import { Route as appServicesRouteImport } from './routes/(app)/services'
 import { Route as appRoomsRouteImport } from './routes/(app)/rooms'
 import { Route as appRestaurantRouteImport } from './routes/(app)/restaurant'
 import { Route as appContactRouteImport } from './routes/(app)/contact'
@@ -93,6 +94,11 @@ const authLoginRoute = authLoginRouteImport.update({
 const appSpaRoute = appSpaRouteImport.update({
   id: '/spa',
   path: '/spa',
+  getParentRoute: () => appRouteRoute,
+} as any)
+const appServicesRoute = appServicesRouteImport.update({
+  id: '/services',
+  path: '/services',
   getParentRoute: () => appRouteRoute,
 } as any)
 const appRoomsRoute = appRoomsRouteImport.update({
@@ -210,6 +216,7 @@ export interface FileRoutesByFullPath {
   '/contact': typeof appContactRoute
   '/restaurant': typeof appRestaurantRoute
   '/rooms': typeof appRoomsRouteWithChildren
+  '/services': typeof appServicesRoute
   '/spa': typeof appSpaRoute
   '/login': typeof authLoginRoute
   '/signup': typeof authSignupRoute
@@ -240,6 +247,7 @@ export interface FileRoutesByTo {
   '/contact': typeof appContactRoute
   '/restaurant': typeof appRestaurantRoute
   '/rooms': typeof appRoomsRouteWithChildren
+  '/services': typeof appServicesRoute
   '/spa': typeof appSpaRoute
   '/login': typeof authLoginRoute
   '/signup': typeof authSignupRoute
@@ -275,6 +283,7 @@ export interface FileRoutesById {
   '/(app)/contact': typeof appContactRoute
   '/(app)/restaurant': typeof appRestaurantRoute
   '/(app)/rooms': typeof appRoomsRouteWithChildren
+  '/(app)/services': typeof appServicesRoute
   '/(app)/spa': typeof appSpaRoute
   '/(auth)/login': typeof authLoginRoute
   '/(auth)/signup': typeof authSignupRoute
@@ -308,6 +317,7 @@ export interface FileRouteTypes {
     | '/contact'
     | '/restaurant'
     | '/rooms'
+    | '/services'
     | '/spa'
     | '/login'
     | '/signup'
@@ -338,6 +348,7 @@ export interface FileRouteTypes {
     | '/contact'
     | '/restaurant'
     | '/rooms'
+    | '/services'
     | '/spa'
     | '/login'
     | '/signup'
@@ -372,6 +383,7 @@ export interface FileRouteTypes {
     | '/(app)/contact'
     | '/(app)/restaurant'
     | '/(app)/rooms'
+    | '/(app)/services'
     | '/(app)/spa'
     | '/(auth)/login'
     | '/(auth)/signup'
@@ -480,6 +492,13 @@ declare module '@tanstack/react-router' {
       path: '/spa'
       fullPath: '/spa'
       preLoaderRoute: typeof appSpaRouteImport
+      parentRoute: typeof appRouteRoute
+    }
+    '/(app)/services': {
+      id: '/(app)/services'
+      path: '/services'
+      fullPath: '/services'
+      preLoaderRoute: typeof appServicesRouteImport
       parentRoute: typeof appRouteRoute
     }
     '/(app)/rooms': {
@@ -663,6 +682,7 @@ interface appRouteRouteChildren {
   appContactRoute: typeof appContactRoute
   appRestaurantRoute: typeof appRestaurantRoute
   appRoomsRoute: typeof appRoomsRouteWithChildren
+  appServicesRoute: typeof appServicesRoute
   appSpaRoute: typeof appSpaRoute
   appIndexRoute: typeof appIndexRoute
 }
@@ -674,6 +694,7 @@ const appRouteRouteChildren: appRouteRouteChildren = {
   appContactRoute: appContactRoute,
   appRestaurantRoute: appRestaurantRoute,
   appRoomsRoute: appRoomsRouteWithChildren,
+  appServicesRoute: appServicesRoute,
   appSpaRoute: appSpaRoute,
   appIndexRoute: appIndexRoute,
 }

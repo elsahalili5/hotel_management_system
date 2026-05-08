@@ -53,6 +53,11 @@ export function BookingCard({ price }: BookingCardProps) {
             View All Rooms
           </button>
         </Link>
+        <Link to="/services" className="no-underline">
+          <button className="w-full flex items-center justify-center gap-2 py-3 text-xs font-medium tracking-widest uppercase transition-opacity duration-200 hover:opacity-60 bg-transparent text-mansio-linen border border-mansio-gold/25">
+            Extra Services
+          </button>
+        </Link>
       </div>
     </div>
   )

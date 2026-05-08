@@ -75,6 +75,15 @@ function App() {
          buttonEndIcon={<ArrowRight size={20}/>}
       />
 
+      <SplitSection
+        title="Elevate Your Stay"
+        text="Make your time at Mansio truly your own. From in-room dining and laundry to wellness treatments and special arrangements, our extra services are designed to cover every need — so you can focus on enjoying every moment."
+        image="https://confident-health-b88439dafa.media.strapiapp.com/medium_SPA_3_2ce15bce40.jpg"
+        buttonLabel="Explore Extra Services"
+        buttonTo="/services"
+        buttonEndIcon={<ArrowRight size={20}/>}
+      />
+
       <TextSection
         subtitle="Wellness, Redefined"
         paragraphs={[

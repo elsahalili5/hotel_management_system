@@ -1,4 +1,5 @@
 import { createFileRoute, Link } from '@tanstack/react-router'
+import { ArrowRight } from 'lucide-react'
 import { HeroSection } from '#/components/HeroSection'
 import { Button } from '#/components/Button'
 import { StatsBar } from '#/components/room/StatsBar'
@@ -97,6 +98,13 @@ function RoomDetail() {
           )}
 
           {amenities.length > 0 && <RoomAmenities amenities={amenities} />}
+
+          <div className="flex items-center justify-between py-5 px-6 bg-mansio-ivory border-l-2 border-mansio-gold">
+            <p className="text-sm font-light text-mansio-mocha">Looking to enhance your stay with extra services?</p>
+            <Link to="/services" className="no-underline flex items-center gap-1.5 text-xs font-medium tracking-widest uppercase text-mansio-gold whitespace-nowrap ml-4 hover:opacity-70 transition-opacity">
+              View Services <ArrowRight size={12} />
+            </Link>
+          </div>
         </div>
 
         <div className="lg:col-span-1">
