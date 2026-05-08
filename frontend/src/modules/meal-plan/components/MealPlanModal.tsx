@@ -1,6 +1,7 @@
 import { useForm } from 'react-hook-form'
 import { Modal } from '#/modules/admin/components/Modal'
 import { Button } from '#/components/Button'
+import { Input, fieldClass } from '#/components/Input'
 import type { CreateMealPlanInput, MealPlanResponse } from '@mansio/shared'
 
 interface MealPlanModalProps {
@@ -12,7 +13,6 @@ interface MealPlanModalProps {
   title?: string
 }
 
-const field = 'w-full border border-mansio-ink/10 rounded px-3 py-2 text-sm focus:outline-none'
 const lbl = 'text-xs tracking-widest uppercase mb-1 block text-mansio-mocha'
 
 export function MealPlanModal({
@@ -43,9 +43,9 @@ export function MealPlanModal({
       <form onSubmit={handleSubmit(async (values) => await onSubmit(values))} className="flex flex-col gap-4">
         <div>
           <label className={lbl}>Name *</label>
-          <input
+          <Input
             {...register('name', { required: true })}
-            className={`${field} ${errors.name ? 'border-red-400' : ''}`}
+            error={!!errors.name}
             placeholder="e.g. Full Board"
           />
         </div>
@@ -54,7 +54,7 @@ export function MealPlanModal({
           <label className={lbl}>Description</label>
           <textarea
             {...register('description')}
-            className={`${field} resize-none`}
+            className={`${fieldClass} resize-none`}
             rows={2}
             placeholder="Optional description"
           />
@@ -62,11 +62,11 @@ export function MealPlanModal({
 
         <div>
           <label className={lbl}>Price per Night (€) *</label>
-          <input
+          <Input
             type="number"
             step="0.01"
             {...register('price_per_night', { required: true, valueAsNumber: true })}
-            className={`${field} ${errors.price_per_night ? 'border-red-400' : ''}`}
+            error={!!errors.price_per_night}
             placeholder="0.00"
           />
         </div>

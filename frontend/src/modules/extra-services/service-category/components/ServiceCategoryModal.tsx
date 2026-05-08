@@ -1,6 +1,7 @@
 import { useForm } from 'react-hook-form'
 import { Modal } from '#/modules/admin/components/Modal'
 import { Button } from '#/components/Button'
+import { Input, fieldClass } from '#/components/Input'
 import type {
   CreateServiceCategoryInput,
   ServiceCategoryResponse,
@@ -15,8 +16,6 @@ interface ServiceCategoryModalProps {
   title?: string
 }
 
-const field =
-  'w-full border border-mansio-ink/10 rounded px-3 py-2 text-sm focus:outline-none'
 const lbl = 'text-xs tracking-widest uppercase mb-1 block text-mansio-mocha'
 
 export function ServiceCategoryModal({
@@ -50,9 +49,9 @@ export function ServiceCategoryModal({
       >
         <div>
           <label className={lbl}>Name *</label>
-          <input
+          <Input
             {...register('name', { required: true })}
-            className={`${field} ${errors.name ? 'border-red-400' : ''}`}
+            error={!!errors.name}
             placeholder="e.g. Spa & Wellness"
           />
         </div>
@@ -61,7 +60,7 @@ export function ServiceCategoryModal({
           <label className={lbl}>Description</label>
           <textarea
             {...register('description')}
-            className={`${field} resize-none`}
+            className={`${fieldClass} resize-none`}
             rows={3}
             placeholder="Optional description"
           />
@@ -70,10 +69,9 @@ export function ServiceCategoryModal({
         <div className="flex gap-4">
           <div className="flex-1">
             <label className={lbl}>Sort Order</label>
-            <input
+            <Input
               type="number"
               {...register('sort_order', { valueAsNumber: true })}
-              className={field}
               placeholder="0"
             />
           </div>

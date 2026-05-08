@@ -3,10 +3,10 @@ import { useForm } from 'react-hook-form'
 import { useState } from 'react'
 import { Modal } from '#/modules/admin/components/Modal'
 import { Button } from '#/components/Button'
+import { Input, fieldClass } from '#/components/Input'
 import { useAmenities } from '#/modules/rooms/amenity/hooks/use-amenities'
 import { useBeds } from '#/modules/rooms/bed/hooks/use-beds'
 import type { CreateRoomTypeInput, RoomTypeResponse } from '@mansio/shared'
-import { useRoomTypeById } from '#/modules/rooms/room-type/hooks/use-room-types'
 type ImageEntry = { url: string; is_primary: boolean; alt_text: string }
 
 interface Props {
@@ -18,8 +18,6 @@ interface Props {
   title?: string
 }
 
-const field =
-  'w-full border border-mansio-ink/10 rounded px-3 py-2 text-sm focus:outline-none'
 const lbl = 'text-xs tracking-widest uppercase mb-1 block text-mansio-mocha'
 
 export function RoomTypeModal({
@@ -95,9 +93,9 @@ export function RoomTypeModal({
       <form onSubmit={handleFormSubmit} className="flex flex-col gap-4">
         <div>
           <label className={lbl}>Name *</label>
-          <input
+          <Input
             {...register('name', { required: true })}
-            className={`${field} ${errors.name ? 'border-red-400' : ''}`}
+            error={!!errors.name}
             placeholder="e.g. Deluxe Suite"
           />
         </div>
@@ -107,7 +105,7 @@ export function RoomTypeModal({
           <textarea
             {...register('description')}
             rows={3}
-            className={`${field} resize-none`}
+            className={`${fieldCls} resize-none`}
             placeholder="Room description..."
           />
         </div>
@@ -115,26 +113,26 @@ export function RoomTypeModal({
         <div className="grid grid-cols-2 gap-4">
           <div>
             <label className={lbl}>Base Price (€) *</label>
-            <input
+            <Input
               type="number"
               step="0.01"
               {...register('base_price', {
                 required: true,
                 valueAsNumber: true,
               })}
-              className={`${field} ${errors.base_price ? 'border-red-400' : ''}`}
+              error={!!errors.base_price}
               placeholder="0.00"
             />
           </div>
           <div>
             <label className={lbl}>Max Occupancy *</label>
-            <input
+            <Input
               type="number"
               {...register('max_occupancy', {
                 required: true,
                 valueAsNumber: true,
               })}
-              className={`${field} ${errors.max_occupancy ? 'border-red-400' : ''}`}
+              error={!!errors.max_occupancy}
               placeholder="2"
             />
           </div>
@@ -142,10 +140,9 @@ export function RoomTypeModal({
 
         <div>
           <label className={lbl}>Size (m²)</label>
-          <input
+          <Input
             type="number"
             {...register('size_m2', { valueAsNumber: true })}
-            className={field}
             placeholder="35"
           />
         </div>
@@ -223,10 +220,10 @@ export function RoomTypeModal({
               className="border border-mansio-ink/10 rounded p-3 flex flex-col gap-2 mb-2"
             >
               <div className="flex gap-2">
-                <input
+                <Input
                   value={img.url}
                   onChange={(e) => updateImage(i, { url: e.target.value })}
-                  className={`${field} flex-1`}
+                  className="flex-1"
                   placeholder="https://..."
                 />
                 <button
@@ -240,10 +237,10 @@ export function RoomTypeModal({
                 </button>
               </div>
               <div className="flex gap-4">
-                <input
+                <Input
                   value={img.alt_text}
                   onChange={(e) => updateImage(i, { alt_text: e.target.value })}
-                  className={`${field} flex-1`}
+                  className="flex-1"
                   placeholder="Alt text"
                 />
                 <label className="flex items-center gap-1.5 text-xs text-mansio-mocha shrink-0 cursor-pointer">

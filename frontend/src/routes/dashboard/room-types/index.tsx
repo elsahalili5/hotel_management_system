@@ -14,7 +14,6 @@ import {
   useCreateRoomType,
   useUpdateRoomType,
   useDeleteRoomType,
-  roomTypeKeys,
 } from '#/modules/rooms/room-type/hooks/use-room-types'
 import type { RoomTypeResponse } from '@mansio/shared'
 

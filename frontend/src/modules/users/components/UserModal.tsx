@@ -1,13 +1,22 @@
 import { useEffect } from 'react'
 import { useForm } from 'react-hook-form'
 import { Button } from '#/components/Button'
+import { Input, fieldClass } from '#/components/Input'
 import { Modal } from '#/modules/admin/components/Modal'
+import { ROLES, SHIFTS } from '@mansio/shared'
+
 import type {
   CreateGuestInput,
   CreateStaffInput,
   UpdateUserInput,
   UserResponse,
+  RoleType,
+  ShiftType,
 } from '@mansio/shared'
+
+const STAFF_ROLES = Object.values(ROLES).filter(
+  (r) => r !== ROLES.GUEST,
+) as Exclude<RoleType, 'GUEST'>[]
 
 type UserCreatePayload = {
   account_type: 'GUEST' | 'STAFF'
@@ -21,13 +30,13 @@ type UserCreatePayload = {
   country?: string
   passport_number?: string
   date_of_birth?: string
-  role?: 'ADMIN' | 'MANAGER' | 'RECEPTIONIST' | 'HOUSEKEEPING'
-  shift?: 'MORNING' | 'AFTERNOON' | 'NIGHT'
+  role?: Exclude<RoleType, 'GUEST'>
+  shift?: ShiftType
 }
 
 type UserEditPayload = UpdateUserInput & {
   is_active?: boolean
-  role?: 'ADMIN' | 'MANAGER' | 'RECEPTIONIST' | 'HOUSEKEEPING' | 'GUEST'
+  role?: RoleType
 }
 
 export type { UserEditPayload }
@@ -42,8 +51,6 @@ interface UserModalProps {
   isError?: boolean
 }
 
-const field =
-  'w-full border border-mansio-ink/10 rounded px-3 py-2 text-sm focus:outline-none'
 const lbl = 'text-xs tracking-widest uppercase mb-1 block text-mansio-mocha'
 
 export function UserModal({
@@ -67,9 +74,10 @@ export function UserModal({
             last_name: defaultValues.last_name,
             email: defaultValues.email,
             status: defaultValues.status as UserEditPayload['status'],
-            role: (defaultValues.user_roles?.[0]?.role?.name ?? undefined) as UserEditPayload['role'],
+            role: (defaultValues.user_roles?.[0]?.role?.name ??
+              undefined) as UserEditPayload['role'],
             is_active: isStaff
-              ? (defaultValues.staff_profile as any)?.is_active ?? true
+              ? ((defaultValues.staff_profile as any)?.is_active ?? true)
               : undefined,
           }
         : {
@@ -82,8 +90,8 @@ export function UserModal({
 
   useEffect(() => {
     if (accountType === 'STAFF') {
-      setValue('role', 'RECEPTIONIST')
-      setValue('shift', 'MORNING')
+      setValue('role', 'RECEPTIONIST' as never)
+      setValue('shift', 'MORNING' as never)
     }
   }, [accountType, setValue])
 
@@ -139,11 +147,14 @@ export function UserModal({
       onClose={onClose}
       maxWidth="max-w-lg"
     >
-      <form onSubmit={handleSubmit(handleValid)} className="flex flex-col gap-4">
+      <form
+        onSubmit={handleSubmit(handleValid)}
+        className="flex flex-col gap-4"
+      >
         {mode === 'create' && (
           <div>
             <label className={lbl}>Account Type</label>
-            <select {...register('account_type')} className={field}>
+            <select {...register('account_type')} className={fieldClass}>
               <option value="GUEST">Guest</option>
               <option value="STAFF">Staff</option>
             </select>
@@ -153,27 +164,26 @@ export function UserModal({
         <div className="grid grid-cols-2 gap-3">
           <div>
             <label className={lbl}>First Name</label>
-            <input {...register('first_name')} className={field} />
+            <Input {...register('first_name')} />
           </div>
           <div>
             <label className={lbl}>Last Name</label>
-            <input {...register('last_name')} className={field} />
+            <Input {...register('last_name')} />
           </div>
         </div>
 
         <div>
           <label className={lbl}>Email</label>
-          <input type="email" {...register('email')} className={field} />
+          <Input type="email" {...register('email')} />
         </div>
 
         <div>
           <label className={lbl}>
             Password {mode === 'edit' ? '(optional)' : ''}
           </label>
-          <input
+          <Input
             type="password"
             {...register('password')}
-            className={field}
             placeholder={mode === 'edit' ? 'Leave empty to keep current' : ''}
           />
         </div>
@@ -182,7 +192,7 @@ export function UserModal({
           <>
             <div>
               <label className={lbl}>Status</label>
-              <select {...register('status')} className={field}>
+              <select {...register('status')} className={fieldClass}>
                 <option value="ACTIVE">Active</option>
                 <option value="PENDING">Pending</option>
                 <option value="LOCKED">Locked</option>
@@ -192,12 +202,12 @@ export function UserModal({
 
             <div>
               <label className={lbl}>Role</label>
-              <select {...register('role')} className={field}>
-                <option value="GUEST">Guest</option>
-                <option value="RECEPTIONIST">Receptionist</option>
-                <option value="HOUSEKEEPING">Housekeeping</option>
-                <option value="MANAGER">Manager</option>
-                <option value="ADMIN">Admin</option>
+              <select {...register('role')} className={fieldClass}>
+                {Object.values(ROLES).map((r) => (
+                  <option key={r} value={r}>
+                    {r.charAt(0) + r.slice(1).toLowerCase()}
+                  </option>
+                ))}
               </select>
             </div>
 
@@ -224,9 +234,8 @@ export function UserModal({
           <>
             <div>
               <label className={lbl}>Phone Number</label>
-              <input
+              <Input
                 {...register('phone_number')}
-                className={field}
                 placeholder="+383 44 000 000"
               />
             </div>
@@ -236,30 +245,26 @@ export function UserModal({
                 <div className="grid grid-cols-2 gap-3">
                   <div>
                     <label className={lbl}>Address</label>
-                    <input {...register('address')} className={field} />
+                    <Input {...register('address')} />
                   </div>
                   <div>
                     <label className={lbl}>City</label>
-                    <input {...register('city')} className={field} />
+                    <Input {...register('city')} />
                   </div>
                 </div>
                 <div className="grid grid-cols-2 gap-3">
                   <div>
                     <label className={lbl}>Country</label>
-                    <input {...register('country')} className={field} />
+                    <Input {...register('country')} />
                   </div>
                   <div>
                     <label className={lbl}>Date of Birth</label>
-                    <input
-                      type="date"
-                      {...register('date_of_birth')}
-                      className={field}
-                    />
+                    <Input type="date" {...register('date_of_birth')} />
                   </div>
                 </div>
                 <div>
                   <label className={lbl}>Passport Number</label>
-                  <input {...register('passport_number')} className={field} />
+                  <Input {...register('passport_number')} />
                 </div>
               </>
             )}
@@ -268,19 +273,22 @@ export function UserModal({
               <div className="grid grid-cols-2 gap-3">
                 <div>
                   <label className={lbl}>Role</label>
-                  <select {...register('role')} className={field}>
-                    <option value="ADMIN">Admin</option>
-                    <option value="MANAGER">Manager</option>
-                    <option value="RECEPTIONIST">Receptionist</option>
-                    <option value="HOUSEKEEPING">Housekeeping</option>
+                  <select {...register('role')} className={fieldCls}>
+                    {STAFF_ROLES.map((r) => (
+                      <option key={r} value={r}>
+                        {r.charAt(0) + r.slice(1).toLowerCase()}
+                      </option>
+                    ))}
                   </select>
                 </div>
                 <div>
                   <label className={lbl}>Shift</label>
-                  <select {...register('shift')} className={field}>
-                    <option value="MORNING">Morning</option>
-                    <option value="AFTERNOON">Afternoon</option>
-                    <option value="NIGHT">Night</option>
+                  <select {...register('shift')} className={fieldCls}>
+                    {Object.values(SHIFTS).map((s) => (
+                      <option key={s} value={s}>
+                        {s.charAt(0) + s.slice(1).toLowerCase()}
+                      </option>
+                    ))}
                   </select>
                 </div>
               </div>

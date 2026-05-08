@@ -1,6 +1,7 @@
 import { useForm } from 'react-hook-form'
 import { Modal } from '#/modules/admin/components/Modal'
 import { Button } from '#/components/Button'
+import { Input } from '#/components/Input'
 import type { UpdateGuestInput, GuestResponse } from '@mansio/shared'
 
 interface GuestModalProps {
@@ -12,7 +13,6 @@ interface GuestModalProps {
   title?: string
 }
 
-const field = 'w-full border border-mansio-ink/10 rounded px-3 py-2 text-sm focus:outline-none'
 const lbl = 'text-xs tracking-widest uppercase mb-1 block text-mansio-mocha'
 
 export function GuestModal({ onClose, onSubmit, defaultValues, isPending, isError, title = 'Edit Guest' }: GuestModalProps) {
@@ -41,33 +41,33 @@ export function GuestModal({ onClose, onSubmit, defaultValues, isPending, isErro
       <form onSubmit={handleSubmit(handleValid)} className="flex flex-col gap-4">
         <div>
           <label className={lbl}>Phone Number</label>
-          <input {...register('phone_number')} className={field} placeholder="+383 44 000 000" />
+          <Input {...register('phone_number')} placeholder="+383 44 000 000" />
         </div>
 
         <div>
           <label className={lbl}>Address</label>
-          <input {...register('address')} className={field} placeholder="123 Main St" />
+          <Input {...register('address')} placeholder="123 Main St" />
         </div>
 
         <div className="flex gap-3">
           <div className="flex-1">
             <label className={lbl}>City</label>
-            <input {...register('city')} className={field} placeholder="Pristina" />
+            <Input {...register('city')} placeholder="Pristina" />
           </div>
           <div className="flex-1">
             <label className={lbl}>Country</label>
-            <input {...register('country')} className={field} placeholder="Kosovo" />
+            <Input {...register('country')} placeholder="Kosovo" />
           </div>
         </div>
 
         <div>
           <label className={lbl}>Passport Number</label>
-          <input {...register('passport_number')} className={field} placeholder="AB123456" />
+          <Input {...register('passport_number')} placeholder="AB123456" />
         </div>
 
         <div>
           <label className={lbl}>Date of Birth</label>
-          <input type="date" {...register('date_of_birth')} className={field} />
+          <Input type="date" {...register('date_of_birth')} />
         </div>
 
         {isError && <p className="text-xs text-red-500">Something went wrong. Please try again.</p>}

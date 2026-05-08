@@ -53,7 +53,7 @@ function Restaurant() {
         />
       </section>
       <div className="flex justify-center pb-20">
-        <div className="h-px w-32 bg-[var(--color-mansio-gold)] opacity-50" />
+        <div className="h-px w-32 bg-mansio-gold] opacity-50" />
       </div>
     </main>
   )

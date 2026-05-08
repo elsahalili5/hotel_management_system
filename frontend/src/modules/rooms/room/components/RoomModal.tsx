@@ -1,12 +1,11 @@
 import { useForm } from 'react-hook-form'
 import { Modal } from '#/modules/admin/components/Modal'
 import { Button } from '#/components/Button'
+import { Input, fieldClass } from '#/components/Input'
 import { useRoomTypes } from '#/modules/rooms/room-type/hooks/use-room-types'
 import { RoomStatus } from '@mansio/shared'
 import type { CreateRoomInput, RoomResponse } from '@mansio/shared'
 
-const field =
-  'w-full border border-mansio-ink/10 rounded px-3 py-2 text-sm focus:outline-none'
 const lbl = 'text-xs tracking-widest uppercase mb-1 block text-mansio-mocha'
 
 interface RoomModalProps {
@@ -51,20 +50,20 @@ export function RoomModal({
       >
         <div>
           <label className={lbl}>Room Number *</label>
-          <input
+          <Input
             {...register('room_number', { required: true })}
-            className={`${field} ${errors.room_number ? 'border-red-400' : ''}`}
+            error={!!errors.room_number}
             placeholder="e.g. 101"
           />
         </div>
 
         <div>
           <label className={lbl}>Floor *</label>
-          <input
+          <Input
             type="number"
             min={0}
             {...register('floor', { required: true, valueAsNumber: true })}
-            className={`${field} ${errors.floor ? 'border-red-400' : ''}`}
+            error={!!errors.floor}
             placeholder="1"
           />
         </div>
@@ -76,7 +75,7 @@ export function RoomModal({
               required: true,
               valueAsNumber: true,
             })}
-            className={`${field} ${errors.room_type_id ? 'border-red-400' : ''}`}
+            className={`${fieldClass} ${errors.room_type_id ? 'border-red-400' : ''}`}
           >
             <option value="">Select room type...</option>
             {roomTypes?.map((rt) => (
@@ -89,7 +88,7 @@ export function RoomModal({
 
         <div>
           <label className={lbl}>Status</label>
-          <select {...register('status')} className={field}>
+          <select {...register('status')} className={fieldClass}>
             {Object.values(RoomStatus).map((s) => (
               <option key={s} value={s}>
                 {s}

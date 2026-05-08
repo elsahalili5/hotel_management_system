@@ -1,6 +1,7 @@
 import { useForm } from 'react-hook-form'
 import { Modal } from '#/modules/admin/components/Modal'
 import { Button } from '#/components/Button'
+import { Input } from '#/components/Input'
 import type { CreateBedInput, BedResponse } from '@mansio/shared'
 
 interface BedModalProps {
@@ -12,7 +13,6 @@ interface BedModalProps {
   title?: string
 }
 
-const field = 'w-full border border-mansio-ink/10 rounded px-3 py-2 text-sm focus:outline-none'
 const lbl = 'text-xs tracking-widest uppercase mb-1 block text-mansio-mocha'
 
 export function BedModal({ onClose, onSubmit, defaultValues, isPending, isError, title = 'Add Bed' }: BedModalProps) {
@@ -27,13 +27,18 @@ export function BedModal({ onClose, onSubmit, defaultValues, isPending, isError,
       <form onSubmit={handleSubmit(async (values) => await onSubmit(values))} className="flex flex-col gap-4">
         <div>
           <label className={lbl}>Name *</label>
-          <input {...register('name', { required: true })} className={`${field} ${errors.name ? 'border-red-400' : ''}`} placeholder="e.g. King Bed" />
+          <Input {...register('name', { required: true })} error={!!errors.name} placeholder="e.g. King Bed" />
         </div>
 
         <div>
           <label className={lbl}>Capacity *</label>
-          <input type="number" min={1} {...register('capacity', { required: true, valueAsNumber: true, min: 1 })}
-            className={`${field} ${errors.capacity ? 'border-red-400' : ''}`} placeholder="2" />
+          <Input
+            type="number"
+            min={1}
+            {...register('capacity', { required: true, valueAsNumber: true, min: 1 })}
+            error={!!errors.capacity}
+            placeholder="2"
+          />
           <p className="text-xs mt-1 text-mansio-mocha">Number of persons this bed fits</p>
         </div>
 

@@ -1,6 +1,7 @@
 import { useForm } from 'react-hook-form'
 import { Modal } from '#/modules/admin/components/Modal'
 import { Button } from '#/components/Button'
+import { Input, Select } from '#/components/Input'
 import type { StaffResponse, UpdateStaffInput } from '@mansio/shared'
 
 interface StaffModalProps {
@@ -12,8 +13,6 @@ interface StaffModalProps {
   title?: string
 }
 
-const field =
-  'w-full border border-mansio-ink/10 rounded px-3 py-2 text-sm focus:outline-none'
 const lbl = 'text-xs tracking-widest uppercase mb-1 block text-mansio-mocha'
 
 export function StaffModal({
@@ -44,24 +43,23 @@ export function StaffModal({
 
   return (
     <Modal title={title} onClose={onClose} maxWidth="max-w-sm">
-      <form onSubmit={handleSubmit(handleValid)} className="flex flex-col gap-4">
+      <form
+        onSubmit={handleSubmit(handleValid)}
+        className="flex flex-col gap-4"
+      >
         <div>
           <label className={lbl}>Phone Number</label>
-          <input
-            {...register('phone_number')}
-            className={field}
-            placeholder="+383 44 000 000"
-          />
+          <Input {...register('phone_number')} placeholder="+383 44 000 000" />
         </div>
 
         <div>
           <label className={lbl}>Shift</label>
-          <select {...register('shift')} className={field}>
+          <Select {...register('shift')}>
             <option value="">Select shift</option>
             <option value="MORNING">Morning</option>
             <option value="AFTERNOON">Afternoon</option>
             <option value="NIGHT">Night</option>
-          </select>
+          </Select>
         </div>
 
         {isError && (
