@@ -15,6 +15,7 @@ import {
   Star,
   UserCog,
   Users,
+  UtensilsCrossed,
   X,
   type LucideIcon,
 } from 'lucide-react'
@@ -97,6 +98,12 @@ const navItems: NavItem[] = [
     label: 'Extra Services',
     icon: PackagePlus,
     path: '/dashboard/extra-services',
+    roles: [ROLES.ADMIN, ROLES.MANAGER],
+  },
+  {
+    label: 'Meal Plans',
+    icon: UtensilsCrossed,
+    path: '/dashboard/meal-plans',
     roles: [ROLES.ADMIN, ROLES.MANAGER],
   },
   { label: 'Reviews', icon: Star, path: '/dashboard/reviews' },

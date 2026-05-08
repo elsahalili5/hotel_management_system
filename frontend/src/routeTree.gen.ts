@@ -33,6 +33,7 @@ import { Route as DashboardServiceCategoriesIndexRouteImport } from './routes/da
 import { Route as DashboardRoomsIndexRouteImport } from './routes/dashboard/rooms/index'
 import { Route as DashboardRoomTypesIndexRouteImport } from './routes/dashboard/room-types/index'
 import { Route as DashboardMyTasksIndexRouteImport } from './routes/dashboard/my-tasks/index'
+import { Route as DashboardMealPlansIndexRouteImport } from './routes/dashboard/meal-plans/index'
 import { Route as DashboardGuestsIndexRouteImport } from './routes/dashboard/guests/index'
 import { Route as DashboardExtraServicesIndexRouteImport } from './routes/dashboard/extra-services/index'
 import { Route as DashboardCleaningTasksIndexRouteImport } from './routes/dashboard/cleaning-tasks/index'
@@ -161,6 +162,11 @@ const DashboardMyTasksIndexRoute = DashboardMyTasksIndexRouteImport.update({
   path: '/my-tasks/',
   getParentRoute: () => DashboardRouteRoute,
 } as any)
+const DashboardMealPlansIndexRoute = DashboardMealPlansIndexRouteImport.update({
+  id: '/meal-plans/',
+  path: '/meal-plans/',
+  getParentRoute: () => DashboardRouteRoute,
+} as any)
 const DashboardGuestsIndexRoute = DashboardGuestsIndexRouteImport.update({
   id: '/guests/',
   path: '/guests/',
@@ -234,6 +240,7 @@ export interface FileRoutesByFullPath {
   '/dashboard/cleaning-tasks/': typeof DashboardCleaningTasksIndexRoute
   '/dashboard/extra-services/': typeof DashboardExtraServicesIndexRoute
   '/dashboard/guests/': typeof DashboardGuestsIndexRoute
+  '/dashboard/meal-plans/': typeof DashboardMealPlansIndexRoute
   '/dashboard/my-tasks/': typeof DashboardMyTasksIndexRoute
   '/dashboard/room-types/': typeof DashboardRoomTypesIndexRoute
   '/dashboard/rooms/': typeof DashboardRoomsIndexRoute
@@ -265,6 +272,7 @@ export interface FileRoutesByTo {
   '/dashboard/cleaning-tasks': typeof DashboardCleaningTasksIndexRoute
   '/dashboard/extra-services': typeof DashboardExtraServicesIndexRoute
   '/dashboard/guests': typeof DashboardGuestsIndexRoute
+  '/dashboard/meal-plans': typeof DashboardMealPlansIndexRoute
   '/dashboard/my-tasks': typeof DashboardMyTasksIndexRoute
   '/dashboard/room-types': typeof DashboardRoomTypesIndexRoute
   '/dashboard/rooms': typeof DashboardRoomsIndexRoute
@@ -301,6 +309,7 @@ export interface FileRoutesById {
   '/dashboard/cleaning-tasks/': typeof DashboardCleaningTasksIndexRoute
   '/dashboard/extra-services/': typeof DashboardExtraServicesIndexRoute
   '/dashboard/guests/': typeof DashboardGuestsIndexRoute
+  '/dashboard/meal-plans/': typeof DashboardMealPlansIndexRoute
   '/dashboard/my-tasks/': typeof DashboardMyTasksIndexRoute
   '/dashboard/room-types/': typeof DashboardRoomTypesIndexRoute
   '/dashboard/rooms/': typeof DashboardRoomsIndexRoute
@@ -335,6 +344,7 @@ export interface FileRouteTypes {
     | '/dashboard/cleaning-tasks/'
     | '/dashboard/extra-services/'
     | '/dashboard/guests/'
+    | '/dashboard/meal-plans/'
     | '/dashboard/my-tasks/'
     | '/dashboard/room-types/'
     | '/dashboard/rooms/'
@@ -366,6 +376,7 @@ export interface FileRouteTypes {
     | '/dashboard/cleaning-tasks'
     | '/dashboard/extra-services'
     | '/dashboard/guests'
+    | '/dashboard/meal-plans'
     | '/dashboard/my-tasks'
     | '/dashboard/room-types'
     | '/dashboard/rooms'
@@ -401,6 +412,7 @@ export interface FileRouteTypes {
     | '/dashboard/cleaning-tasks/'
     | '/dashboard/extra-services/'
     | '/dashboard/guests/'
+    | '/dashboard/meal-plans/'
     | '/dashboard/my-tasks/'
     | '/dashboard/room-types/'
     | '/dashboard/rooms/'
@@ -585,6 +597,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof DashboardMyTasksIndexRouteImport
       parentRoute: typeof DashboardRouteRoute
     }
+    '/dashboard/meal-plans/': {
+      id: '/dashboard/meal-plans/'
+      path: '/meal-plans'
+      fullPath: '/dashboard/meal-plans/'
+      preLoaderRoute: typeof DashboardMealPlansIndexRouteImport
+      parentRoute: typeof DashboardRouteRoute
+    }
     '/dashboard/guests/': {
       id: '/dashboard/guests/'
       path: '/guests'
@@ -729,6 +748,7 @@ interface DashboardRouteRouteChildren {
   DashboardCleaningTasksIndexRoute: typeof DashboardCleaningTasksIndexRoute
   DashboardExtraServicesIndexRoute: typeof DashboardExtraServicesIndexRoute
   DashboardGuestsIndexRoute: typeof DashboardGuestsIndexRoute
+  DashboardMealPlansIndexRoute: typeof DashboardMealPlansIndexRoute
   DashboardMyTasksIndexRoute: typeof DashboardMyTasksIndexRoute
   DashboardRoomTypesIndexRoute: typeof DashboardRoomTypesIndexRoute
   DashboardRoomsIndexRoute: typeof DashboardRoomsIndexRoute
@@ -749,6 +769,7 @@ const DashboardRouteRouteChildren: DashboardRouteRouteChildren = {
   DashboardCleaningTasksIndexRoute: DashboardCleaningTasksIndexRoute,
   DashboardExtraServicesIndexRoute: DashboardExtraServicesIndexRoute,
   DashboardGuestsIndexRoute: DashboardGuestsIndexRoute,
+  DashboardMealPlansIndexRoute: DashboardMealPlansIndexRoute,
   DashboardMyTasksIndexRoute: DashboardMyTasksIndexRoute,
   DashboardRoomTypesIndexRoute: DashboardRoomTypesIndexRoute,
   DashboardRoomsIndexRoute: DashboardRoomsIndexRoute,
