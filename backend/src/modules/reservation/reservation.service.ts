@@ -4,6 +4,8 @@ import {
   CreateReservationInput,
   BookingTxParams,
 } from "./reservation.types.ts";
+import { InvoiceService } from "@modules/invoice/invoice.service.ts";
+import { PaymentService } from "@modules/payment/payment.service.ts";
 import { PaymentMethod } from "@generated/prisma/enums.ts";
 
 const ERRORS = {
@@ -29,14 +31,12 @@ const ERRORS = {
 const calcNights = (checkIn: Date, checkOut: Date) =>
   Math.ceil((checkOut.getTime() - checkIn.getTime()) / (1000 * 60 * 60 * 24));
 
-// a ekziston një guest profil që i përket këtij user-i
-
 const resolveGuest = async (userId: number) => {
   const guest = await prisma.guest.findUnique({ where: { user_id: userId } });
   if (!guest) throw ERRORS.GUEST_PROFILE_NOT_FOUND;
   return guest;
 };
-// kontrollon nëse ka meal plan dhe nëse po, sa kushton për netët e qëndrimit, nëse ka meal plan kthen edhe detajet e tij, nëse jo kthen null
+
 const resolveMealPlan = async (
   meal_plan_id: number | null | undefined,
   nights: number,
@@ -81,45 +81,24 @@ const runBookingTransaction = async ({
       },
     });
 
-    const invoice = await tx.invoice.create({
-      data: {
-        reservation_id: reservation.id,
-        status: "ISSUED",
-        issued_at: new Date(),
-        due_date: check_in_date,
-      },
+    const invoice = await InvoiceService.createInvoiceInTx({
+      tx,
+      reservation_id: reservation.id,
+      check_in_date,
+      nights,
+      base_price,
+      roomCost,
+      mealPlan: mealPlan
+        ? { name: mealPlan.name, price_per_night: Number(mealPlan.price_per_night) }
+        : null,
+      mealPlanCost,
     });
 
-    await tx.invoiceItem.create({
-      data: {
-        invoice_id: invoice.id,
-        description: `Room — ${nights} night(s)`,
-        quantity: nights,
-        unit_price: base_price,
-        total: roomCost,
-      },
-    });
-
-    if (mealPlan && mealPlanCost > 0) {
-      await tx.invoiceItem.create({
-        data: {
-          invoice_id: invoice.id,
-          description: `Meal plan: ${mealPlan.name} — ${nights} night(s)`,
-          quantity: nights,
-          unit_price: Number(mealPlan.price_per_night),
-          total: mealPlanCost,
-        },
-      });
-    }
-
-    await tx.payment.create({
-      data: {
-        invoice_id: invoice.id,
-        amount: totalAmount,
-        method: payment_method as PaymentMethod,
-        status: "COMPLETED",
-        paid_at: new Date(),
-      },
+    await PaymentService.createPaymentInTx({
+      tx,
+      invoice_id: invoice.id,
+      amount: totalAmount,
+      method: payment_method as PaymentMethod,
     });
 
     return tx.reservation.update({

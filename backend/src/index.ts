@@ -18,6 +18,8 @@ import serviceCategoryRoutes from "@modules/extraServices/serviceCategory/servic
 import extraServiceRoutes from "@modules/extraServices/extraService/extraService.routes.ts";
 import mealPlanRoutes from "@modules/mealPlan/mealPlan.routes.ts";
 import reservationRoutes from "@modules/reservation/reservation.routes.ts";
+import invoiceRoutes from "@modules/invoice/invoice.routes.ts";
+import paymentRoutes from "@modules/payment/payment.routes.ts";
 
 
 const app = express();
@@ -38,6 +40,8 @@ app.use("/api/service-categories", serviceCategoryRoutes);
 app.use("/api/extra-services", extraServiceRoutes);
 app.use("/api/meal-plans", mealPlanRoutes);
 app.use("/api/reservations", reservationRoutes);
+app.use("/api/invoices", invoiceRoutes);
+app.use("/api/payments", paymentRoutes);
 
 
 const PORT = process.env.PORT || 5000;
