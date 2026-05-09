@@ -1,8 +1,6 @@
 import { Request, Response } from "express";
-import { AuthRequest, TypedRequest } from "@lib/types.ts";
+import { AuthRequest } from "@lib/types.ts";
 import { ReservationService } from "./reservation.service.ts";
-import { CreateReservationInput } from "./reservation.types.ts";
-import { UserIdParam } from "@modules/users/user.types.ts";
 
 export const ReservationController = {
   checkAvailability: async (req: Request, res: Response) => {
@@ -19,9 +17,10 @@ export const ReservationController = {
     }
   },
 
+  // Guest self-booking
   createReservation: async (req: AuthRequest, res: Response) => {
     try {
-      const data = await ReservationService.createReservation(req.body, req.user!.id);
+      const data = await ReservationService.createReservationAsGuest(req.body, req.user!.id);
       res.status(201).json({ data });
     } catch (error: any) {
       if (error.status) return res.status(error.status).json({ error: error.message });
@@ -29,17 +28,15 @@ export const ReservationController = {
     }
   },
 
-  createReservationForGuest: async (
-    req: TypedRequest<CreateReservationInput, UserIdParam>,
-    res: Response,
-  ) => {
+  // Staff processes checkout and payment
+  checkout: async (req: AuthRequest, res: Response) => {
     try {
-      const userId = Number(req.params.userId);
-      const data = await ReservationService.createReservation(req.body, userId);
-      res.status(201).json({ data });
+      const reservationId = Number(req.params.id);
+      const data = await ReservationService.checkout(reservationId, req.body);
+      res.status(200).json({ data });
     } catch (error: any) {
       if (error.status) return res.status(error.status).json({ error: error.message });
-      res.status(500).json({ error: "Failed to create reservation" });
+      res.status(500).json({ error: "Failed to process checkout" });
     }
   },
 };

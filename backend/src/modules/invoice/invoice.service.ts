@@ -15,6 +15,8 @@ export const InvoiceService = {
     roomCost,
     mealPlan,
     mealPlanCost,
+    children,
+    childrenDiscount,
   }: CreateInvoiceTxParams) => {
     const invoice = await tx.invoice.create({
       data: {
@@ -43,6 +45,18 @@ export const InvoiceService = {
           quantity: nights,
           unit_price: mealPlan.price_per_night,
           total: mealPlanCost,
+        },
+      });
+    }
+
+    if (children > 0 && childrenDiscount > 0) {
+      await tx.invoiceItem.create({
+        data: {
+          invoice_id: invoice.id,
+          description: `Children discount (${children} child${children > 1 ? "ren" : ""})`,
+          quantity: 1,
+          unit_price: -childrenDiscount,
+          total: -childrenDiscount,
         },
       });
     }

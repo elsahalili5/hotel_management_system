@@ -13,4 +13,6 @@ export type CreateInvoiceTxParams = {
   roomCost: number;
   mealPlan: { name: string; price_per_night: number } | null;
   mealPlanCost: number;
+  children: number;
+  childrenDiscount: number;
 };

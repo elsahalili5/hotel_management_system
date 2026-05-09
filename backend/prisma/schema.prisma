@@ -266,7 +266,6 @@ model MealPlan {
 // ─────────────────────────────────────────
 
 enum ReservationStatus {
-  PENDING
   CONFIRMED
   CHECKED_IN
   CHECKED_OUT
@@ -278,7 +277,7 @@ model Reservation {
   guest_id         Int
   room_id          Int
   meal_plan_id     Int?
-  status           ReservationStatus @default(PENDING)
+  status           ReservationStatus @default(CONFIRMED)
   check_in_date    DateTime
   check_out_date   DateTime
   adults           Int               @default(1)
@@ -335,7 +334,6 @@ model ServiceOrders {
 // ─────────────────────────────────────────
 
 enum InvoiceStatus {
-  DRAFT
   ISSUED
   PAID
   CANCELLED
@@ -344,7 +342,7 @@ enum InvoiceStatus {
 model Invoice {
   id             Int           @id @default(autoincrement())
   reservation_id Int           @unique
-  status         InvoiceStatus @default(DRAFT)
+  status         InvoiceStatus @default(ISSUED)
   notes          String?       @db.Text
   issued_at      DateTime?
   due_date       DateTime?
@@ -370,10 +368,7 @@ model InvoiceItem {
 
 
 enum PaymentStatus {
-  PENDING
   COMPLETED
-  FAILED
-  REFUNDED
 }
 
 enum PaymentMethod {
@@ -386,7 +381,7 @@ model Payment {
   invoice_id Int
   amount     Decimal       @db.Decimal(10, 2)
   method     PaymentMethod
-  status     PaymentStatus @default(PENDING)
+  status     PaymentStatus @default(COMPLETED)
   notes      String?
   paid_at    DateTime      @default(now())
 

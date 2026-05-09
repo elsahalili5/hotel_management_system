@@ -5,9 +5,10 @@ import { validateRequestMiddleware } from "@shared/middleware/validateRequest.mi
 import { roleMiddleware } from "@shared/middleware/roleMiddleware.ts";
 import {
   availabilityQuerySchema,
-  createReservationSchema,
+  createReservationGuestSchema,
+  checkoutSchema,
+  reservationIdParamSchema,
 } from "./reservation.schema.ts";
-import { userIdParamSchema } from "@modules/users/user.schema.ts";
 
 const router = Router();
 
@@ -18,20 +19,23 @@ router.get(
   ReservationController.checkAvailability,
 );
 
+// Guest self-booking
 router.post(
   "/",
   authMiddleware,
-  validateRequestMiddleware(createReservationSchema, "body"),
+  roleMiddleware(["GUEST"]),
+  validateRequestMiddleware(createReservationGuestSchema, "body"),
   ReservationController.createReservation,
 );
 
+// Checkout — staff pays the full invoice
 router.post(
-  "/:userId",
+  "/:id/checkout",
   authMiddleware,
   roleMiddleware(["ADMIN", "MANAGER", "RECEPTIONIST"]),
-  validateRequestMiddleware(userIdParamSchema, "params"),
-  validateRequestMiddleware(createReservationSchema, "body"),
-  ReservationController.createReservationForGuest,
+  validateRequestMiddleware(reservationIdParamSchema, "params"),
+  validateRequestMiddleware(checkoutSchema, "body"),
+  ReservationController.checkout,
 );
 
 export default router;
