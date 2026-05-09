@@ -7,7 +7,7 @@ import { Button } from '#/components/Button'
 import { DataTable } from '#/modules/admin/components/DataTable'
 import { DashboardCard } from '#/modules/admin/components/DashboardCard'
 import { CleaningTaskModal } from '#/modules/cleaning-task/components/cleaningTaskModal'
-import { ConfirmModal } from '#/modules/admin/components/ConfirmModal'
+import { ConfirmModal } from '#/components/ConfirmModal'
 import type { Column } from '#/modules/admin/components/DataTable'
 import {
   useCleaningTasks,

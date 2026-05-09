@@ -1,8 +1,9 @@
 import { useEffect } from 'react'
 import { useForm } from 'react-hook-form'
 import { Button } from '#/components/Button'
-import { Input, fieldClass } from '#/components/Input'
-import { Modal } from '#/modules/admin/components/Modal'
+import { Input } from '#/components/Input'
+import { Select } from '#/components/Select'
+import { Modal } from '#/components/Modal'
 import { ROLES, SHIFTS } from '@mansio/shared'
 
 import type {
@@ -74,8 +75,7 @@ export function UserModal({
             last_name: defaultValues.last_name,
             email: defaultValues.email,
             status: defaultValues.status as UserEditPayload['status'],
-            role: (defaultValues.user_roles?.[0]?.role?.name ??
-              undefined) as UserEditPayload['role'],
+            role: (defaultValues.user_roles?.[0]?.role?.name ?? undefined) as UserEditPayload['role'],
             is_active: isStaff
               ? ((defaultValues.staff_profile as any)?.is_active ?? true)
               : undefined,
@@ -147,17 +147,14 @@ export function UserModal({
       onClose={onClose}
       maxWidth="max-w-lg"
     >
-      <form
-        onSubmit={handleSubmit(handleValid)}
-        className="flex flex-col gap-4"
-      >
+      <form onSubmit={handleSubmit(handleValid)} className="flex flex-col gap-4">
         {mode === 'create' && (
           <div>
             <label className={lbl}>Account Type</label>
-            <select {...register('account_type')} className={fieldClass}>
+            <Select {...register('account_type')}>
               <option value="GUEST">Guest</option>
               <option value="STAFF">Staff</option>
-            </select>
+            </Select>
           </div>
         )}
 
@@ -192,23 +189,23 @@ export function UserModal({
           <>
             <div>
               <label className={lbl}>Status</label>
-              <select {...register('status')} className={fieldClass}>
+              <Select {...register('status')}>
                 <option value="ACTIVE">Active</option>
                 <option value="PENDING">Pending</option>
                 <option value="LOCKED">Locked</option>
                 <option value="DISABLED">Disabled</option>
-              </select>
+              </Select>
             </div>
 
             <div>
               <label className={lbl}>Role</label>
-              <select {...register('role')} className={fieldClass}>
+              <Select {...register('role')}>
                 {Object.values(ROLES).map((r) => (
                   <option key={r} value={r}>
                     {r.charAt(0) + r.slice(1).toLowerCase()}
                   </option>
                 ))}
-              </select>
+              </Select>
             </div>
 
             {isStaff && (
@@ -219,10 +216,7 @@ export function UserModal({
                   {...register('is_active')}
                   className="w-4 h-4 accent-mansio-ink"
                 />
-                <label
-                  htmlFor="is_active"
-                  className="text-sm text-mansio-mocha cursor-pointer"
-                >
+                <label htmlFor="is_active" className="text-sm text-mansio-mocha cursor-pointer">
                   Staff is active
                 </label>
               </div>
@@ -234,10 +228,7 @@ export function UserModal({
           <>
             <div>
               <label className={lbl}>Phone Number</label>
-              <Input
-                {...register('phone_number')}
-                placeholder="+383 44 000 000"
-              />
+              <Input {...register('phone_number')} placeholder="+383 44 000 000" />
             </div>
 
             {accountType === 'GUEST' && (
@@ -273,23 +264,23 @@ export function UserModal({
               <div className="grid grid-cols-2 gap-3">
                 <div>
                   <label className={lbl}>Role</label>
-                  <select {...register('role')} className={fieldCls}>
+                  <Select {...register('role')}>
                     {STAFF_ROLES.map((r) => (
                       <option key={r} value={r}>
                         {r.charAt(0) + r.slice(1).toLowerCase()}
                       </option>
                     ))}
-                  </select>
+                  </Select>
                 </div>
                 <div>
                   <label className={lbl}>Shift</label>
-                  <select {...register('shift')} className={fieldCls}>
+                  <Select {...register('shift')}>
                     {Object.values(SHIFTS).map((s) => (
                       <option key={s} value={s}>
                         {s.charAt(0) + s.slice(1).toLowerCase()}
                       </option>
                     ))}
-                  </select>
+                  </Select>
                 </div>
               </div>
             )}

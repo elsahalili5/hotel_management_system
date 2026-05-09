@@ -1,9 +1,10 @@
 import { X, ImagePlus } from 'lucide-react'
 import { useForm } from 'react-hook-form'
 import { useState } from 'react'
-import { Modal } from '#/modules/admin/components/Modal'
+import { Modal } from '#/components/Modal'
 import { Button } from '#/components/Button'
-import { Input, fieldClass } from '#/components/Input'
+import { Input } from '#/components/Input'
+import { Textarea } from '#/components/Textarea'
 import { useAmenities } from '#/modules/rooms/amenity/hooks/use-amenities'
 import { useBeds } from '#/modules/rooms/bed/hooks/use-beds'
 import type { CreateRoomTypeInput, RoomTypeResponse } from '@mansio/shared'
@@ -102,10 +103,9 @@ export function RoomTypeModal({
 
         <div>
           <label className={lbl}>Description</label>
-          <textarea
+          <Textarea
             {...register('description')}
             rows={3}
-            className={`${fieldCls} resize-none`}
             placeholder="Room description..."
           />
         </div>

@@ -7,7 +7,7 @@ import { Button } from '#/components/Button'
 import { useAuth } from '#/modules/auth/hooks/use-auth'
 import { DataTable } from '#/modules/admin/components/DataTable'
 import { RoomTypeModal } from '#/modules/rooms/room-type/components/RoomTypeModal'
-import { ConfirmModal } from '#/modules/admin/components/ConfirmModal'
+import { ConfirmModal } from '#/components/ConfirmModal'
 import type { Column } from '#/modules/admin/components/DataTable'
 import {
   useRoomTypes,

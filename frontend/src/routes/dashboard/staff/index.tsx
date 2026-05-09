@@ -10,7 +10,7 @@ import {
   useDeleteStaff,
 } from '#/modules/staff/hooks/use-staff'
 import { StaffModal } from '#/modules/staff/components/StaffModal'
-import { ConfirmModal } from '#/modules/admin/components/ConfirmModal'
+import { ConfirmModal } from '#/components/ConfirmModal'
 import type { StaffResponse, UpdateStaffInput } from '@mansio/shared'
 
 export const Route = createFileRoute('/dashboard/staff/')({

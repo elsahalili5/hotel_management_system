@@ -15,7 +15,7 @@ import {
 } from '#/modules/users/hooks/use-users'
 import { useUpdateStaff } from '#/modules/staff/hooks/use-staff'
 import { UserModal } from '#/modules/users/components/UserModal'
-import { ConfirmModal } from '#/modules/admin/components/ConfirmModal'
+import { ConfirmModal } from '#/components/ConfirmModal'
 import type { UserEditPayload } from '#/modules/users/components/UserModal'
 import type {
   CreateGuestInput,

@@ -54,9 +54,7 @@ export function DataTable<T>({
             {rows.map((row, i) => (
               <tr
                 key={getRowKey(row)}
-                className={
-                  i < rows.length - 1 ? 'border-b border-mansio-ink/10' : ''
-                }
+                className={i < rows.length - 1 ? 'border-b border-mansio-ink/10' : ''}
               >
                 {columns.map((col) => (
                   <td key={col.key} className="px-4 py-3.5 truncate max-w-0">
@@ -69,7 +67,7 @@ export function DataTable<T>({
                       {onEdit && (
                         <button
                           onClick={() => onEdit(row)}
-                          className="p-1.5 rounded hover:opacity-70 transition-opacity text-mansio-mocha"
+                          className="p-1.5 rounded hover:opacity-70 transition-opacity text-mansio-mocha cursor-pointer"
                         >
                           <Pencil size={14} />
                         </button>
@@ -77,7 +75,7 @@ export function DataTable<T>({
                       {onDelete && (
                         <button
                           onClick={() => onDelete(row)}
-                          className="p-1.5 rounded hover:opacity-70 transition-opacity text-red-400"
+                          className="p-1.5 rounded hover:opacity-70 transition-opacity text-red-400 cursor-pointer"
                         >
                           <Trash2 size={14} />
                         </button>

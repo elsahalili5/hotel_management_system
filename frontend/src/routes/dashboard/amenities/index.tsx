@@ -8,7 +8,7 @@ import * as Icons from 'lucide-react'
 import type { LucideIcon } from 'lucide-react'
 import { DataTable } from '#/modules/admin/components/DataTable'
 import { AmenityModal } from '#/modules/rooms/amenity/components/AmenityModal'
-import { ConfirmModal } from '#/modules/admin/components/ConfirmModal'
+import { ConfirmModal } from '#/components/ConfirmModal'
 import type { Column } from '#/modules/admin/components/DataTable'
 import {
   useAmenities,

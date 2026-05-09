@@ -1,10 +1,11 @@
 import { useForm } from 'react-hook-form'
-import { Modal } from '#/modules/admin/components/Modal'
+import { Modal } from '#/components/Modal'
 import { Button } from '#/components/Button'
-import { Input, fieldClass } from '#/components/Input'
+import { Input } from '#/components/Input'
+import { Textarea } from '#/components/Textarea'
+import { Select } from '#/components/Select'
 import { useRooms } from '#/modules/rooms/room/hooks/use-rooms'
 import { useStaff } from '#/modules/staff/hooks/use-staff'
-
 import { RoomStatus, ROLES, type CreateCleaningTaskInput } from '@mansio/shared'
 
 interface CleaningTaskModalProps {
@@ -48,9 +49,9 @@ export function CleaningTaskModal({
       >
         <div>
           <label className={lbl}>Room (Dirty Only) *</label>
-          <select
+          <Select
             {...register('room_id', { required: true, valueAsNumber: true })}
-            className={`${fieldClass} ${errors.room_id ? 'border-red-400' : ''}`}
+            error={!!errors.room_id}
           >
             <option value="">Select a room...</option>
             {dirtyRooms?.map((r) => (
@@ -58,7 +59,7 @@ export function CleaningTaskModal({
                 #{r.room_number} — Floor {r.floor}
               </option>
             ))}
-          </select>
+          </Select>
           {errors.room_id && (
             <span className="text-[10px] text-red-500">Room is required</span>
           )}
@@ -71,9 +72,9 @@ export function CleaningTaskModal({
 
         <div>
           <label className={lbl}>Assign To (Housekeeper) *</label>
-          <select
+          <Select
             {...register('staff_id', { required: true, valueAsNumber: true })}
-            className={`${fieldClass} ${errors.staff_id ? 'border-red-400' : ''}`}
+            error={!!errors.staff_id}
           >
             <option value="">Select housekeeper...</option>
             {housekeepers?.map((s) => (
@@ -81,7 +82,7 @@ export function CleaningTaskModal({
                 {s.user.first_name} {s.user.last_name}
               </option>
             ))}
-          </select>
+          </Select>
           {errors.staff_id && (
             <span className="text-[10px] text-red-500">
               Please assign a staff member
@@ -96,10 +97,9 @@ export function CleaningTaskModal({
 
         <div>
           <label className={lbl}>Notes</label>
-          <textarea
+          <Textarea
             {...register('notes')}
             rows={3}
-            className={`${fieldClass} resize-none`}
             placeholder="e.g. Check minibar, change towels..."
           />
         </div>

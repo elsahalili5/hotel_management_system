@@ -1,7 +1,8 @@
 import { useForm } from 'react-hook-form'
-import { Modal } from '#/modules/admin/components/Modal'
+import { Modal } from '#/components/Modal'
 import { Button } from '#/components/Button'
-import { Input, fieldClass } from '#/components/Input'
+import { Input } from '#/components/Input'
+import { Textarea } from '#/components/Textarea'
 import type {
   CreateServiceCategoryInput,
   ServiceCategoryResponse,
@@ -58,9 +59,8 @@ export function ServiceCategoryModal({
 
         <div>
           <label className={lbl}>Description</label>
-          <textarea
+          <Textarea
             {...register('description')}
-            className={`${fieldClass} resize-none`}
             rows={3}
             placeholder="Optional description"
           />

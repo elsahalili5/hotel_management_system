@@ -6,7 +6,7 @@ import { useState } from 'react'
 import { Button } from '#/components/Button'
 import { DataTable } from '#/modules/admin/components/DataTable'
 import { BedModal } from '#/modules/rooms/bed/components/BedModal'
-import { ConfirmModal } from '#/modules/admin/components/ConfirmModal'
+import { ConfirmModal } from '#/components/ConfirmModal'
 import type { Column } from '#/modules/admin/components/DataTable'
 import {
   useBeds,

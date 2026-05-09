@@ -5,7 +5,7 @@ import { Plus } from 'lucide-react'
 import { useState } from 'react'
 import { Button } from '#/components/Button'
 import { DataTable } from '#/modules/admin/components/DataTable'
-import { ConfirmModal } from '#/modules/admin/components/ConfirmModal'
+import { ConfirmModal } from '#/components/ConfirmModal'
 import { ServiceCategoryModal } from '#/modules/extra-services/service-category/components/ServiceCategoryModal'
 import type { Column } from '#/modules/admin/components/DataTable'
 import {

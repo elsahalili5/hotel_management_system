@@ -1,7 +1,8 @@
 import { useForm } from 'react-hook-form'
-import { Modal } from '#/modules/admin/components/Modal'
+import { Modal } from '#/components/Modal'
 import { Button } from '#/components/Button'
-import { Input, fieldClass } from '#/components/Input'
+import { Input } from '#/components/Input'
+import { Select } from '#/components/Select'
 import { useRoomTypes } from '#/modules/rooms/room-type/hooks/use-room-types'
 import { RoomStatus } from '@mansio/shared'
 import type { CreateRoomInput, RoomResponse } from '@mansio/shared'
@@ -70,12 +71,9 @@ export function RoomModal({
 
         <div>
           <label className={lbl}>Room Type *</label>
-          <select
-            {...register('room_type_id', {
-              required: true,
-              valueAsNumber: true,
-            })}
-            className={`${fieldClass} ${errors.room_type_id ? 'border-red-400' : ''}`}
+          <Select
+            {...register('room_type_id', { required: true, valueAsNumber: true })}
+            error={!!errors.room_type_id}
           >
             <option value="">Select room type...</option>
             {roomTypes?.map((rt) => (
@@ -83,18 +81,18 @@ export function RoomModal({
                 {rt.name}
               </option>
             ))}
-          </select>
+          </Select>
         </div>
 
         <div>
           <label className={lbl}>Status</label>
-          <select {...register('status')} className={fieldClass}>
+          <Select {...register('status')}>
             {Object.values(RoomStatus).map((s) => (
               <option key={s} value={s}>
                 {s}
               </option>
             ))}
-          </select>
+          </Select>
         </div>
 
         {isError && (

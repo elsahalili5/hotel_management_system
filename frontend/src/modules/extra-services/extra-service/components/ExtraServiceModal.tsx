@@ -1,7 +1,9 @@
 import { useForm } from 'react-hook-form'
-import { Modal } from '#/modules/admin/components/Modal'
+import { Modal } from '#/components/Modal'
 import { Button } from '#/components/Button'
-import { Input, fieldClass } from '#/components/Input'
+import { Input } from '#/components/Input'
+import { Textarea } from '#/components/Textarea'
+import { Select } from '#/components/Select'
 import type {
   CreateExtraServiceInput,
   ExtraServiceResponse,
@@ -68,9 +70,8 @@ export function ExtraServiceModal({
 
         <div>
           <label className={lbl}>Description</label>
-          <textarea
+          <Textarea
             {...register('description')}
-            className={`${fieldClass} resize-none`}
             rows={2}
             placeholder="Optional description"
           />
@@ -89,12 +90,9 @@ export function ExtraServiceModal({
           </div>
           <div className="flex-1">
             <label className={lbl}>Category *</label>
-            <select
-              {...register('category_id', {
-                required: true,
-                valueAsNumber: true,
-              })}
-              className={`${fieldClass} ${errors.category_id ? 'border-red-400' : ''}`}
+            <Select
+              {...register('category_id', { required: true, valueAsNumber: true })}
+              error={!!errors.category_id}
             >
               <option value="">Select...</option>
               {categories.map((c) => (
@@ -102,7 +100,7 @@ export function ExtraServiceModal({
                   {c.name}
                 </option>
               ))}
-            </select>
+            </Select>
           </div>
         </div>
 
@@ -114,10 +112,7 @@ export function ExtraServiceModal({
               id="is_available_24h"
               className="accent-mansio-gold"
             />
-            <label
-              htmlFor="is_available_24h"
-              className="text-sm text-mansio-ink"
-            >
+            <label htmlFor="is_available_24h" className="text-sm text-mansio-ink">
               24h Available
             </label>
           </div>

@@ -1,5 +1,5 @@
 import { useForm } from 'react-hook-form'
-import { Modal } from '#/modules/admin/components/Modal'
+import { Modal } from '#/components/Modal'
 import { Button } from '#/components/Button'
 import { Input } from '#/components/Input'
 import type { CreateBedInput, BedResponse } from '@mansio/shared'

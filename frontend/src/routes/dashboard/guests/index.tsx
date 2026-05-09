@@ -10,7 +10,7 @@ import {
   useDeleteGuest,
 } from '#/modules/guest/hooks/use-guests'
 import { GuestModal } from '#/modules/guest/components/GuestModal'
-import { ConfirmModal } from '#/modules/admin/components/ConfirmModal'
+import { ConfirmModal } from '#/components/ConfirmModal'
 import type { GuestResponse, UpdateGuestInput } from '@mansio/shared'
 
 export const Route = createFileRoute('/dashboard/guests/')({
