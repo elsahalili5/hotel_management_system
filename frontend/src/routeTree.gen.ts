@@ -16,7 +16,7 @@ import { Route as DashboardIndexRouteImport } from './routes/dashboard/index'
 import { Route as appIndexRouteImport } from './routes/(app)/index'
 import { Route as DashboardStatsRouteImport } from './routes/dashboard/stats'
 import { Route as DashboardReviewsRouteImport } from './routes/dashboard/reviews'
-import { Route as DashboardBookingsRouteImport } from './routes/dashboard/bookings'
+import { Route as DashboardReservationsRouteImport } from './routes/dashboard/reservations'
 import { Route as authSignupRouteImport } from './routes/(auth)/signup'
 import { Route as authLoginRouteImport } from './routes/(auth)/login'
 import { Route as appSpaRouteImport } from './routes/(app)/spa'
@@ -77,9 +77,9 @@ const DashboardReviewsRoute = DashboardReviewsRouteImport.update({
   path: '/reviews',
   getParentRoute: () => DashboardRouteRoute,
 } as any)
-const DashboardBookingsRoute = DashboardBookingsRouteImport.update({
-  id: '/bookings',
-  path: '/bookings',
+const DashboardReservationsRoute = DashboardReservationsRouteImport.update({
+  id: '/reservations',
+  path: '/reservations',
   getParentRoute: () => DashboardRouteRoute,
 } as any)
 const authSignupRoute = authSignupRouteImport.update({
@@ -226,7 +226,7 @@ export interface FileRoutesByFullPath {
   '/spa': typeof appSpaRoute
   '/login': typeof authLoginRoute
   '/signup': typeof authSignupRoute
-  '/dashboard/bookings': typeof DashboardBookingsRoute
+  '/dashboard/reservations': typeof DashboardReservationsRoute
   '/dashboard/reviews': typeof DashboardReviewsRoute
   '/dashboard/stats': typeof DashboardStatsRoute
   '/': typeof appIndexRoute
@@ -258,7 +258,7 @@ export interface FileRoutesByTo {
   '/spa': typeof appSpaRoute
   '/login': typeof authLoginRoute
   '/signup': typeof authSignupRoute
-  '/dashboard/bookings': typeof DashboardBookingsRoute
+  '/dashboard/reservations': typeof DashboardReservationsRoute
   '/dashboard/reviews': typeof DashboardReviewsRoute
   '/dashboard/stats': typeof DashboardStatsRoute
   '/': typeof appIndexRoute
@@ -295,7 +295,7 @@ export interface FileRoutesById {
   '/(app)/spa': typeof appSpaRoute
   '/(auth)/login': typeof authLoginRoute
   '/(auth)/signup': typeof authSignupRoute
-  '/dashboard/bookings': typeof DashboardBookingsRoute
+  '/dashboard/reservations': typeof DashboardReservationsRoute
   '/dashboard/reviews': typeof DashboardReviewsRoute
   '/dashboard/stats': typeof DashboardStatsRoute
   '/(app)/': typeof appIndexRoute
@@ -330,7 +330,7 @@ export interface FileRouteTypes {
     | '/spa'
     | '/login'
     | '/signup'
-    | '/dashboard/bookings'
+    | '/dashboard/reservations'
     | '/dashboard/reviews'
     | '/dashboard/stats'
     | '/'
@@ -362,7 +362,7 @@ export interface FileRouteTypes {
     | '/spa'
     | '/login'
     | '/signup'
-    | '/dashboard/bookings'
+    | '/dashboard/reservations'
     | '/dashboard/reviews'
     | '/dashboard/stats'
     | '/'
@@ -398,7 +398,7 @@ export interface FileRouteTypes {
     | '/(app)/spa'
     | '/(auth)/login'
     | '/(auth)/signup'
-    | '/dashboard/bookings'
+    | '/dashboard/reservations'
     | '/dashboard/reviews'
     | '/dashboard/stats'
     | '/(app)/'
@@ -478,11 +478,11 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof DashboardReviewsRouteImport
       parentRoute: typeof DashboardRouteRoute
     }
-    '/dashboard/bookings': {
-      id: '/dashboard/bookings'
-      path: '/bookings'
-      fullPath: '/dashboard/bookings'
-      preLoaderRoute: typeof DashboardBookingsRouteImport
+    '/dashboard/reservations': {
+      id: '/dashboard/reservations'
+      path: '/reservations'
+      fullPath: '/dashboard/reservations'
+      preLoaderRoute: typeof DashboardReservationsRouteImport
       parentRoute: typeof DashboardRouteRoute
     }
     '/(auth)/signup': {
@@ -737,7 +737,7 @@ const authRouteRouteWithChildren = authRouteRoute._addFileChildren(
 )
 
 interface DashboardRouteRouteChildren {
-  DashboardBookingsRoute: typeof DashboardBookingsRoute
+  DashboardReservationsRoute: typeof DashboardReservationsRoute
   DashboardReviewsRoute: typeof DashboardReviewsRoute
   DashboardStatsRoute: typeof DashboardStatsRoute
   DashboardIndexRoute: typeof DashboardIndexRoute
@@ -758,7 +758,7 @@ interface DashboardRouteRouteChildren {
 }
 
 const DashboardRouteRouteChildren: DashboardRouteRouteChildren = {
-  DashboardBookingsRoute: DashboardBookingsRoute,
+  DashboardReservationsRoute: DashboardReservationsRoute,
   DashboardReviewsRoute: DashboardReviewsRoute,
   DashboardStatsRoute: DashboardStatsRoute,
   DashboardIndexRoute: DashboardIndexRoute,

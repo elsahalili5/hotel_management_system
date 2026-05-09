@@ -1,10 +1,12 @@
 import { apiClient } from '#/api/client'
+import type {
+  AvailabilityQuery,
+  CreateReservationInput,
+  CheckoutInput,
+  ReservationResponse,
+} from '@mansio/shared'
 
-export type AvailabilityQuery = {
-  room_type_id: number
-  check_in_date: string
-  check_out_date: string
-}
+export type { AvailabilityQuery, CreateReservationInput, CheckoutInput, ReservationResponse }
 
 export type AvailabilityResult = {
   available: boolean
@@ -18,36 +20,19 @@ export type AvailabilityResult = {
   max_occupancy: number
 }
 
-export type CreateReservationInput = {
-  room_type_id: number
-  check_in_date: string
-  check_out_date: string
-  adults: number
-  children: number
-  meal_plan_id?: number
-}
-
-export type ReservationResponse = {
-  id: number
-  status: string
-  check_in_date: string
-  check_out_date: string
-  adults: number
-  children: number
-  room: { id: number; room_number: string }
-  meal_plan: { id: number; name: string } | null
-  invoice: {
-    id: number
-    status: string
-    items: { id: number; description: string; quantity: number; unit_price: number; total: number }[]
-    payments: { id: number; amount: number; method: string; status: string }[]
-  } | null
-}
-
 export const reservationApi = {
   checkAvailability: (params: AvailabilityQuery) =>
     apiClient.get<AvailabilityResult>('/reservations/availability', { params }),
 
   create: (data: CreateReservationInput) =>
     apiClient.post<ReservationResponse, CreateReservationInput>('/reservations', data),
+
+  getAll: () => apiClient.get<ReservationResponse[]>('/reservations'),
+
+  getTodaysCheckIns: () => apiClient.get<ReservationResponse[]>('/reservations/today'),
+
+  getMyReservations: () => apiClient.get<ReservationResponse[]>('/reservations/my-reservations'),
+
+  checkout: (id: number, data: CheckoutInput) =>
+    apiClient.post<ReservationResponse, CheckoutInput>(`/reservations/${id}/checkout`, data),
 }

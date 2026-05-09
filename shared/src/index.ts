@@ -7,3 +7,5 @@ export * from './staff';
 export * from './users';
 export * from './extraServices';
 export * from './mealPlan';
+
+export * from './reservation';

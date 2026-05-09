@@ -69,7 +69,7 @@ const navItems: NavItem[] = [
     path: '/dashboard/my-tasks',
     roles: [ROLES.HOUSEKEEPING],
   },
-  { label: 'Bookings', icon: BookOpen, path: '/dashboard/bookings' },
+  { label: 'Reservations', icon: BookOpen, path: '/dashboard/reservations', roles: [ROLES.ADMIN, ROLES.MANAGER, ROLES.RECEPTIONIST] },
   {
     label: 'Users',
     icon: Users,
