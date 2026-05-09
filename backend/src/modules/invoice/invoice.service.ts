@@ -1,5 +1,6 @@
 import { prisma } from "@lib/prisma.ts";
 import { CreateInvoiceTxParams } from "./invoice.types.ts";
+import { InvoiceStatus } from "@generated/prisma/enums.ts";
 
 const ERRORS = {
   NOT_FOUND: { status: 404, message: "Invoice not found" },
@@ -21,7 +22,7 @@ export const InvoiceService = {
     const invoice = await tx.invoice.create({
       data: {
         reservation_id,
-        status: "ISSUED",
+        status: InvoiceStatus.ISSUED,
         issued_at: new Date(),
         due_date: check_in_date,
       },

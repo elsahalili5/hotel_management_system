@@ -13,9 +13,75 @@ import {
   InvoiceStatus,
   PaymentStatus,
   RoomStatus,
-} from "./reservation.types.ts";
+} from "@generated/prisma/enums.ts";
 
-const CHILD_DISCOUNT_RATE = 0.1; // 10% off room cost per child, max 50%
+const CHILD_DISCOUNT_RATE = 0.1; 
+
+const reservationSelect = {
+  id: true,
+  check_in_date: true,
+  check_out_date: true,
+  status: true,
+  adults: true,
+  children: true,
+  created_at: true,
+  
+  guest: {
+    select: {
+      id: true,
+      phone_number: true,
+      user: {
+        select: {
+          first_name: true,
+          last_name: true,
+          email: true
+        }
+      }
+    }
+  },
+  
+  room: {
+    select: {
+      id: true,
+      room_number: true,
+      room_type: {
+        select: {
+          name: true,
+          base_price: true
+        }
+      }
+    }
+  },
+  
+  meal_plan: {
+    select: {
+      id: true,
+      name: true,
+      price_per_night: true
+    }
+  },
+  
+  invoice: {
+    select: {
+      id: true,
+      status: true,
+      items: {
+        select: {
+          description: true,
+          total: true,
+          quantity: true
+        }
+      },
+      payments: {
+        select: {
+          amount: true,
+          method: true,
+          paid_at: true
+        }
+      }
+    }
+  }
+};
 
 const ERRORS = {
   ROOM_TYPE_NOT_FOUND:      { status: 404, message: "Room type not found" },
@@ -113,11 +179,7 @@ const runBookingTransaction = async ({
 
     return tx.reservation.findUnique({
       where: { id: reservation.id },
-      include: {
-        room: true,
-        meal_plan: true,
-        invoice: { include: { items: true, payments: true } },
-      },
+      select: reservationSelect,
     });
   });
 };
@@ -177,7 +239,7 @@ export const ReservationService = {
       availability.nights,
     );
     const childrenDiscount = calcChildrenDiscount(availability.total_price, input.children);
-    // This is what the guest pays now (room + meal plan - discount). Extras paid at checkout.
+   
     const prepaidAmount = availability.total_price + mealPlanCost - childrenDiscount;
 
     return runBookingTransaction({
@@ -196,7 +258,7 @@ export const ReservationService = {
     });
   },
 
-  // Checkout — pays remaining balance (extras ordered during stay), marks everything done
+ 
   checkout: async (reservationId: number, { payment_method }: CheckoutInput) => {
     const reservation = await prisma.reservation.findUnique({
       where: { id: reservationId },
@@ -213,10 +275,10 @@ export const ReservationService = {
     const invoice = reservation.invoice;
     if (!invoice) throw ERRORS.INVOICE_NOT_FOUND;
 
-    // Total of all invoice items (room + meal plan + extras + discounts)
+    
     const totalInvoice = invoice.items.reduce((sum, i) => sum + Number(i.total), 0);
 
-    // What has already been paid (at booking)
+    
     const totalPaid = invoice.payments
       .filter((p) => p.status === PaymentStatus.COMPLETED)
       .reduce((sum, p) => sum + Number(p.amount), 0);
@@ -224,7 +286,7 @@ export const ReservationService = {
     const remaining = Math.round((totalInvoice - totalPaid) * 100) / 100;
 
     return prisma.$transaction(async (tx) => {
-      // Only create a payment if there's something left to pay (extras)
+      
       if (remaining > 0) {
         await PaymentService.createPaymentInTx({
           tx,
@@ -239,7 +301,7 @@ export const ReservationService = {
         data: { status: InvoiceStatus.PAID },
       });
 
-      // Mark room as DIRTY so housekeeping knows to clean it
+      
       await tx.room.update({
         where: { id: reservation.room_id },
         data: { status: RoomStatus.DIRTY },
@@ -248,12 +310,51 @@ export const ReservationService = {
       return tx.reservation.update({
         where: { id: reservationId },
         data: { status: ReservationStatus.CHECKED_OUT },
-        include: {
-          room: true,
-          meal_plan: true,
-          invoice: { include: { items: true, payments: true } },
-        },
+        select: reservationSelect,
       });
+    });
+  },
+
+  getAll: async () => {
+    return await prisma.reservation.findMany({
+      select: reservationSelect,
+      orderBy: {
+        created_at: 'desc'
+      }
+    });
+  },
+  getTodaysCheckIns: async () => {
+    const startOfToday = new Date();
+    startOfToday.setHours(0, 0, 0, 0);
+
+    const startOfTomorrow = new Date(startOfToday);
+    startOfTomorrow.setDate(startOfToday.getDate() + 1);
+
+    return await prisma.reservation.findMany({
+      where: {
+        check_in_date: {
+          gte: startOfToday,
+          lt: startOfTomorrow,
+        },
+        status: ReservationStatus.CONFIRMED,
+      },
+      select: reservationSelect,
+      orderBy: {
+        created_at: "desc",
+      },
+    });
+  },
+  getMyReservations: async (userId: number) => {
+    return await prisma.reservation.findMany({
+      where: {
+        guest: {
+          user_id: userId, 
+        },
+      },
+      select: reservationSelect,
+      orderBy: {
+        check_in_date: 'desc', 
+      },
     });
   },
 };

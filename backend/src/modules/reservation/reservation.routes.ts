@@ -19,7 +19,7 @@ router.get(
   ReservationController.checkAvailability,
 );
 
-// Guest self-booking
+
 router.post(
   "/",
   authMiddleware,
@@ -36,6 +36,26 @@ router.post(
   validateRequestMiddleware(reservationIdParamSchema, "params"),
   validateRequestMiddleware(checkoutSchema, "body"),
   ReservationController.checkout,
+
+);
+router.get(
+  "/my-reservations",
+  authMiddleware,
+  roleMiddleware(["GUEST"]),
+  ReservationController.getMyReservations,
 );
 
+router.get(
+  "/",
+  authMiddleware,
+  roleMiddleware(["ADMIN", "MANAGER", "RECEPTIONIST"]),
+  ReservationController.getAll,
+);
+
+router.get(
+  "/today",
+  authMiddleware,
+  roleMiddleware(["ADMIN", "MANAGER", "RECEPTIONIST"]),
+  ReservationController.getTodaysCheckIns,
+);
 export default router;

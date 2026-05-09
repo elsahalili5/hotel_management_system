@@ -1,5 +1,6 @@
 import { prisma } from "@lib/prisma.ts";
 import { CreatePaymentTxParams } from "./payment.types.ts";
+import { PaymentStatus } from "@generated/prisma/enums.ts";
 
 const ERRORS = {
   NOT_FOUND: { status: 404, message: "Payment not found" },
@@ -17,7 +18,7 @@ export const PaymentService = {
         invoice_id,
         amount,
         method,
-        status: "COMPLETED",
+        status: PaymentStatus.COMPLETED,
         paid_at: new Date(),
       },
     });
