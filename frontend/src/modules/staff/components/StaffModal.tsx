@@ -1,7 +1,7 @@
 import { useForm } from 'react-hook-form'
 import { Modal } from '#/components/Modal'
 import { Button } from '#/components/Button'
-import { Input } from '#/components/Input'
+import { Input, labelClass } from '#/components/Input'
 import { Select } from '#/components/Select'
 import type { StaffResponse, UpdateStaffInput } from '@mansio/shared'
 
@@ -14,7 +14,6 @@ interface StaffModalProps {
   title?: string
 }
 
-const lbl = 'text-xs tracking-widest uppercase mb-1 block text-mansio-mocha'
 
 export function StaffModal({
   onClose,
@@ -49,12 +48,12 @@ export function StaffModal({
         className="flex flex-col gap-4"
       >
         <div>
-          <label className={lbl}>Phone Number</label>
+          <label className={labelClass}>Phone Number</label>
           <Input {...register('phone_number')} placeholder="+383 44 000 000" />
         </div>
 
         <div>
-          <label className={lbl}>Shift</label>
+          <label className={labelClass}>Shift</label>
           <Select {...register('shift')}>
             <option value="">Select shift</option>
             <option value="MORNING">Morning</option>

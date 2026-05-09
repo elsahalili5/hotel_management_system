@@ -1,13 +1,12 @@
 import { useForm } from 'react-hook-form'
 import { Modal } from '#/components/Modal'
 import { Button } from '#/components/Button'
-import { Input } from '#/components/Input'
+import { Input, labelClass } from '#/components/Input'
 import { Select } from '#/components/Select'
 import { useRoomTypes } from '#/modules/rooms/room-type/hooks/use-room-types'
 import { RoomStatus } from '@mansio/shared'
 import type { CreateRoomInput, RoomResponse } from '@mansio/shared'
 
-const lbl = 'text-xs tracking-widest uppercase mb-1 block text-mansio-mocha'
 
 interface RoomModalProps {
   onClose: () => void
@@ -50,7 +49,7 @@ export function RoomModal({
         className="flex flex-col gap-4"
       >
         <div>
-          <label className={lbl}>Room Number *</label>
+          <label className={labelClass}>Room Number *</label>
           <Input
             {...register('room_number', { required: true })}
             error={!!errors.room_number}
@@ -59,7 +58,7 @@ export function RoomModal({
         </div>
 
         <div>
-          <label className={lbl}>Floor *</label>
+          <label className={labelClass}>Floor *</label>
           <Input
             type="number"
             min={0}
@@ -70,7 +69,7 @@ export function RoomModal({
         </div>
 
         <div>
-          <label className={lbl}>Room Type *</label>
+          <label className={labelClass}>Room Type *</label>
           <Select
             {...register('room_type_id', { required: true, valueAsNumber: true })}
             error={!!errors.room_type_id}
@@ -85,7 +84,7 @@ export function RoomModal({
         </div>
 
         <div>
-          <label className={lbl}>Status</label>
+          <label className={labelClass}>Status</label>
           <Select {...register('status')}>
             {Object.values(RoomStatus).map((s) => (
               <option key={s} value={s}>

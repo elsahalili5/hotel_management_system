@@ -1,7 +1,7 @@
 import { useForm } from 'react-hook-form'
 import { Modal } from '#/components/Modal'
 import { Button } from '#/components/Button'
-import { Input } from '#/components/Input'
+import { Input, labelClass } from '#/components/Input'
 import type { UpdateGuestInput, GuestResponse } from '@mansio/shared'
 
 interface GuestModalProps {
@@ -13,7 +13,6 @@ interface GuestModalProps {
   title?: string
 }
 
-const lbl = 'text-xs tracking-widest uppercase mb-1 block text-mansio-mocha'
 
 export function GuestModal({ onClose, onSubmit, defaultValues, isPending, isError, title = 'Edit Guest' }: GuestModalProps) {
   const { register, handleSubmit } = useForm<UpdateGuestInput>({
@@ -40,33 +39,33 @@ export function GuestModal({ onClose, onSubmit, defaultValues, isPending, isErro
     <Modal title={title} onClose={onClose}>
       <form onSubmit={handleSubmit(handleValid)} className="flex flex-col gap-4">
         <div>
-          <label className={lbl}>Phone Number</label>
+          <label className={labelClass}>Phone Number</label>
           <Input {...register('phone_number')} placeholder="+383 44 000 000" />
         </div>
 
         <div>
-          <label className={lbl}>Address</label>
+          <label className={labelClass}>Address</label>
           <Input {...register('address')} placeholder="123 Main St" />
         </div>
 
         <div className="flex gap-3">
           <div className="flex-1">
-            <label className={lbl}>City</label>
+            <label className={labelClass}>City</label>
             <Input {...register('city')} placeholder="Pristina" />
           </div>
           <div className="flex-1">
-            <label className={lbl}>Country</label>
+            <label className={labelClass}>Country</label>
             <Input {...register('country')} placeholder="Kosovo" />
           </div>
         </div>
 
         <div>
-          <label className={lbl}>Passport Number</label>
+          <label className={labelClass}>Passport Number</label>
           <Input {...register('passport_number')} placeholder="AB123456" />
         </div>
 
         <div>
-          <label className={lbl}>Date of Birth</label>
+          <label className={labelClass}>Date of Birth</label>
           <Input type="date" {...register('date_of_birth')} />
         </div>
 

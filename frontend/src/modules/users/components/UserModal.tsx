@@ -1,7 +1,7 @@
 import { useEffect } from 'react'
 import { useForm } from 'react-hook-form'
 import { Button } from '#/components/Button'
-import { Input } from '#/components/Input'
+import { Input, labelClass } from '#/components/Input'
 import { Select } from '#/components/Select'
 import { Modal } from '#/components/Modal'
 import { ROLES, SHIFTS } from '@mansio/shared'
@@ -52,7 +52,6 @@ interface UserModalProps {
   isError?: boolean
 }
 
-const lbl = 'text-xs tracking-widest uppercase mb-1 block text-mansio-mocha'
 
 export function UserModal({
   mode,
@@ -150,7 +149,7 @@ export function UserModal({
       <form onSubmit={handleSubmit(handleValid)} className="flex flex-col gap-4">
         {mode === 'create' && (
           <div>
-            <label className={lbl}>Account Type</label>
+            <label className={labelClass}>Account Type</label>
             <Select {...register('account_type')}>
               <option value="GUEST">Guest</option>
               <option value="STAFF">Staff</option>
@@ -160,22 +159,22 @@ export function UserModal({
 
         <div className="grid grid-cols-2 gap-3">
           <div>
-            <label className={lbl}>First Name</label>
+            <label className={labelClass}>First Name</label>
             <Input {...register('first_name')} />
           </div>
           <div>
-            <label className={lbl}>Last Name</label>
+            <label className={labelClass}>Last Name</label>
             <Input {...register('last_name')} />
           </div>
         </div>
 
         <div>
-          <label className={lbl}>Email</label>
+          <label className={labelClass}>Email</label>
           <Input type="email" {...register('email')} />
         </div>
 
         <div>
-          <label className={lbl}>
+          <label className={labelClass}>
             Password {mode === 'edit' ? '(optional)' : ''}
           </label>
           <Input
@@ -188,7 +187,7 @@ export function UserModal({
         {mode === 'edit' && (
           <>
             <div>
-              <label className={lbl}>Status</label>
+              <label className={labelClass}>Status</label>
               <Select {...register('status')}>
                 <option value="ACTIVE">Active</option>
                 <option value="PENDING">Pending</option>
@@ -198,7 +197,7 @@ export function UserModal({
             </div>
 
             <div>
-              <label className={lbl}>Role</label>
+              <label className={labelClass}>Role</label>
               <Select {...register('role')}>
                 {Object.values(ROLES).map((r) => (
                   <option key={r} value={r}>
@@ -227,7 +226,7 @@ export function UserModal({
         {mode === 'create' && (
           <>
             <div>
-              <label className={lbl}>Phone Number</label>
+              <label className={labelClass}>Phone Number</label>
               <Input {...register('phone_number')} placeholder="+383 44 000 000" />
             </div>
 
@@ -235,26 +234,26 @@ export function UserModal({
               <>
                 <div className="grid grid-cols-2 gap-3">
                   <div>
-                    <label className={lbl}>Address</label>
+                    <label className={labelClass}>Address</label>
                     <Input {...register('address')} />
                   </div>
                   <div>
-                    <label className={lbl}>City</label>
+                    <label className={labelClass}>City</label>
                     <Input {...register('city')} />
                   </div>
                 </div>
                 <div className="grid grid-cols-2 gap-3">
                   <div>
-                    <label className={lbl}>Country</label>
+                    <label className={labelClass}>Country</label>
                     <Input {...register('country')} />
                   </div>
                   <div>
-                    <label className={lbl}>Date of Birth</label>
+                    <label className={labelClass}>Date of Birth</label>
                     <Input type="date" {...register('date_of_birth')} />
                   </div>
                 </div>
                 <div>
-                  <label className={lbl}>Passport Number</label>
+                  <label className={labelClass}>Passport Number</label>
                   <Input {...register('passport_number')} />
                 </div>
               </>
@@ -263,7 +262,7 @@ export function UserModal({
             {accountType === 'STAFF' && (
               <div className="grid grid-cols-2 gap-3">
                 <div>
-                  <label className={lbl}>Role</label>
+                  <label className={labelClass}>Role</label>
                   <Select {...register('role')}>
                     {STAFF_ROLES.map((r) => (
                       <option key={r} value={r}>
@@ -273,7 +272,7 @@ export function UserModal({
                   </Select>
                 </div>
                 <div>
-                  <label className={lbl}>Shift</label>
+                  <label className={labelClass}>Shift</label>
                   <Select {...register('shift')}>
                     {Object.values(SHIFTS).map((s) => (
                       <option key={s} value={s}>

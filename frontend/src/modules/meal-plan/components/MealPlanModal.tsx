@@ -1,7 +1,7 @@
 import { useForm } from 'react-hook-form'
 import { Modal } from '#/components/Modal'
 import { Button } from '#/components/Button'
-import { Input } from '#/components/Input'
+import { Input, labelClass } from '#/components/Input'
 import { Textarea } from '#/components/Textarea'
 import type { CreateMealPlanInput, MealPlanResponse } from '@mansio/shared'
 
@@ -14,7 +14,6 @@ interface MealPlanModalProps {
   title?: string
 }
 
-const lbl = 'text-xs tracking-widest uppercase mb-1 block text-mansio-mocha'
 
 export function MealPlanModal({
   onClose,
@@ -43,7 +42,7 @@ export function MealPlanModal({
     <Modal title={title} onClose={onClose} maxWidth="max-w-md">
       <form onSubmit={handleSubmit(async (values) => await onSubmit(values))} className="flex flex-col gap-4">
         <div>
-          <label className={lbl}>Name *</label>
+          <label className={labelClass}>Name *</label>
           <Input
             {...register('name', { required: true })}
             error={!!errors.name}
@@ -52,7 +51,7 @@ export function MealPlanModal({
         </div>
 
         <div>
-          <label className={lbl}>Description</label>
+          <label className={labelClass}>Description</label>
           <Textarea
             {...register('description')}
             rows={2}
@@ -61,7 +60,7 @@ export function MealPlanModal({
         </div>
 
         <div>
-          <label className={lbl}>Price per Night (€) *</label>
+          <label className={labelClass}>Price per Night (€) *</label>
           <Input
             type="number"
             step="0.01"

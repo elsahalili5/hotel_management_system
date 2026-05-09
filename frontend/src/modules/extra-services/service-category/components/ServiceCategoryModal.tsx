@@ -1,7 +1,7 @@
 import { useForm } from 'react-hook-form'
 import { Modal } from '#/components/Modal'
 import { Button } from '#/components/Button'
-import { Input } from '#/components/Input'
+import { Input, labelClass } from '#/components/Input'
 import { Textarea } from '#/components/Textarea'
 import type {
   CreateServiceCategoryInput,
@@ -17,7 +17,6 @@ interface ServiceCategoryModalProps {
   title?: string
 }
 
-const lbl = 'text-xs tracking-widest uppercase mb-1 block text-mansio-mocha'
 
 export function ServiceCategoryModal({
   onClose,
@@ -49,7 +48,7 @@ export function ServiceCategoryModal({
         className="flex flex-col gap-4"
       >
         <div>
-          <label className={lbl}>Name *</label>
+          <label className={labelClass}>Name *</label>
           <Input
             {...register('name', { required: true })}
             error={!!errors.name}
@@ -58,7 +57,7 @@ export function ServiceCategoryModal({
         </div>
 
         <div>
-          <label className={lbl}>Description</label>
+          <label className={labelClass}>Description</label>
           <Textarea
             {...register('description')}
             rows={3}
@@ -68,7 +67,7 @@ export function ServiceCategoryModal({
 
         <div className="flex gap-4">
           <div className="flex-1">
-            <label className={lbl}>Sort Order</label>
+            <label className={labelClass}>Sort Order</label>
             <Input
               type="number"
               {...register('sort_order', { valueAsNumber: true })}

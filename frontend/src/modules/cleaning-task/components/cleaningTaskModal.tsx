@@ -1,7 +1,7 @@
 import { useForm } from 'react-hook-form'
 import { Modal } from '#/components/Modal'
 import { Button } from '#/components/Button'
-import { Input } from '#/components/Input'
+import { Input, labelClass } from '#/components/Input'
 import { Textarea } from '#/components/Textarea'
 import { Select } from '#/components/Select'
 import { useRooms } from '#/modules/rooms/room/hooks/use-rooms'
@@ -16,8 +16,7 @@ interface CleaningTaskModalProps {
   title?: string
 }
 
-const lbl =
-  'text-xs tracking-widest uppercase mb-1 block text-mansio-mocha font-semibold'
+const lbl = `${labelClass} font-semibold`
 
 export function CleaningTaskModal({
   onClose,

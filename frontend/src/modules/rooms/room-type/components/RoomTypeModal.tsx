@@ -3,7 +3,7 @@ import { useForm } from 'react-hook-form'
 import { useState } from 'react'
 import { Modal } from '#/components/Modal'
 import { Button } from '#/components/Button'
-import { Input } from '#/components/Input'
+import { Input, labelClass } from '#/components/Input'
 import { Textarea } from '#/components/Textarea'
 import { useAmenities } from '#/modules/rooms/amenity/hooks/use-amenities'
 import { useBeds } from '#/modules/rooms/bed/hooks/use-beds'
@@ -19,7 +19,6 @@ interface Props {
   title?: string
 }
 
-const lbl = 'text-xs tracking-widest uppercase mb-1 block text-mansio-mocha'
 
 export function RoomTypeModal({
   onClose,
@@ -93,7 +92,7 @@ export function RoomTypeModal({
     <Modal title={title} onClose={onClose}>
       <form onSubmit={handleFormSubmit} className="flex flex-col gap-4">
         <div>
-          <label className={lbl}>Name *</label>
+          <label className={labelClass}>Name *</label>
           <Input
             {...register('name', { required: true })}
             error={!!errors.name}
@@ -102,7 +101,7 @@ export function RoomTypeModal({
         </div>
 
         <div>
-          <label className={lbl}>Description</label>
+          <label className={labelClass}>Description</label>
           <Textarea
             {...register('description')}
             rows={3}
@@ -112,7 +111,7 @@ export function RoomTypeModal({
 
         <div className="grid grid-cols-2 gap-4">
           <div>
-            <label className={lbl}>Base Price (€) *</label>
+            <label className={labelClass}>Base Price (€) *</label>
             <Input
               type="number"
               step="0.01"
@@ -125,7 +124,7 @@ export function RoomTypeModal({
             />
           </div>
           <div>
-            <label className={lbl}>Max Occupancy *</label>
+            <label className={labelClass}>Max Occupancy *</label>
             <Input
               type="number"
               {...register('max_occupancy', {
@@ -139,7 +138,7 @@ export function RoomTypeModal({
         </div>
 
         <div>
-          <label className={lbl}>Size (m²)</label>
+          <label className={labelClass}>Size (m²)</label>
           <Input
             type="number"
             {...register('size_m2', { valueAsNumber: true })}
@@ -149,7 +148,7 @@ export function RoomTypeModal({
 
         {amenities && amenities.length > 0 && (
           <div>
-            <label className={lbl}>Amenities</label>
+            <label className={labelClass}>Amenities</label>
             <div className="border border-mansio-ink/10 rounded p-3 flex flex-wrap gap-2 max-h-36 overflow-y-auto">
               {amenities.map((a) => (
                 <button
@@ -167,7 +166,7 @@ export function RoomTypeModal({
 
         {beds && beds.length > 0 && (
           <div>
-            <label className={lbl}>Beds</label>
+            <label className={labelClass}>Beds</label>
             <div className="border border-mansio-ink/10 rounded p-3 flex flex-col gap-2">
               {beds.map((b) => (
                 <div key={b.id} className="flex items-center justify-between">
@@ -197,7 +196,7 @@ export function RoomTypeModal({
 
         <div>
           <div className="flex items-center justify-between mb-1">
-            <label className={lbl}>Images</label>
+            <label className={labelClass}>Images</label>
             <button
               type="button"
               onClick={() =>

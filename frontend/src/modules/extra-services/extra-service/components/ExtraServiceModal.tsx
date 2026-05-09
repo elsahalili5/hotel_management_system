@@ -1,7 +1,7 @@
 import { useForm } from 'react-hook-form'
 import { Modal } from '#/components/Modal'
 import { Button } from '#/components/Button'
-import { Input } from '#/components/Input'
+import { Input, labelClass } from '#/components/Input'
 import { Textarea } from '#/components/Textarea'
 import { Select } from '#/components/Select'
 import type {
@@ -20,7 +20,6 @@ interface ExtraServiceModalProps {
   title?: string
 }
 
-const lbl = 'text-xs tracking-widest uppercase mb-1 block text-mansio-mocha'
 
 export function ExtraServiceModal({
   onClose,
@@ -60,7 +59,7 @@ export function ExtraServiceModal({
         className="flex flex-col gap-4"
       >
         <div>
-          <label className={lbl}>Name *</label>
+          <label className={labelClass}>Name *</label>
           <Input
             {...register('name', { required: true })}
             error={!!errors.name}
@@ -69,7 +68,7 @@ export function ExtraServiceModal({
         </div>
 
         <div>
-          <label className={lbl}>Description</label>
+          <label className={labelClass}>Description</label>
           <Textarea
             {...register('description')}
             rows={2}
@@ -79,7 +78,7 @@ export function ExtraServiceModal({
 
         <div className="flex gap-4">
           <div className="flex-1">
-            <label className={lbl}>Price *</label>
+            <label className={labelClass}>Price *</label>
             <Input
               type="number"
               step="0.01"
@@ -89,7 +88,7 @@ export function ExtraServiceModal({
             />
           </div>
           <div className="flex-1">
-            <label className={lbl}>Category *</label>
+            <label className={labelClass}>Category *</label>
             <Select
               {...register('category_id', { required: true, valueAsNumber: true })}
               error={!!errors.category_id}
@@ -132,11 +131,11 @@ export function ExtraServiceModal({
         {!is24h && (
           <div className="flex gap-4">
             <div className="flex-1">
-              <label className={lbl}>Available From</label>
+              <label className={labelClass}>Available From</label>
               <Input type="time" {...register('available_from')} />
             </div>
             <div className="flex-1">
-              <label className={lbl}>Available Until</label>
+              <label className={labelClass}>Available Until</label>
               <Input type="time" {...register('available_until')} />
             </div>
           </div>
