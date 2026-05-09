@@ -1,5 +1,7 @@
 import { Link } from '@tanstack/react-router'
 import { ArrowRight, Check } from 'lucide-react'
+import { useAuth } from '#/modules/auth/hooks/use-auth'
+import { ROLES } from '@mansio/shared'
 
 const INCLUDED = [
   'Daily breakfast for two',
@@ -12,9 +14,21 @@ const INCLUDED = [
 
 interface BookingCardProps {
   price: string | number
+  roomTypeId?: number
 }
 
-export function BookingCard({ price }: BookingCardProps) {
+export function BookingCard({ price, roomTypeId }: BookingCardProps) {
+  const auth = useAuth()
+
+  const reserveTarget = !auth.user
+    ? { to: '/login' as const }
+    : auth.hasRole(ROLES.GUEST)
+      ? {
+          to: '/bookings' as const,
+          search: roomTypeId ? { roomTypeId } : {},
+        }
+      : { to: '/dashboard' as const }
+
   return (
     <div className="sticky top-28 flex flex-col gap-6 p-8 bg-mansio-espresso border border-mansio-gold/15">
       <div>
@@ -42,8 +56,11 @@ export function BookingCard({ price }: BookingCardProps) {
       <div className="h-px w-full bg-mansio-gold/15" />
 
       <div className="flex flex-col gap-3">
-        <Link to="/login" className="no-underline">
-          <button className="w-full flex items-center justify-center gap-2 py-4 text-xs font-medium tracking-widest uppercase transition-opacity duration-200 hover:opacity-80 bg-mansio-gold text-mansio-espresso">
+        <Link {...reserveTarget} className="no-underline">
+          <button
+            type="button"
+            className="w-full flex items-center justify-center gap-2 py-4 text-xs font-medium tracking-widest uppercase transition-opacity duration-200 hover:opacity-80 bg-mansio-gold text-mansio-espresso"
+          >
             Reserve This Room
             <ArrowRight size={13} />
           </button>

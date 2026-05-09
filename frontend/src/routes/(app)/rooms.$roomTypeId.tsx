@@ -108,7 +108,7 @@ function RoomDetail() {
         </div>
 
         <div className="lg:col-span-1">
-          <BookingCard price={room.base_price} />
+          <BookingCard price={room.base_price} roomTypeId={room.id} />
         </div>
       </Container>
 

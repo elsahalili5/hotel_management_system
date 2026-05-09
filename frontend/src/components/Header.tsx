@@ -46,7 +46,7 @@ export default function Header() {
 
 
             <div className="ml-auto flex items-center gap-3">
-              <Link to="/contact" className="hidden lg:inline-flex no-underline">
+              <Link to="/bookings" className="hidden lg:inline-flex no-underline">
                 <Button endIcon={<ArrowRight size={16} />}>BOOK NOW</Button>
               </Link>
 
@@ -109,7 +109,7 @@ export default function Header() {
         <div className="h-px w-full bg-mansio-espresso" />
 
         <div className="flex justify-center">
-          <Link to="/contact" className="no-underline" onClick={() => setMenuOpen(false)}>
+          <Link to="/bookings" className="no-underline" onClick={() => setMenuOpen(false)}>
             <Button endIcon={<ArrowRight size={16} />}>BOOK NOW</Button>
           </Link>
         </div>
