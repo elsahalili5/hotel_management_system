@@ -28,7 +28,16 @@ router.post(
   ReservationController.createReservation,
 );
 
-// Checkout — staff pays the full invoice
+
+router.post(
+  "/:id/checkin",
+  authMiddleware,
+  roleMiddleware(["ADMIN", "MANAGER", "RECEPTIONIST"]),
+  validateRequestMiddleware(reservationIdParamSchema, "params"),
+  ReservationController.checkin,
+);
+
+
 router.post(
   "/:id/checkout",
   authMiddleware,
@@ -58,4 +67,12 @@ router.get(
   roleMiddleware(["ADMIN", "MANAGER", "RECEPTIONIST"]),
   ReservationController.getTodaysCheckIns,
 );
+router.get(
+  "/:id",
+  authMiddleware,
+  roleMiddleware(["ADMIN", "MANAGER", "RECEPTIONIST"]),
+  validateRequestMiddleware(reservationIdParamSchema, "params"),
+  ReservationController.getById,
+);
+
 export default router;

@@ -94,7 +94,10 @@ const ERRORS = {
   CAPACITY_EXCEEDED:     { status: 400, message: "Number of guests exceeds room capacity" },
   MEAL_PLAN_NOT_FOUND:   { status: 404, message: "Meal plan not found or inactive" },
   RESERVATION_NOT_FOUND: { status: 404, message: "Reservation not found" },
+  NOT_CONFIRMED:         { status: 400, message: "Reservation must be CONFIRMED to check in" },
+  ALREADY_CHECKED_IN:    { status: 400, message: "Reservation is already checked in" },
   ALREADY_CHECKED_OUT:   { status: 400, message: "Reservation is already checked out" },
+  NOT_CHECKED_IN:        { status: 400, message: "Reservation must be CHECKED_IN to check out" },
   INVOICE_NOT_FOUND:     { status: 404, message: "Invoice not found for this reservation" },
 };
 
@@ -259,6 +262,33 @@ export const ReservationService = {
   },
 
  
+  checkin: async (reservationId: number, staffId: number) => {
+    const reservation = await prisma.reservation.findUnique({
+      where: { id: reservationId },
+    });
+
+    if (!reservation) throw ERRORS.RESERVATION_NOT_FOUND;
+    if (reservation.status === ReservationStatus.CHECKED_IN) throw ERRORS.ALREADY_CHECKED_IN;
+    if (reservation.status !== ReservationStatus.CONFIRMED) throw ERRORS.NOT_CONFIRMED;
+
+    return prisma.$transaction(async (tx) => {
+      await tx.room.update({
+        where: { id: reservation.room_id },
+        data: { status: RoomStatus.OCCUPIED },
+      });
+
+      return tx.reservation.update({
+        where: { id: reservationId },
+        data: {
+          status: ReservationStatus.CHECKED_IN,
+          checked_in_at: new Date(),
+          checked_in_by: staffId,
+        },
+        select: reservationSelect,
+      });
+    });
+  },
+
   checkout: async (reservationId: number, { payment_method }: CheckoutInput) => {
     const reservation = await prisma.reservation.findUnique({
       where: { id: reservationId },
@@ -270,7 +300,7 @@ export const ReservationService = {
     });
 
     if (!reservation) throw ERRORS.RESERVATION_NOT_FOUND;
-    if (reservation.status === ReservationStatus.CHECKED_OUT) throw ERRORS.ALREADY_CHECKED_OUT;
+    if (reservation.status !== ReservationStatus.CHECKED_IN) throw ERRORS.NOT_CHECKED_IN;
 
     const invoice = reservation.invoice;
     if (!invoice) throw ERRORS.INVOICE_NOT_FOUND;
@@ -313,6 +343,15 @@ export const ReservationService = {
         select: reservationSelect,
       });
     });
+  },
+
+  getById: async (reservationId: number) => {
+    const reservation = await prisma.reservation.findUnique({
+      where: { id: reservationId },
+      select: reservationSelect,
+    });
+    if (!reservation) throw ERRORS.RESERVATION_NOT_FOUND;
+    return reservation;
   },
 
   getAll: async () => {

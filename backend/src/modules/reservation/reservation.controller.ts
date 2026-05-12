@@ -28,7 +28,17 @@ export const ReservationController = {
     }
   },
 
-  
+  checkin: async (req: AuthRequest, res: Response) => {
+    try {
+      const reservationId = Number(req.params.id);
+      const data = await ReservationService.checkin(reservationId, req.user!.id);
+      res.status(200).json({ data });
+    } catch (error: any) {
+      if (error.status) return res.status(error.status).json({ error: error.message });
+      res.status(500).json({ error: "Failed to process check-in" });
+    }
+  },
+
   checkout: async (req: AuthRequest, res: Response) => {
     try {
       const reservationId = Number(req.params.id);
@@ -40,7 +50,17 @@ export const ReservationController = {
     }
   },
   
-  getAll: async (req: AuthRequest, res: Response) => {
+  getById: async (req: AuthRequest, res: Response) => {
+    try {
+      const data = await ReservationService.getById(Number(req.params.id));
+      res.status(200).json({ data });
+    } catch (error: any) {
+      if (error.status) return res.status(error.status).json({ error: error.message });
+      res.status(500).json({ error: "Failed to fetch reservation" });
+    }
+  },
+
+  getAll: async (_req: AuthRequest, res: Response) => {
     try {
       const data = await ReservationService.getAll();
       res.status(200).json({ data });
@@ -50,7 +70,7 @@ export const ReservationController = {
   },
 
   
-  getTodaysCheckIns: async (req: AuthRequest, res: Response) => {
+  getTodaysCheckIns: async (_req: AuthRequest, res: Response) => {
     try {
       const data = await ReservationService.getTodaysCheckIns();
       res.status(200).json({ data });
