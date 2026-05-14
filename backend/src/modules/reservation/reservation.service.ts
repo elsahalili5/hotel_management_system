@@ -101,6 +101,7 @@ const ERRORS = {
   ALREADY_CHECKED_OUT:   { status: 400, message: "Reservation is already checked out" },
   NOT_CHECKED_IN:        { status: 400, message: "Reservation must be CHECKED_IN to check out" },
   INVOICE_NOT_FOUND:     { status: 404, message: "Invoice not found for this reservation" },
+  CANNOT_NO_SHOW:        { status: 400, message: "Only CONFIRMED reservations can be marked as no-show" },
 };
 
 const calcNights = (checkIn: Date, checkOut: Date) =>
@@ -291,7 +292,7 @@ export const ReservationService = {
     });
   },
 
-  checkout: async (reservationId: number, { payment_method }: CheckoutInput) => {
+  checkout: async (reservationId: number, { payment_method }: CheckoutInput, staffId: number) => {
     const reservation = await prisma.reservation.findUnique({
       where: { id: reservationId },
       include: {
@@ -341,7 +342,7 @@ export const ReservationService = {
 
       return tx.reservation.update({
         where: { id: reservationId },
-        data: { status: ReservationStatus.CHECKED_OUT },
+        data: { status: ReservationStatus.CHECKED_OUT, checked_out_at: new Date(), checked_out_by: staffId },
         select: reservationSelect,
       });
     });
@@ -377,7 +378,7 @@ export const ReservationService = {
           gte: startOfToday,
           lt: startOfTomorrow,
         },
-        status: ReservationStatus.CONFIRMED,
+        status: { in: [ReservationStatus.CONFIRMED, ReservationStatus.CHECKED_IN, ReservationStatus.NO_SHOW] },
       },
       select: reservationSelect,
       orderBy: {
@@ -385,6 +386,49 @@ export const ReservationService = {
       },
     });
   },
+
+  noShow: async (reservationId: number) => {
+    const reservation = await prisma.reservation.findUnique({
+      where: { id: reservationId },
+    });
+
+    if (!reservation) throw ERRORS.RESERVATION_NOT_FOUND;
+    if (reservation.status !== ReservationStatus.CONFIRMED) throw ERRORS.CANNOT_NO_SHOW;
+
+    return prisma.$transaction(async (tx) => {
+      await tx.room.update({
+        where: { id: reservation.room_id },
+        data: { status: RoomStatus.AVAILABLE },
+      });
+
+      return tx.reservation.update({
+        where: { id: reservationId },
+        data: { status: ReservationStatus.NO_SHOW },
+        select: reservationSelect,
+      });
+    });
+  },
+
+  getTodaysCheckOuts: async () => {
+    const startOfToday = new Date();
+    startOfToday.setHours(0, 0, 0, 0);
+
+    const startOfTomorrow = new Date(startOfToday);
+    startOfTomorrow.setDate(startOfToday.getDate() + 1);
+
+    return await prisma.reservation.findMany({
+      where: {
+        check_out_date: {
+          gte: startOfToday,
+          lt: startOfTomorrow,
+        },
+        status: { in: [ReservationStatus.CHECKED_IN, ReservationStatus.CHECKED_OUT] },
+      },
+      select: reservationSelect,
+      orderBy: { created_at: "desc" },
+    });
+  },
+
   getMyReservations: async (userId: number) => {
     return await prisma.reservation.findMany({
       where: {

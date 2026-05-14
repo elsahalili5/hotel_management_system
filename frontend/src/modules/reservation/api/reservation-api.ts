@@ -29,13 +29,23 @@ export const reservationApi = {
 
   getAll: () => apiClient.get<ReservationResponse[]>('/reservations'),
 
-  getTodaysCheckIns: () => apiClient.get<ReservationResponse[]>('/reservations/today'),
+  getTodaysCheckIns: () => apiClient.get<ReservationResponse[]>('/reservations/today/arrivals'),
+
+  getTodaysCheckOuts: () => apiClient.get<ReservationResponse[]>('/reservations/today/departures'),
+
+  getById: (id: number) => apiClient.get<ReservationResponse>(`/reservations/${id}`),
 
   getMyReservations: () => apiClient.get<ReservationResponse[]>('/reservations/my-reservations'),
 
   checkin: (id: number) =>
     apiClient.post<ReservationResponse, Record<string, never>>(`/reservations/${id}/checkin`, {}),
 
+  noShow: (id: number) =>
+    apiClient.post<ReservationResponse, Record<string, never>>(`/reservations/${id}/no-show`, {}),
+
   checkout: (id: number, data: CheckoutInput) =>
     apiClient.post<ReservationResponse, CheckoutInput>(`/reservations/${id}/checkout`, data),
+
+  delete: (id: number) =>
+    apiClient.delete<void>(`/reservations/${id}`),
 }

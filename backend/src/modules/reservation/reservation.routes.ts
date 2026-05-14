@@ -61,11 +61,26 @@ router.get(
   ReservationController.getAll,
 );
 
+router.post(
+  "/:id/no-show",
+  authMiddleware,
+  roleMiddleware(["ADMIN", "MANAGER", "RECEPTIONIST"]),
+  validateRequestMiddleware(reservationIdParamSchema, "params"),
+  ReservationController.noShow,
+);
+
 router.get(
-  "/today",
+  "/today/arrivals",
   authMiddleware,
   roleMiddleware(["ADMIN", "MANAGER", "RECEPTIONIST"]),
   ReservationController.getTodaysCheckIns,
+);
+
+router.get(
+  "/today/departures",
+  authMiddleware,
+  roleMiddleware(["ADMIN", "MANAGER", "RECEPTIONIST"]),
+  ReservationController.getTodaysCheckOuts,
 );
 router.get(
   "/:id",
