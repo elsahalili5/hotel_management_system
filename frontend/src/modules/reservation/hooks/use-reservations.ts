@@ -60,6 +60,17 @@ export function useCreateReservation() {
   })
 }
 
+export function useCheckin() {
+  const queryClient = useQueryClient()
+  return useMutation({
+    mutationFn: (id: number) => reservationApi.checkin(id),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: reservationKeys.all })
+      queryClient.invalidateQueries({ queryKey: reservationKeys.today })
+    },
+  })
+}
+
 export function useCheckout() {
   const queryClient = useQueryClient()
   return useMutation({

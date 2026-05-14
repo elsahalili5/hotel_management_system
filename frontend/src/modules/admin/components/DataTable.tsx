@@ -15,6 +15,7 @@ interface DataTableProps<T> {
   getRowKey: (row: T) => string
   onEdit?: (row: T) => void
   onDelete?: (row: T) => void
+  onRowClick?: (row: T) => void
 }
 
 export function DataTable<T>({
@@ -24,6 +25,7 @@ export function DataTable<T>({
   getRowKey,
   onEdit,
   onDelete,
+  onRowClick,
 }: DataTableProps<T>) {
   return (
     <DashboardCard>
@@ -54,7 +56,8 @@ export function DataTable<T>({
             {rows.map((row, i) => (
               <tr
                 key={getRowKey(row)}
-                className={i < rows.length - 1 ? 'border-b border-mansio-ink/10' : ''}
+                className={`${i < rows.length - 1 ? 'border-b border-mansio-ink/10' : ''} ${onRowClick ? 'cursor-pointer hover:bg-mansio-ivory/60 transition-colors' : ''}`}
+                onClick={onRowClick ? () => onRowClick(row) : undefined}
               >
                 {columns.map((col) => (
                   <td key={col.key} className="px-4 py-3.5 truncate max-w-0">

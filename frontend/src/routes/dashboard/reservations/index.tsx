@@ -10,12 +10,10 @@ import type { ReservationResponse } from '@mansio/shared'
 import {
   useReservations,
   useTodaysCheckIns,
-  useCheckin,
-  useCheckout,
 } from '#/modules/reservation/hooks/use-reservations'
 import { ReservationModal } from '#/modules/reservation/components/ReservationModal'
 
-export const Route = createFileRoute('/dashboard/reservations')({
+export const Route = createFileRoute('/dashboard/reservations/')({
   beforeLoad: ({ context }) => {
     requireRole(context.auth, {
       role: [ROLES.ADMIN, ROLES.MANAGER, ROLES.RECEPTIONIST],
@@ -28,60 +26,25 @@ export const Route = createFileRoute('/dashboard/reservations')({
 type Tab = 'today' | 'all'
 
 const statusColors: Record<string, string> = {
-  CONFIRMED:   'bg-blue-100 text-blue-700',
-  CHECKED_IN:  'bg-green-100 text-green-700',
+  CONFIRMED: 'bg-blue-100 text-blue-700',
+  CHECKED_IN: 'bg-green-100 text-green-700',
   CHECKED_OUT: 'bg-mansio-ink/10 text-mansio-mocha',
-  CANCELLED:   'bg-red-100 text-red-500',
-  NO_SHOW:     'bg-amber-100 text-amber-700',
+  CANCELLED: 'bg-red-100 text-red-500',
+  NO_SHOW: 'bg-amber-100 text-amber-700',
 }
 
 const fmt = (d: string | Date) => new Date(d).toLocaleDateString('en-GB')
-
-function ActionButtons({ reservation }: { reservation: ReservationResponse }) {
-  const checkin = useCheckin()
-  const checkout = useCheckout()
-
-  if (reservation.status === 'CONFIRMED') {
-    return (
-      <Button
-        variant="outline"
-        disabled={checkin.isPending}
-        onClick={(e) => {
-          e.stopPropagation()
-          checkin.mutate(reservation.id)
-        }}
-      >
-        {checkin.isPending ? '…' : 'Check In'}
-      </Button>
-    )
-  }
-
-  if (reservation.status === 'CHECKED_IN') {
-    return (
-      <Button
-        variant="outline"
-        disabled={checkout.isPending}
-        onClick={(e) => {
-          e.stopPropagation()
-          checkout.mutate({ id: reservation.id, payment_method: 'CASH' })
-        }}
-      >
-        {checkout.isPending ? '…' : 'Check Out'}
-      </Button>
-    )
-  }
-
-  return null
-}
 
 function ReservationsPage() {
   const [tab, setTab] = useState<Tab>('today')
   const [selected, setSelected] = useState<ReservationResponse | null>(null)
 
   const { data: allReservations, isLoading: loadingAll } = useReservations()
-  const { data: todayReservations, isLoading: loadingToday } = useTodaysCheckIns()
+  const { data: todayReservations, isLoading: loadingToday } =
+    useTodaysCheckIns()
 
-  const rows = tab === 'today' ? (todayReservations ?? []) : (allReservations ?? [])
+  const rows =
+    tab === 'today' ? (todayReservations ?? []) : (allReservations ?? [])
   const isLoading = tab === 'today' ? loadingToday : loadingAll
 
   const columns: Column<ReservationResponse>[] = [
@@ -102,7 +65,9 @@ function ReservationsPage() {
       header: 'Room',
       render: (r) => (
         <div>
-          <p className="text-sm font-medium text-mansio-ink">#{r.room.room_number}</p>
+          <p className="text-sm font-medium text-mansio-ink">
+            #{r.room.room_number}
+          </p>
           <p className="text-xs text-mansio-mocha">{r.room.room_type.name}</p>
         </div>
       ),
@@ -110,12 +75,20 @@ function ReservationsPage() {
     {
       key: 'check_in_date',
       header: 'Check In',
-      render: (r) => <span className="text-sm text-mansio-mocha">{fmt(r.check_in_date)}</span>,
+      render: (r) => (
+        <span className="text-sm text-mansio-mocha">
+          {fmt(r.check_in_date)}
+        </span>
+      ),
     },
     {
       key: 'check_out_date',
       header: 'Check Out',
-      render: (r) => <span className="text-sm text-mansio-mocha">{fmt(r.check_out_date)}</span>,
+      render: (r) => (
+        <span className="text-sm text-mansio-mocha">
+          {fmt(r.check_out_date)}
+        </span>
+      ),
     },
     {
       key: 'guests',
@@ -130,9 +103,14 @@ function ReservationsPage() {
       key: 'invoice',
       header: 'Total',
       render: (r) => {
-        if (!r.invoice) return <span className="text-xs text-mansio-mocha">—</span>
+        if (!r.invoice)
+          return <span className="text-xs text-mansio-mocha">—</span>
         const total = r.invoice.items.reduce((s, i) => s + Number(i.total), 0)
-        return <span className="text-sm font-medium text-mansio-ink">€{total.toFixed(2)}</span>
+        return (
+          <span className="text-sm font-medium text-mansio-ink">
+            €{total.toFixed(2)}
+          </span>
+        )
       },
     },
     {
@@ -145,11 +123,6 @@ function ReservationsPage() {
           {r.status.replace('_', ' ')}
         </span>
       ),
-    },
-    {
-      key: 'actions',
-      header: '',
-      render: (r) => <ActionButtons reservation={r} />,
     },
   ]
 
@@ -173,7 +146,9 @@ function ReservationsPage() {
       </div>
 
       {isLoading && (
-        <p className="text-sm text-center py-10 text-mansio-mocha">Loading...</p>
+        <p className="text-sm text-center py-10 text-mansio-mocha">
+          Loading...
+        </p>
       )}
 
       {!isLoading && (

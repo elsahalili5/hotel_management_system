@@ -20,6 +20,7 @@ export type ReservationResponse = {
   adults: number
   children: number
   created_at: Date
+  checked_in_at: Date | null
   guest: {
     id: number
     phone_number: string | null
@@ -35,7 +36,7 @@ export type ReservationResponse = {
     id: number
     status: string
     items: { description: string; quantity: number; total: unknown }[]
-    payments: { amount: unknown; method: string; paid_at: Date }[]
+    payments: { amount: unknown; method: string; paid_at: Date; status: string }[]
   } | null
 }
 

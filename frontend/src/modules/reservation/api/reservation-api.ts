@@ -33,6 +33,9 @@ export const reservationApi = {
 
   getMyReservations: () => apiClient.get<ReservationResponse[]>('/reservations/my-reservations'),
 
+  checkin: (id: number) =>
+    apiClient.post<ReservationResponse, Record<string, never>>(`/reservations/${id}/checkin`, {}),
+
   checkout: (id: number, data: CheckoutInput) =>
     apiClient.post<ReservationResponse, CheckoutInput>(`/reservations/${id}/checkout`, data),
 }

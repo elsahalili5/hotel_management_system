@@ -25,6 +25,7 @@ const reservationSelect = {
   adults: true,
   children: true,
   created_at: true,
+  checked_in_at: true,
   
   guest: {
     select: {
@@ -76,7 +77,8 @@ const reservationSelect = {
         select: {
           amount: true,
           method: true,
-          paid_at: true
+          paid_at: true,
+          status: true
         }
       }
     }

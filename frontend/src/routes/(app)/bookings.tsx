@@ -54,7 +54,9 @@ function estimatePrepaid(
   if (!availability) return null
   const mealCost = mealPricePerNight ? mealPricePerNight * nights : 0
   const discount = calcChildrenDiscount(availability.total_price, children)
-  return Math.round((availability.total_price + mealCost - discount) * 100) / 100
+  return (
+    Math.round((availability.total_price + mealCost - discount) * 100) / 100
+  )
 }
 
 function apiErrorMessage(error: unknown): string | null {
@@ -131,10 +133,8 @@ function GuestBookingsPage() {
       }
     : null
 
-  const { data: availability, isFetching: availabilityLoading } = useReservationAvailability(
-    availabilityQuery,
-    datesValid,
-  )
+  const { data: availability, isFetching: availabilityLoading } =
+    useReservationAvailability(availabilityQuery, datesValid)
 
   const selectedMeal = useMemo(() => {
     if (!mealPlanId) return undefined
@@ -153,8 +153,7 @@ function GuestBookingsPage() {
   )
 
   const capacityOk =
-    availability &&
-    adults + children <= availability.max_occupancy
+    availability && adults + children <= availability.max_occupancy
 
   const createReservation = useCreateReservation()
   const [createdId, setCreatedId] = useState<number | null>(null)
@@ -213,7 +212,9 @@ function GuestBookingsPage() {
 
   const canPay = step === 'card' && !createReservation.isPending
 
-  const selectedRoomLabel = roomTypes?.find((r) => String(r.id) === roomTypeId)?.name
+  const selectedRoomLabel = roomTypes?.find(
+    (r) => String(r.id) === roomTypeId,
+  )?.name
 
   return (
     <main className="min-h-screen bg-mansio-cream">
@@ -226,7 +227,9 @@ function GuestBookingsPage() {
       <Container className="py-14 md:py-20 max-w-3xl">
         {createdId !== null && (
           <div className="mb-10 p-6 bg-mansio-ivory border-l-2 border-mansio-gold">
-            <p className="text-xs tracking-widest uppercase text-mansio-gold mb-2">Confirmed</p>
+            <p className="text-xs tracking-widest uppercase text-mansio-gold mb-2">
+              Confirmed
+            </p>
             <p className="font-serif text-xl text-mansio-espresso mb-4">
               Reservation #{createdId} is confirmed.
             </p>
@@ -242,17 +245,26 @@ function GuestBookingsPage() {
         )}
 
         <p className="text-sm font-light text-mansio-mocha mb-8">
-          Your guest profile must include phone, passport number, and date of birth before booking.
+          Your guest profile must include phone, passport number, and date of
+          birth before booking.
         </p>
 
         <div className="flex gap-6 text-xs tracking-widest uppercase mb-10 text-mansio-taupe">
-          <span className={step === 'stay' ? 'text-mansio-espresso font-medium' : ''}>
+          <span
+            className={
+              step === 'stay' ? 'text-mansio-espresso font-medium' : ''
+            }
+          >
             1 · Stay
           </span>
           <span aria-hidden className="text-mansio-gold/40">
             —
           </span>
-          <span className={step === 'card' ? 'text-mansio-espresso font-medium' : ''}>
+          <span
+            className={
+              step === 'card' ? 'text-mansio-espresso font-medium' : ''
+            }
+          >
             2 · Card
           </span>
         </div>
@@ -262,20 +274,27 @@ function GuestBookingsPage() {
             <div>
               <label className={labelClass}>Room type</label>
               <Select
-                {...register('room_type_id', { required: 'Choose a room type' })}
+                {...register('room_type_id', {
+                  required: 'Choose a room type',
+                })}
                 error={Boolean(errors.room_type_id)}
               >
                 <option value="">Select a room</option>
                 {roomTypes?.map((rt) => (
                   <option key={rt.id} value={rt.id}>
-                    {rt.name} — €{rt.base_price} / night · up to {rt.max_occupancy} guests
+                    {rt.name} — €{rt.base_price} / night · up to{' '}
+                    {rt.max_occupancy} guests
                   </option>
                 ))}
               </Select>
               {errors.room_type_id && (
-                <p className="text-xs text-red-500 mt-1">{errors.room_type_id.message}</p>
+                <p className="text-xs text-red-500 mt-1">
+                  {errors.room_type_id.message}
+                </p>
               )}
-              {roomsLoading && <p className="text-xs text-mansio-taupe mt-1">Loading rooms…</p>}
+              {roomsLoading && (
+                <p className="text-xs text-mansio-taupe mt-1">Loading rooms…</p>
+              )}
             </div>
 
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
@@ -328,46 +347,65 @@ function GuestBookingsPage() {
                   </option>
                 ))}
               </Select>
-              {mealsLoading && <p className="text-xs text-mansio-taupe mt-1">Loading meal plans…</p>}
+              {mealsLoading && (
+                <p className="text-xs text-mansio-taupe mt-1">
+                  Loading meal plans…
+                </p>
+              )}
             </div>
 
             <div className="p-6 bg-mansio-espresso/5 border border-mansio-gold/20">
-              <p className="text-xs tracking-widest uppercase mb-3 text-mansio-gold">Availability</p>
+              <p className="text-xs tracking-widest uppercase mb-3 text-mansio-gold">
+                Availability
+              </p>
               {!datesValid && (
                 <p className="text-sm font-light text-mansio-mocha">
-                  Choose room type and valid dates to see availability and pricing.
+                  Choose room type and valid dates to see availability and
+                  pricing.
                 </p>
               )}
               {datesValid && availabilityLoading && (
-                <p className="text-sm font-light text-mansio-mocha">Checking availability…</p>
+                <p className="text-sm font-light text-mansio-mocha">
+                  Checking availability…
+                </p>
               )}
               {datesValid && !availabilityLoading && availability && (
                 <div className="space-y-2 text-sm font-light text-mansio-mocha">
                   <p>
                     {availability.available ? (
-                      <span className="text-mansio-espresso font-medium">Rooms available</span>
+                      <span className="text-mansio-espresso font-medium">
+                        Rooms available
+                      </span>
                     ) : (
-                      <span className="text-red-600">No rooms available for these dates.</span>
+                      <span className="text-red-600">
+                        No rooms available for these dates.
+                      </span>
                     )}
                   </p>
                   <p>
-                    {availability.nights} night{availability.nights === 1 ? '' : 's'} · Max{' '}
+                    {availability.nights} night
+                    {availability.nights === 1 ? '' : 's'} · Max{' '}
                     {availability.max_occupancy} guests
                   </p>
                   {!capacityOk && (
                     <p className="text-red-600">
-                      Guest count exceeds room capacity ({adults + children} &gt;{' '}
-                      {availability.max_occupancy}).
+                      Guest count exceeds room capacity ({adults + children}{' '}
+                      &gt; {availability.max_occupancy}).
                     </p>
                   )}
-                  {availability.available && capacityOk && estimatedPrepaid !== null && (
-                    <p className="pt-2 text-mansio-espresso">
-                      Estimated prepaid (room + meal plan − child discount):{' '}
-                      <span className="font-serif text-lg">€{estimatedPrepaid}</span>
-                    </p>
-                  )}
+                  {availability.available &&
+                    capacityOk &&
+                    estimatedPrepaid !== null && (
+                      <p className="pt-2 text-mansio-espresso">
+                        Estimated prepaid (room + meal plan − child discount):{' '}
+                        <span className="font-serif text-lg">
+                          €{estimatedPrepaid}
+                        </span>
+                      </p>
+                    )}
                   <p className="text-xs text-mansio-taupe pt-2">
-                    Next step: enter your card details (demo — not sent to a payment gateway).
+                    Next step: enter your card details (demo — not sent to a
+                    payment gateway).
                   </p>
                 </div>
               )}
@@ -377,7 +415,11 @@ function GuestBookingsPage() {
               <Button type="submit" disabled={!canContinueToCard}>
                 Continue to card payment
               </Button>
-              <Button type="button" variant="ghost" onClick={() => navigate({ to: '/rooms' })}>
+              <Button
+                type="button"
+                variant="ghost"
+                onClick={() => navigate({ to: '/rooms' })}
+              >
                 Back to rooms
               </Button>
             </div>
@@ -387,7 +429,9 @@ function GuestBookingsPage() {
         {step === 'card' && (
           <form onSubmit={submitReservation} className="flex flex-col gap-8">
             <div className="p-5 bg-white border border-mansio-gold/25 text-sm text-mansio-mocha space-y-1">
-              <p className="text-xs tracking-widest uppercase text-mansio-gold">Summary</p>
+              <p className="text-xs tracking-widest uppercase text-mansio-gold">
+                Summary
+              </p>
               <p>
                 <span className="text-mansio-taupe">Room: </span>
                 {selectedRoomLabel ?? '—'}
@@ -415,7 +459,9 @@ function GuestBookingsPage() {
             </div>
 
             <div>
-              <p className="text-xs tracking-widest uppercase text-mansio-gold mb-4">Card</p>
+              <p className="text-xs tracking-widest uppercase text-mansio-gold mb-4">
+                Card
+              </p>
               <div className="flex flex-col gap-5">
                 <div>
                   <label className={labelClass}>Name on card</label>
@@ -477,18 +523,17 @@ function GuestBookingsPage() {
             </div>
 
             <p className="text-xs text-mansio-taupe">
-              Card fields stay in your browser; only the reservation is sent to Mansio’s server.
+              Card fields stay in your browser; only the reservation is sent to
+              Mansio’s server.
             </p>
 
-            {createError && <p className="text-sm text-red-600">{createError}</p>}
+            {createError && (
+              <p className="text-sm text-red-600">{createError}</p>
+            )}
 
             <div className="flex flex-wrap gap-3">
               <Button type="submit" disabled={!canPay}>
-                {createReservation.isPending
-                  ? 'Processing…'
-                  : estimatedPrepaid !== null
-                    ? `Pay €${estimatedPrepaid} & confirm`
-                    : 'Confirm reservation'}
+                {createReservation.isPending ? 'Processing…' : 'Confirm'}
               </Button>
               <Button
                 type="button"
