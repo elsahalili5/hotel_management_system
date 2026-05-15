@@ -2,7 +2,7 @@ import { createFileRoute } from '@tanstack/react-router'
 import { requireRole } from '#/lib/route-guard'
 import { ROLES } from '@mansio/shared'
 import { useState } from 'react'
-import { CalendarCheck, List } from 'lucide-react'
+import { CalendarCheck, LogOut, List } from 'lucide-react'
 import { DataTable } from '#/modules/admin/components/DataTable'
 import { Button } from '#/components/Button'
 import type { Column } from '#/modules/admin/components/DataTable'
@@ -10,8 +10,7 @@ import type { ReservationResponse } from '@mansio/shared'
 import {
   useReservations,
   useTodaysCheckIns,
-  useCheckin,
-  useCheckout,
+  useTodaysCheckOuts,
 } from '#/modules/reservation/hooks/use-reservations'
 import { ReservationModal } from '#/modules/reservation/components/ReservationModal'
 
@@ -25,7 +24,7 @@ export const Route = createFileRoute('/dashboard/reservations')({
   component: ReservationsPage,
 })
 
-type Tab = 'today' | 'all'
+type Tab = 'arrivals' | 'departures' | 'all'
 
 const statusColors: Record<string, string> = {
   CONFIRMED:   'bg-blue-100 text-blue-700',
@@ -37,52 +36,28 @@ const statusColors: Record<string, string> = {
 
 const fmt = (d: string | Date) => new Date(d).toLocaleDateString('en-GB')
 
-function ActionButtons({ reservation }: { reservation: ReservationResponse }) {
-  const checkin = useCheckin()
-  const checkout = useCheckout()
-
-  if (reservation.status === 'CONFIRMED') {
-    return (
-      <Button
-        variant="outline"
-        disabled={checkin.isPending}
-        onClick={(e) => {
-          e.stopPropagation()
-          checkin.mutate(reservation.id)
-        }}
-      >
-        {checkin.isPending ? '…' : 'Check In'}
-      </Button>
-    )
-  }
-
-  if (reservation.status === 'CHECKED_IN') {
-    return (
-      <Button
-        variant="outline"
-        disabled={checkout.isPending}
-        onClick={(e) => {
-          e.stopPropagation()
-          checkout.mutate({ id: reservation.id, payment_method: 'CASH' })
-        }}
-      >
-        {checkout.isPending ? '…' : 'Check Out'}
-      </Button>
-    )
-  }
-
-  return null
-}
-
 function ReservationsPage() {
-  const [tab, setTab] = useState<Tab>('today')
+  const [tab, setTab] = useState<Tab>('arrivals')
   const [selected, setSelected] = useState<ReservationResponse | null>(null)
 
-  const { data: allReservations, isLoading: loadingAll } = useReservations()
-  const { data: todayReservations, isLoading: loadingToday } = useTodaysCheckIns()
+  const { data: allReservations,       isLoading: loadingAll }        = useReservations()
+  const { data: arrivalReservations,   isLoading: loadingArrivals }   = useTodaysCheckIns()
+  const { data: departureReservations, isLoading: loadingDepartures } = useTodaysCheckOuts()
 
-  const rows = tab === 'today' ? (todayReservations ?? []) : (allReservations ?? [])
-  const isLoading = tab === 'today' ? loadingToday : loadingAll
+  const rows =
+    tab === 'arrivals'   ? (arrivalReservations   ?? []) :
+    tab === 'departures' ? (departureReservations ?? []) :
+                           (allReservations        ?? [])
+
+  const isLoading =
+    tab === 'arrivals'   ? loadingArrivals :
+    tab === 'departures' ? loadingDepartures :
+                           loadingAll
+
+  const tableTitle =
+    tab === 'arrivals'   ? "Today's Arrivals" :
+    tab === 'departures' ? "Today's Departures" :
+                           'All Reservations'
 
   const columns: Column<ReservationResponse>[] = [
     {
@@ -139,17 +114,10 @@ function ReservationsPage() {
       key: 'status',
       header: 'Status',
       render: (r) => (
-        <span
-          className={`text-xs font-medium px-2 py-0.5 rounded-full ${statusColors[r.status] ?? 'bg-mansio-ink/10 text-mansio-mocha'}`}
-        >
+        <span className={`text-xs font-medium px-2 py-0.5 rounded-full ${statusColors[r.status] ?? 'bg-mansio-ink/10 text-mansio-mocha'}`}>
           {r.status.replace('_', ' ')}
         </span>
       ),
-    },
-    {
-      key: 'actions',
-      header: '',
-      render: (r) => <ActionButtons reservation={r} />,
     },
   ]
 
@@ -157,11 +125,18 @@ function ReservationsPage() {
     <>
       <div className="flex gap-2 mb-6">
         <Button
-          variant={tab === 'today' ? 'primary' : 'outline'}
+          variant={tab === 'arrivals' ? 'primary' : 'outline'}
           startIcon={<CalendarCheck size={14} />}
-          onClick={() => setTab('today')}
+          onClick={() => setTab('arrivals')}
         >
           Today's Arrivals
+        </Button>
+        <Button
+          variant={tab === 'departures' ? 'primary' : 'outline'}
+          startIcon={<LogOut size={14} />}
+          onClick={() => setTab('departures')}
+        >
+          Today's Departures
         </Button>
         <Button
           variant={tab === 'all' ? 'primary' : 'outline'}
@@ -178,7 +153,7 @@ function ReservationsPage() {
 
       {!isLoading && (
         <DataTable
-          title={tab === 'today' ? "Today's Arrivals" : 'All Reservations'}
+          title={tableTitle}
           columns={columns}
           rows={rows}
           getRowKey={(r) => String(r.id)}

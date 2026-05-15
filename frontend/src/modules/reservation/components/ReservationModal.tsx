@@ -5,6 +5,7 @@ import { Select } from '#/components/Select'
 import {
   useCheckin,
   useCheckout,
+  useNoShow,
 } from '#/modules/reservation/hooks/use-reservations'
 import type { ReservationResponse } from '@mansio/shared'
 
@@ -28,9 +29,11 @@ interface Props {
 export function ReservationModal({ reservation, onClose }: Props) {
   const checkin = useCheckin()
   const checkout = useCheckout()
+  const noShow = useNoShow()
   const [paymentMethod, setPaymentMethod] = useState<'CASH' | 'CARD'>('CASH')
 
   const canCheckin = reservation.status === 'CONFIRMED'
+  const canNoShow = reservation.status === 'CONFIRMED'
   const canCheckout = reservation.status === 'CHECKED_IN'
 
   const total =
@@ -41,11 +44,16 @@ export function ReservationModal({ reservation, onClose }: Props) {
       .reduce((s, p) => s + Number(p.amount), 0) ?? 0
   const remaining = Math.max(0, Math.round((total - paid) * 100) / 100)
 
-  const isPending = checkin.isPending || checkout.isPending
-  const error = checkin.error || checkout.error
+  const isPending = checkin.isPending || checkout.isPending || noShow.isPending
+  const error = checkin.error || checkout.error || noShow.error
 
   const handleCheckin = async () => {
     await checkin.mutateAsync(reservation.id)
+    onClose()
+  }
+
+  const handleNoShow = async () => {
+    await noShow.mutateAsync(reservation.id)
     onClose()
   }
 
@@ -219,6 +227,11 @@ export function ReservationModal({ reservation, onClose }: Props) {
           {canCheckin && (
             <Button onClick={handleCheckin} disabled={isPending}>
               {checkin.isPending ? 'Processing…' : 'Check In'}
+            </Button>
+          )}
+          {canNoShow && (
+            <Button variant="outline" onClick={handleNoShow} disabled={isPending}>
+              {noShow.isPending ? 'Processing…' : 'No Show'}
             </Button>
           )}
           {canCheckout && (

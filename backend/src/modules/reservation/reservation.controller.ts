@@ -42,7 +42,7 @@ export const ReservationController = {
   checkout: async (req: AuthRequest, res: Response) => {
     try {
       const reservationId = Number(req.params.id);
-      const data = await ReservationService.checkout(reservationId, req.body);
+      const data = await ReservationService.checkout(reservationId, req.body, req.user!.id);
       res.status(200).json({ data });
     } catch (error: any) {
       if (error.status) return res.status(error.status).json({ error: error.message });
@@ -79,7 +79,25 @@ export const ReservationController = {
     }
   },
 
-  
+  noShow: async (req: AuthRequest, res: Response) => {
+    try {
+      const data = await ReservationService.noShow(Number(req.params.id));
+      res.status(200).json({ data });
+    } catch (error: any) {
+      if (error.status) return res.status(error.status).json({ error: error.message });
+      res.status(500).json({ error: "Failed to mark reservation as no-show" });
+    }
+  },
+
+  getTodaysCheckOuts: async (_req: AuthRequest, res: Response) => {
+    try {
+      const data = await ReservationService.getTodaysCheckOuts();
+      res.status(200).json({ data });
+    } catch (error: any) {
+      res.status(500).json({ error: "Failed to fetch today's departures" });
+    }
+  },
+
   getMyReservations: async (req: AuthRequest, res: Response) => {
     try {
       
