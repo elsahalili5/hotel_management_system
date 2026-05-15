@@ -1,6 +1,8 @@
+import { useState } from 'react'
 import { Link } from '@tanstack/react-router'
 import { BedDouble, CalendarDays, LogOut } from 'lucide-react'
 import { useMyReservations } from '#/modules/reservation/hooks/use-reservations'
+import { GuestReservationModal } from '#/modules/reservation/components/GuestReservationModal'
 import type { ReservationResponse } from '@mansio/shared'
 
 const fmt = (d: string | Date) => new Date(d).toLocaleDateString('en-GB')
@@ -13,11 +15,20 @@ const statusColors: Record<string, string> = {
   NO_SHOW:     'bg-amber-50 text-amber-600',
 }
 
-function ReservationItem({ r }: { r: ReservationResponse }) {
+function ReservationItem({
+  r,
+  onClick,
+}: {
+  r: ReservationResponse
+  onClick: () => void
+}) {
   const total = r.invoice?.items.reduce((s, i) => s + Number(i.total), 0) ?? 0
 
   return (
-    <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 py-5 border-b border-mansio-gold/10 last:border-0">
+    <div
+      onClick={onClick}
+      className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 py-5 border-b border-mansio-gold/10 last:border-0 cursor-pointer hover:bg-mansio-gold/5 transition-colors rounded px-2 -mx-2"
+    >
       <div className="flex items-start gap-4">
         <div className="w-10 h-10 rounded-full bg-mansio-gold/10 flex items-center justify-center flex-shrink-0">
           <BedDouble size={16} className="text-mansio-gold" />
@@ -55,6 +66,7 @@ function ReservationItem({ r }: { r: ReservationResponse }) {
 
 export function ReservationsCard() {
   const { data: reservations, isLoading } = useMyReservations()
+  const [selected, setSelected] = useState<ReservationResponse | null>(null)
 
   return (
     <div className="bg-mansio-ivory p-8">
@@ -94,9 +106,16 @@ export function ReservationsCard() {
       {!isLoading && reservations && reservations.length > 0 && (
         <div>
           {reservations.map((r) => (
-            <ReservationItem key={r.id} r={r} />
+            <ReservationItem key={r.id} r={r} onClick={() => setSelected(r)} />
           ))}
         </div>
+      )}
+
+      {selected && (
+        <GuestReservationModal
+          reservation={selected}
+          onClose={() => setSelected(null)}
+        />
       )}
     </div>
   )
