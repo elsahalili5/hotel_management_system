@@ -33,7 +33,8 @@ export const updateUserSchema = z.object({
   email: z.email().trim().optional(),
   password: z.string().trim().min(8).max(72).optional(),
   status: z.enum(['PENDING', 'ACTIVE', 'LOCKED', 'DISABLED']).optional(),
-  role: z.enum([ROLES.ADMIN, ROLES.MANAGER, ROLES.RECEPTIONIST, ROLES.HOUSEKEEPING, ROLES.GUEST]).optional(),
+  role: z.enum([ROLES.ADMIN, ROLES.MANAGER, ROLES.RECEPTIONIST, ROLES.HOUSEKEEPING]).optional(),
+  shift: z.enum(["MORNING", "AFTERNOON", "NIGHT"]).optional(),
 });
 
 export const userIdParamSchema = z.object({

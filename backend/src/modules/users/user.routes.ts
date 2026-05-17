@@ -16,7 +16,7 @@ const router = Router();
 router.post(
   "/create-guest",
   authMiddleware,
-  roleMiddleware([ROLES.ADMIN, ROLES.MANAGER, ROLES.RECEPTIONIST]),
+  roleMiddleware([ROLES.ADMIN, ROLES.MANAGER]),
   validateRequestMiddleware(createGuestSchema),
   UserController.createGuest,
 );

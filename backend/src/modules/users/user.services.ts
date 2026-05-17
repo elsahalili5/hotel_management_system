@@ -203,6 +203,10 @@ export const UserService = {
       };
     }
 
+    if (updateData.shift) {
+      data.staff_profile = { update: { shift: updateData.shift } };
+    }
+
     if (Object.keys(data).length === 0) {
       throwError(400, "No fields to update");
     }
@@ -213,6 +217,8 @@ export const UserService = {
       select: {
         ...safeUserSelect,
         user_roles: { include: { role: true } },
+        staff_profile: true,
+        guest_profile: true,
       },
     });
   },

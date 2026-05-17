@@ -1,5 +1,6 @@
 import { useEffect } from 'react'
 import { useForm } from 'react-hook-form'
+import { useAuth } from '#/modules/auth/hooks/use-auth'
 import { Button } from '#/components/Button'
 import { Input, labelClass } from '#/components/Input'
 import { Select } from '#/components/Select'
@@ -19,6 +20,13 @@ const STAFF_ROLES = Object.values(ROLES).filter(
   (r) => r !== ROLES.GUEST,
 ) as Exclude<RoleType, 'GUEST'>[]
 
+const STAFF_EDIT_ROLES = [
+  ROLES.ADMIN,
+  ROLES.MANAGER,
+  ROLES.RECEPTIONIST,
+  ROLES.HOUSEKEEPING,
+] as RoleType[]
+
 type UserCreatePayload = {
   account_type: 'GUEST' | 'STAFF'
   first_name: string
@@ -36,7 +44,6 @@ type UserCreatePayload = {
 }
 
 type UserEditPayload = UpdateUserInput & {
-  is_active?: boolean
   role?: RoleType
 }
 
@@ -50,8 +57,8 @@ interface UserModalProps {
   defaultValues?: UserResponse
   isPending?: boolean
   isError?: boolean
+  canCreateGuest?: boolean
 }
-
 
 export function UserModal({
   mode,
@@ -61,8 +68,19 @@ export function UserModal({
   defaultValues,
   isPending,
   isError,
+  canCreateGuest = true,
 }: UserModalProps) {
-  const isStaff = !!defaultValues?.staff_profile
+  const userRole = defaultValues?.user_roles?.[0]?.role?.name
+  const isStaff =
+    !!defaultValues?.staff_profile || (!!userRole && userRole !== ROLES.GUEST)
+  const { hasRole } = useAuth()
+  const isAdmin = hasRole(ROLES.ADMIN)
+  const editableRoles = isAdmin
+    ? STAFF_EDIT_ROLES
+    : STAFF_EDIT_ROLES.filter((r) => r !== ROLES.ADMIN)
+  const creatableRoles = isAdmin
+    ? STAFF_ROLES
+    : STAFF_ROLES.filter((r) => r !== ROLES.ADMIN)
 
   const { register, handleSubmit, watch, setValue } = useForm<
     UserCreatePayload & UserEditPayload
@@ -74,13 +92,14 @@ export function UserModal({
             last_name: defaultValues.last_name,
             email: defaultValues.email,
             status: defaultValues.status as UserEditPayload['status'],
-            role: (defaultValues.user_roles?.[0]?.role?.name ?? undefined) as UserEditPayload['role'],
-            is_active: isStaff
-              ? ((defaultValues.staff_profile as any)?.is_active ?? true)
+            role: (defaultValues.user_roles?.[0]?.role?.name ??
+              undefined) as UserEditPayload['role'],
+            shift: isStaff
+              ? ((defaultValues.staff_profile as any)?.shift ?? 'MORNING')
               : undefined,
           }
         : {
-            account_type: 'GUEST',
+            account_type: canCreateGuest ? 'GUEST' : 'STAFF',
             shift: 'MORNING',
           },
   })
@@ -89,7 +108,7 @@ export function UserModal({
 
   useEffect(() => {
     if (accountType === 'STAFF') {
-      setValue('role', 'RECEPTIONIST' as never)
+      setValue('role', 'MANAGER' as never)
       setValue('shift', 'MORNING' as never)
     }
   }, [accountType, setValue])
@@ -102,9 +121,8 @@ export function UserModal({
       if (values.email) payload.email = values.email
       if (values.password) payload.password = values.password
       if (values.status) payload.status = values.status
-      if (values.role) payload.role = values.role
-      if (isStaff && values.is_active !== undefined)
-        payload.is_active = values.is_active
+      if (isStaff && values.role) payload.role = values.role
+      if (isStaff && values.shift) payload.shift = values.shift
       return onEdit(payload)
     }
 
@@ -146,12 +164,16 @@ export function UserModal({
       onClose={onClose}
       maxWidth="max-w-lg"
     >
-      <form onSubmit={handleSubmit(handleValid)} className="flex flex-col gap-4">
-        {mode === 'create' && (
+      <form
+        onSubmit={handleSubmit(handleValid)}
+        className="flex flex-col gap-4"
+      >
+        {mode === 'create' && canCreateGuest && (
           <div>
             <label className={labelClass}>Account Type</label>
             <Select {...register('account_type')}>
               <option value="GUEST">Guest</option>
+              <option value="STAFF">Staff</option>
               <option value="STAFF">Staff</option>
             </Select>
           </div>
@@ -196,28 +218,36 @@ export function UserModal({
               </Select>
             </div>
 
-            <div>
-              <label className={labelClass}>Role</label>
-              <Select {...register('role')}>
-                {Object.values(ROLES).map((r) => (
-                  <option key={r} value={r}>
-                    {r.charAt(0) + r.slice(1).toLowerCase()}
-                  </option>
-                ))}
-              </Select>
-            </div>
-
-            {isStaff && (
-              <div className="flex items-center gap-3">
-                <input
-                  type="checkbox"
-                  id="is_active"
-                  {...register('is_active')}
-                  className="w-4 h-4 accent-mansio-ink"
-                />
-                <label htmlFor="is_active" className="text-sm text-mansio-mocha cursor-pointer">
-                  Staff is active
-                </label>
+            {isStaff ? (
+              <div className="grid grid-cols-2 gap-3">
+                <div>
+                  <label className={labelClass}>Role</label>
+                  <Select
+                    {...register('role')}
+                    disabled={userRole === ROLES.ADMIN}
+                  >
+                    {editableRoles.map((r) => (
+                      <option key={r} value={r}>
+                        {r.charAt(0) + r.slice(1).toLowerCase()}
+                      </option>
+                    ))}
+                  </Select>
+                </div>
+                <div>
+                  <label className={labelClass}>Shift</label>
+                  <Select {...register('shift')}>
+                    {Object.values(SHIFTS).map((s) => (
+                      <option key={s} value={s}>
+                        {s.charAt(0) + s.slice(1).toLowerCase()}
+                      </option>
+                    ))}
+                  </Select>
+                </div>
+              </div>
+            ) : (
+              <div>
+                <label className={labelClass}>Role</label>
+                <span className="text-sm text-mansio-mocha">Guest</span>
               </div>
             )}
           </>
@@ -227,7 +257,10 @@ export function UserModal({
           <>
             <div>
               <label className={labelClass}>Phone Number</label>
-              <Input {...register('phone_number')} placeholder="+383 44 000 000" />
+              <Input
+                {...register('phone_number')}
+                placeholder="+383 44 000 000"
+              />
             </div>
 
             {accountType === 'GUEST' && (
@@ -264,7 +297,7 @@ export function UserModal({
                 <div>
                   <label className={labelClass}>Role</label>
                   <Select {...register('role')}>
-                    {STAFF_ROLES.map((r) => (
+                    {creatableRoles.map((r) => (
                       <option key={r} value={r}>
                         {r.charAt(0) + r.slice(1).toLowerCase()}
                       </option>

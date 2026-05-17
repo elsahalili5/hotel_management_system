@@ -2,6 +2,7 @@ import { createFileRoute } from '@tanstack/react-router'
 import { useState } from 'react'
 import { requireRole } from '#/lib/route-guard'
 import { ROLES } from '@mansio/shared'
+import { useAuth } from '#/modules/auth/hooks/use-auth'
 import { DataTable } from '#/modules/admin/components/DataTable'
 import type { Column } from '#/modules/admin/components/DataTable'
 import {
@@ -16,7 +17,7 @@ import type { GuestResponse, UpdateGuestInput } from '@mansio/shared'
 export const Route = createFileRoute('/dashboard/guests/')({
   beforeLoad: ({ context }) => {
     requireRole(context.auth, {
-      role: [ROLES.ADMIN, ROLES.MANAGER],
+      role: [ROLES.ADMIN, ROLES.MANAGER, ROLES.RECEPTIONIST],
       redirectTo: '/dashboard',
     })
   },
@@ -28,6 +29,8 @@ const cell = (value: string | null | undefined) => (
 )
 
 function GuestsPage() {
+  const { hasRole } = useAuth()
+  const canModify = hasRole([ROLES.ADMIN, ROLES.MANAGER])
   const [editTarget, setEditTarget] = useState<GuestResponse | null>(null)
   const [deleteTarget, setDeleteTarget] = useState<GuestResponse | null>(null)
   const { data: guests, isLoading, isError } = useGuests()
@@ -132,8 +135,8 @@ function GuestsPage() {
           columns={columns}
           rows={guests}
           getRowKey={(r) => String(r.id)}
-          onEdit={(r) => setEditTarget(r)}
-          onDelete={(r) => setDeleteTarget(r)}
+          onEdit={canModify ? (r) => setEditTarget(r) : undefined}
+          onDelete={canModify ? (r) => setDeleteTarget(r) : undefined}
         />
       )}
     </>

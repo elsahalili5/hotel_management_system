@@ -2,6 +2,7 @@ import { createFileRoute } from '@tanstack/react-router'
 import { useState } from 'react'
 import { Plus } from 'lucide-react'
 import { requireRole } from '#/lib/route-guard'
+import { useAuth } from '#/modules/auth/hooks/use-auth'
 import { Button } from '#/components/Button'
 import { DataTable } from '#/modules/admin/components/DataTable'
 import type { Column } from '#/modules/admin/components/DataTable'
@@ -13,7 +14,6 @@ import {
   useUpdateUser,
   useUsers,
 } from '#/modules/users/hooks/use-users'
-import { useUpdateStaff } from '#/modules/staff/hooks/use-staff'
 import { UserModal } from '#/modules/users/components/UserModal'
 import { ConfirmModal } from '#/components/ConfirmModal'
 import type { UserEditPayload } from '#/modules/users/components/UserModal'
@@ -42,10 +42,12 @@ function UsersPage() {
   const [editTarget, setEditTarget] = useState<UserResponse | null>(null)
   const [deleteTarget, setDeleteTarget] = useState<UserResponse | null>(null)
   const { data: users, isLoading, isError } = useUsers()
+  const { hasRole } = useAuth()
+  const canCreate = hasRole([ROLES.ADMIN, ROLES.MANAGER])
+  const canCreateGuest = hasRole(ROLES.ADMIN)
   const createGuestMutation = useCreateGuest()
   const createStaffMutation = useCreateStaff()
   const updateMutation = useUpdateUser()
-  const updateStaffMutation = useUpdateStaff()
   const deleteMutation = useDeleteUser()
 
   const isCreating =
@@ -93,19 +95,7 @@ function UsersPage() {
 
   async function handleEdit(data: UserEditPayload) {
     if (!editTarget) return
-    const { is_active, ...userFields } = data
-
-    if (Object.keys(userFields).length > 0) {
-      await updateMutation.mutateAsync({ id: editTarget.id, data: userFields })
-    }
-
-    if (is_active !== undefined && editTarget.staff_profile) {
-      await updateStaffMutation.mutateAsync({
-        id: editTarget.staff_profile.id,
-        data: { is_active },
-      })
-    }
-
+    await updateMutation.mutateAsync({ id: editTarget.id, data })
     setEditTarget(null)
   }
 
@@ -124,6 +114,7 @@ function UsersPage() {
       {showAdd && (
         <UserModal
           mode="create"
+          canCreateGuest={canCreateGuest}
           onClose={() => setShowAdd(false)}
           onCreate={async (data: CreateGuestInput | CreateStaffInput) => {
             if ('role' in data) {
@@ -143,8 +134,8 @@ function UsersPage() {
           defaultValues={editTarget}
           onClose={() => setEditTarget(null)}
           onEdit={handleEdit}
-          isPending={updateMutation.isPending || updateStaffMutation.isPending}
-          isError={updateMutation.isError || updateStaffMutation.isError}
+          isPending={updateMutation.isPending}
+          isError={updateMutation.isError}
         />
       )}
 
@@ -152,9 +143,11 @@ function UsersPage() {
         <p className="text-sm text-mansio-mocha">
           {users ? `${users.length} users total` : ''}
         </p>
-        <Button onClick={() => setShowAdd(true)} startIcon={<Plus size={13} />}>
-          Add User
-        </Button>
+        {canCreate && (
+          <Button onClick={() => setShowAdd(true)} startIcon={<Plus size={13} />}>
+            Add User
+          </Button>
+        )}
       </div>
 
       {isLoading && (
