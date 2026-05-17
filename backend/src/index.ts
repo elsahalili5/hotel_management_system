@@ -20,7 +20,7 @@ import mealPlanRoutes from "@modules/mealPlan/mealPlan.routes.ts";
 import reservationRoutes from "@modules/reservation/reservation.routes.ts";
 import invoiceRoutes from "@modules/invoice/invoice.routes.ts";
 import paymentRoutes from "@modules/payment/payment.routes.ts";
-
+import reviewRoutes from "@modules/review/review.routes.ts";
 
 const app = express();
 
@@ -42,6 +42,7 @@ app.use("/api/meal-plans", mealPlanRoutes);
 app.use("/api/reservations", reservationRoutes);
 app.use("/api/invoices", invoiceRoutes);
 app.use("/api/payments", paymentRoutes);
+app.use("/api/reviews", reviewRoutes);
 
 
 const PORT = process.env.PORT || 5000;
