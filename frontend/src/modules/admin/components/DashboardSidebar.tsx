@@ -3,6 +3,7 @@ import {
   Bed,
   BedDouble,
   BookOpen,
+  Star,
   ChevronRight,
   ClipboardList,
   ConciergeBell,
@@ -104,6 +105,12 @@ const navItems: NavItem[] = [
     icon: UtensilsCrossed,
     path: '/dashboard/meal-plans',
     roles: [ROLES.ADMIN, ROLES.MANAGER],
+  },
+  {
+    label: 'Reviews',
+    icon: Star,
+    path: '/dashboard/reviews',
+    roles: [ROLES.ADMIN, ROLES.MANAGER, ROLES.RECEPTIONIST],
   },
 ]
 

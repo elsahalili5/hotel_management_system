@@ -31,7 +31,7 @@ export function ReservationModal({ reservation, onClose }: Props) {
   const checkout = useCheckout()
   const noShow = useNoShow()
   const [paymentMethod, setPaymentMethod] = useState<'CASH' | 'CARD'>('CASH')
-
+  // veq ato qe jane checkin munden mu ba confirm
   const canCheckin = reservation.status === 'CONFIRMED'
   const canNoShow = reservation.status === 'CONFIRMED'
   const canCheckout = reservation.status === 'CHECKED_IN'
@@ -230,7 +230,11 @@ export function ReservationModal({ reservation, onClose }: Props) {
             </Button>
           )}
           {canNoShow && (
-            <Button variant="outline" onClick={handleNoShow} disabled={isPending}>
+            <Button
+              variant="outline"
+              onClick={handleNoShow}
+              disabled={isPending}
+            >
               {noShow.isPending ? 'Processing…' : 'No Show'}
             </Button>
           )}
@@ -239,7 +243,7 @@ export function ReservationModal({ reservation, onClose }: Props) {
               {checkout.isPending ? 'Processing…' : 'Check Out'}
             </Button>
           )}
-          <Button variant="ghost" onClick={onClose} disabled={isPending}>
+          <Button onClick={onClose} disabled={isPending}>
             Close
           </Button>
         </div>

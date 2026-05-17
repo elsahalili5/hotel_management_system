@@ -20,6 +20,8 @@ const STAFF_ROLES = Object.values(ROLES).filter(
   (r) => r !== ROLES.GUEST,
 ) as Exclude<RoleType, 'GUEST'>[]
 
+// i marum krejt rolet perveq geustit
+
 const STAFF_EDIT_ROLES = [
   ROLES.ADMIN,
   ROLES.MANAGER,
@@ -27,6 +29,7 @@ const STAFF_EDIT_ROLES = [
   ROLES.HOUSEKEEPING,
 ] as RoleType[]
 
+// Këto janë rolet që lejohen me u editu manualisht.
 type UserCreatePayload = {
   account_type: 'GUEST' | 'STAFF'
   first_name: string
@@ -109,7 +112,7 @@ export function UserModal({
 
   useEffect(() => {
     if (accountType === 'STAFF') {
-      setValue('role', 'MANAGER' as never)
+      setValue('role', creatableRoles[0] as never)
       setValue('shift', 'MORNING' as never)
     }
   }, [accountType, setValue])
@@ -123,7 +126,7 @@ export function UserModal({
       if (values.password) payload.password = values.password
       if (values.status) payload.status = values.status
       if (isStaff && values.role) payload.role = values.role
-      if (isStaff && values.shift) payload.shift = values.shift
+      if (isStaff) payload.shift = values.shift || undefined
       return onEdit(payload)
     }
 
@@ -174,7 +177,6 @@ export function UserModal({
             <label className={labelClass}>Account Type</label>
             <Select {...register('account_type')}>
               <option value="GUEST">Guest</option>
-              <option value="STAFF">Staff</option>
               <option value="STAFF">Staff</option>
             </Select>
           </div>
