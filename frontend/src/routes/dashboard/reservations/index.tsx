@@ -2,7 +2,7 @@ import { createFileRoute } from '@tanstack/react-router'
 import { requireRole } from '#/lib/route-guard'
 import { ROLES } from '@mansio/shared'
 import { useState } from 'react'
-import { CalendarCheck, List } from 'lucide-react'
+import { CalendarCheck, LogOut, List } from 'lucide-react'
 import { DataTable } from '#/modules/admin/components/DataTable'
 import { Button } from '#/components/Button'
 import type { Column } from '#/modules/admin/components/DataTable'
@@ -10,6 +10,7 @@ import type { ReservationResponse } from '@mansio/shared'
 import {
   useReservations,
   useTodaysCheckIns,
+  useTodaysCheckOuts,
 } from '#/modules/reservation/hooks/use-reservations'
 import { ReservationModal } from '#/modules/reservation/components/ReservationModal'
 
@@ -23,29 +24,40 @@ export const Route = createFileRoute('/dashboard/reservations/')({
   component: ReservationsPage,
 })
 
-type Tab = 'today' | 'all'
+type Tab = 'arrivals' | 'departures' | 'all'
 
 const statusColors: Record<string, string> = {
-  CONFIRMED: 'bg-blue-100 text-blue-700',
-  CHECKED_IN: 'bg-green-100 text-green-700',
+  CONFIRMED:   'bg-blue-100 text-blue-700',
+  CHECKED_IN:  'bg-green-100 text-green-700',
   CHECKED_OUT: 'bg-mansio-ink/10 text-mansio-mocha',
-  CANCELLED: 'bg-red-100 text-red-500',
-  NO_SHOW: 'bg-amber-100 text-amber-700',
+  CANCELLED:   'bg-red-100 text-red-500',
+  NO_SHOW:     'bg-amber-100 text-amber-700',
 }
 
 const fmt = (d: string | Date) => new Date(d).toLocaleDateString('en-GB')
 
 function ReservationsPage() {
-  const [tab, setTab] = useState<Tab>('today')
+  const [tab, setTab] = useState<Tab>('arrivals')
   const [selected, setSelected] = useState<ReservationResponse | null>(null)
 
-  const { data: allReservations, isLoading: loadingAll } = useReservations()
-  const { data: todayReservations, isLoading: loadingToday } =
-    useTodaysCheckIns()
+  const { data: allReservations,       isLoading: loadingAll }        = useReservations()
+  const { data: arrivalReservations,   isLoading: loadingArrivals }   = useTodaysCheckIns()
+  const { data: departureReservations, isLoading: loadingDepartures } = useTodaysCheckOuts()
 
   const rows =
-    tab === 'today' ? (todayReservations ?? []) : (allReservations ?? [])
-  const isLoading = tab === 'today' ? loadingToday : loadingAll
+    tab === 'arrivals'   ? (arrivalReservations   ?? []) :
+    tab === 'departures' ? (departureReservations ?? []) :
+                           (allReservations        ?? [])
+
+  const isLoading =
+    tab === 'arrivals'   ? loadingArrivals :
+    tab === 'departures' ? loadingDepartures :
+                           loadingAll
+
+  const tableTitle =
+    tab === 'arrivals'   ? "Today's Arrivals" :
+    tab === 'departures' ? "Today's Departures" :
+                           'All Reservations'
 
   const columns: Column<ReservationResponse>[] = [
     {
@@ -65,9 +77,7 @@ function ReservationsPage() {
       header: 'Room',
       render: (r) => (
         <div>
-          <p className="text-sm font-medium text-mansio-ink">
-            #{r.room.room_number}
-          </p>
+          <p className="text-sm font-medium text-mansio-ink">#{r.room.room_number}</p>
           <p className="text-xs text-mansio-mocha">{r.room.room_type.name}</p>
         </div>
       ),
@@ -75,20 +85,12 @@ function ReservationsPage() {
     {
       key: 'check_in_date',
       header: 'Check In',
-      render: (r) => (
-        <span className="text-sm text-mansio-mocha">
-          {fmt(r.check_in_date)}
-        </span>
-      ),
+      render: (r) => <span className="text-sm text-mansio-mocha">{fmt(r.check_in_date)}</span>,
     },
     {
       key: 'check_out_date',
       header: 'Check Out',
-      render: (r) => (
-        <span className="text-sm text-mansio-mocha">
-          {fmt(r.check_out_date)}
-        </span>
-      ),
+      render: (r) => <span className="text-sm text-mansio-mocha">{fmt(r.check_out_date)}</span>,
     },
     {
       key: 'guests',
@@ -103,23 +105,16 @@ function ReservationsPage() {
       key: 'invoice',
       header: 'Total',
       render: (r) => {
-        if (!r.invoice)
-          return <span className="text-xs text-mansio-mocha">—</span>
+        if (!r.invoice) return <span className="text-xs text-mansio-mocha">—</span>
         const total = r.invoice.items.reduce((s, i) => s + Number(i.total), 0)
-        return (
-          <span className="text-sm font-medium text-mansio-ink">
-            €{total.toFixed(2)}
-          </span>
-        )
+        return <span className="text-sm font-medium text-mansio-ink">€{total.toFixed(2)}</span>
       },
     },
     {
       key: 'status',
       header: 'Status',
       render: (r) => (
-        <span
-          className={`text-xs font-medium px-2 py-0.5 rounded-full ${statusColors[r.status] ?? 'bg-mansio-ink/10 text-mansio-mocha'}`}
-        >
+        <span className={`text-xs font-medium px-2 py-0.5 rounded-full ${statusColors[r.status] ?? 'bg-mansio-ink/10 text-mansio-mocha'}`}>
           {r.status.replace('_', ' ')}
         </span>
       ),
@@ -130,11 +125,18 @@ function ReservationsPage() {
     <>
       <div className="flex gap-2 mb-6">
         <Button
-          variant={tab === 'today' ? 'primary' : 'outline'}
+          variant={tab === 'arrivals' ? 'primary' : 'outline'}
           startIcon={<CalendarCheck size={14} />}
-          onClick={() => setTab('today')}
+          onClick={() => setTab('arrivals')}
         >
           Today's Arrivals
+        </Button>
+        <Button
+          variant={tab === 'departures' ? 'primary' : 'outline'}
+          startIcon={<LogOut size={14} />}
+          onClick={() => setTab('departures')}
+        >
+          Today's Departures
         </Button>
         <Button
           variant={tab === 'all' ? 'primary' : 'outline'}
@@ -146,14 +148,12 @@ function ReservationsPage() {
       </div>
 
       {isLoading && (
-        <p className="text-sm text-center py-10 text-mansio-mocha">
-          Loading...
-        </p>
+        <p className="text-sm text-center py-10 text-mansio-mocha">Loading...</p>
       )}
 
       {!isLoading && (
         <DataTable
-          title={tab === 'today' ? "Today's Arrivals" : 'All Reservations'}
+          title={tableTitle}
           columns={columns}
           rows={rows}
           getRowKey={(r) => String(r.id)}

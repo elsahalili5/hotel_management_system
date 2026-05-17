@@ -12,7 +12,6 @@ import {
   PackagePlus,
   Sparkles,
   SprayCan,
-  Star,
   UserCog,
   Users,
   UtensilsCrossed,
@@ -106,7 +105,6 @@ const navItems: NavItem[] = [
     path: '/dashboard/meal-plans',
     roles: [ROLES.ADMIN, ROLES.MANAGER],
   },
-  { label: 'Reviews', icon: Star, path: '/dashboard/reviews' },
 ]
 
 interface DashboardSidebarProps {

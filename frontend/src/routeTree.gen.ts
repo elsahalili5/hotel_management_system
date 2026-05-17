@@ -14,9 +14,6 @@ import { Route as authRouteRouteImport } from './routes/(auth)/route'
 import { Route as appRouteRouteImport } from './routes/(app)/route'
 import { Route as DashboardIndexRouteImport } from './routes/dashboard/index'
 import { Route as appIndexRouteImport } from './routes/(app)/index'
-import { Route as DashboardStatsRouteImport } from './routes/dashboard/stats'
-import { Route as DashboardReviewsRouteImport } from './routes/dashboard/reviews'
-import { Route as DashboardReservationsRouteImport } from './routes/dashboard/reservations'
 import { Route as authSignupRouteImport } from './routes/(auth)/signup'
 import { Route as authLoginRouteImport } from './routes/(auth)/login'
 import { Route as appSpaRouteImport } from './routes/(app)/spa'
@@ -40,7 +37,6 @@ import { Route as DashboardExtraServicesIndexRouteImport } from './routes/dashbo
 import { Route as DashboardCleaningTasksIndexRouteImport } from './routes/dashboard/cleaning-tasks/index'
 import { Route as DashboardBedsIndexRouteImport } from './routes/dashboard/beds/index'
 import { Route as DashboardAmenitiesIndexRouteImport } from './routes/dashboard/amenities/index'
-import { Route as DashboardRoomsIdRouteImport } from './routes/dashboard/rooms.$id'
 import { Route as DashboardGuestsIdRouteImport } from './routes/dashboard/guests/$id'
 import { Route as appRoomsRoomTypeIdRouteImport } from './routes/(app)/rooms.$roomTypeId'
 import { Route as appprivateProfileRouteImport } from './routes/(app)/(private)/profile'
@@ -67,21 +63,6 @@ const appIndexRoute = appIndexRouteImport.update({
   id: '/',
   path: '/',
   getParentRoute: () => appRouteRoute,
-} as any)
-const DashboardStatsRoute = DashboardStatsRouteImport.update({
-  id: '/stats',
-  path: '/stats',
-  getParentRoute: () => DashboardRouteRoute,
-} as any)
-const DashboardReviewsRoute = DashboardReviewsRouteImport.update({
-  id: '/reviews',
-  path: '/reviews',
-  getParentRoute: () => DashboardRouteRoute,
-} as any)
-const DashboardReservationsRoute = DashboardReservationsRouteImport.update({
-  id: '/reservations',
-  path: '/reservations',
-  getParentRoute: () => DashboardRouteRoute,
 } as any)
 const authSignupRoute = authSignupRouteImport.update({
   id: '/signup',
@@ -160,9 +141,9 @@ const DashboardRoomTypesIndexRoute = DashboardRoomTypesIndexRouteImport.update({
 } as any)
 const DashboardReservationsIndexRoute =
   DashboardReservationsIndexRouteImport.update({
-    id: '/',
-    path: '/',
-    getParentRoute: () => DashboardReservationsRoute,
+    id: '/reservations/',
+    path: '/reservations/',
+    getParentRoute: () => DashboardRouteRoute,
   } as any)
 const DashboardMyTasksIndexRoute = DashboardMyTasksIndexRouteImport.update({
   id: '/my-tasks/',
@@ -201,11 +182,6 @@ const DashboardAmenitiesIndexRoute = DashboardAmenitiesIndexRouteImport.update({
   path: '/amenities/',
   getParentRoute: () => DashboardRouteRoute,
 } as any)
-const DashboardRoomsIdRoute = DashboardRoomsIdRouteImport.update({
-  id: '/rooms/$id',
-  path: '/rooms/$id',
-  getParentRoute: () => DashboardRouteRoute,
-} as any)
 const DashboardGuestsIdRoute = DashboardGuestsIdRouteImport.update({
   id: '/guests/$id',
   path: '/guests/$id',
@@ -233,15 +209,11 @@ export interface FileRoutesByFullPath {
   '/spa': typeof appSpaRoute
   '/login': typeof authLoginRoute
   '/signup': typeof authSignupRoute
-  '/dashboard/reservations': typeof DashboardReservationsRouteWithChildren
-  '/dashboard/reviews': typeof DashboardReviewsRoute
-  '/dashboard/stats': typeof DashboardStatsRoute
   '/': typeof appIndexRoute
   '/dashboard/': typeof DashboardIndexRoute
   '/profile': typeof appprivateProfileRoute
   '/rooms/$roomTypeId': typeof appRoomsRoomTypeIdRoute
   '/dashboard/guests/$id': typeof DashboardGuestsIdRoute
-  '/dashboard/rooms/$id': typeof DashboardRoomsIdRoute
   '/dashboard/amenities/': typeof DashboardAmenitiesIndexRoute
   '/dashboard/beds/': typeof DashboardBedsIndexRoute
   '/dashboard/cleaning-tasks/': typeof DashboardCleaningTasksIndexRoute
@@ -266,14 +238,11 @@ export interface FileRoutesByTo {
   '/spa': typeof appSpaRoute
   '/login': typeof authLoginRoute
   '/signup': typeof authSignupRoute
-  '/dashboard/reviews': typeof DashboardReviewsRoute
-  '/dashboard/stats': typeof DashboardStatsRoute
   '/': typeof appIndexRoute
   '/dashboard': typeof DashboardIndexRoute
   '/profile': typeof appprivateProfileRoute
   '/rooms/$roomTypeId': typeof appRoomsRoomTypeIdRoute
   '/dashboard/guests/$id': typeof DashboardGuestsIdRoute
-  '/dashboard/rooms/$id': typeof DashboardRoomsIdRoute
   '/dashboard/amenities': typeof DashboardAmenitiesIndexRoute
   '/dashboard/beds': typeof DashboardBedsIndexRoute
   '/dashboard/cleaning-tasks': typeof DashboardCleaningTasksIndexRoute
@@ -303,15 +272,11 @@ export interface FileRoutesById {
   '/(app)/spa': typeof appSpaRoute
   '/(auth)/login': typeof authLoginRoute
   '/(auth)/signup': typeof authSignupRoute
-  '/dashboard/reservations': typeof DashboardReservationsRouteWithChildren
-  '/dashboard/reviews': typeof DashboardReviewsRoute
-  '/dashboard/stats': typeof DashboardStatsRoute
   '/(app)/': typeof appIndexRoute
   '/dashboard/': typeof DashboardIndexRoute
   '/(app)/(private)/profile': typeof appprivateProfileRoute
   '/(app)/rooms/$roomTypeId': typeof appRoomsRoomTypeIdRoute
   '/dashboard/guests/$id': typeof DashboardGuestsIdRoute
-  '/dashboard/rooms/$id': typeof DashboardRoomsIdRoute
   '/dashboard/amenities/': typeof DashboardAmenitiesIndexRoute
   '/dashboard/beds/': typeof DashboardBedsIndexRoute
   '/dashboard/cleaning-tasks/': typeof DashboardCleaningTasksIndexRoute
@@ -339,15 +304,11 @@ export interface FileRouteTypes {
     | '/spa'
     | '/login'
     | '/signup'
-    | '/dashboard/reservations'
-    | '/dashboard/reviews'
-    | '/dashboard/stats'
     | '/'
     | '/dashboard/'
     | '/profile'
     | '/rooms/$roomTypeId'
     | '/dashboard/guests/$id'
-    | '/dashboard/rooms/$id'
     | '/dashboard/amenities/'
     | '/dashboard/beds/'
     | '/dashboard/cleaning-tasks/'
@@ -372,14 +333,11 @@ export interface FileRouteTypes {
     | '/spa'
     | '/login'
     | '/signup'
-    | '/dashboard/reviews'
-    | '/dashboard/stats'
     | '/'
     | '/dashboard'
     | '/profile'
     | '/rooms/$roomTypeId'
     | '/dashboard/guests/$id'
-    | '/dashboard/rooms/$id'
     | '/dashboard/amenities'
     | '/dashboard/beds'
     | '/dashboard/cleaning-tasks'
@@ -408,15 +366,11 @@ export interface FileRouteTypes {
     | '/(app)/spa'
     | '/(auth)/login'
     | '/(auth)/signup'
-    | '/dashboard/reservations'
-    | '/dashboard/reviews'
-    | '/dashboard/stats'
     | '/(app)/'
     | '/dashboard/'
     | '/(app)/(private)/profile'
     | '/(app)/rooms/$roomTypeId'
     | '/dashboard/guests/$id'
-    | '/dashboard/rooms/$id'
     | '/dashboard/amenities/'
     | '/dashboard/beds/'
     | '/dashboard/cleaning-tasks/'
@@ -474,27 +428,6 @@ declare module '@tanstack/react-router' {
       fullPath: '/'
       preLoaderRoute: typeof appIndexRouteImport
       parentRoute: typeof appRouteRoute
-    }
-    '/dashboard/stats': {
-      id: '/dashboard/stats'
-      path: '/stats'
-      fullPath: '/dashboard/stats'
-      preLoaderRoute: typeof DashboardStatsRouteImport
-      parentRoute: typeof DashboardRouteRoute
-    }
-    '/dashboard/reviews': {
-      id: '/dashboard/reviews'
-      path: '/reviews'
-      fullPath: '/dashboard/reviews'
-      preLoaderRoute: typeof DashboardReviewsRouteImport
-      parentRoute: typeof DashboardRouteRoute
-    }
-    '/dashboard/reservations': {
-      id: '/dashboard/reservations'
-      path: '/reservations'
-      fullPath: '/dashboard/reservations'
-      preLoaderRoute: typeof DashboardReservationsRouteImport
-      parentRoute: typeof DashboardRouteRoute
     }
     '/(auth)/signup': {
       id: '/(auth)/signup'
@@ -603,10 +536,10 @@ declare module '@tanstack/react-router' {
     }
     '/dashboard/reservations/': {
       id: '/dashboard/reservations/'
-      path: '/'
+      path: '/reservations'
       fullPath: '/dashboard/reservations/'
       preLoaderRoute: typeof DashboardReservationsIndexRouteImport
-      parentRoute: typeof DashboardReservationsRoute
+      parentRoute: typeof DashboardRouteRoute
     }
     '/dashboard/my-tasks/': {
       id: '/dashboard/my-tasks/'
@@ -655,13 +588,6 @@ declare module '@tanstack/react-router' {
       path: '/amenities'
       fullPath: '/dashboard/amenities/'
       preLoaderRoute: typeof DashboardAmenitiesIndexRouteImport
-      parentRoute: typeof DashboardRouteRoute
-    }
-    '/dashboard/rooms/$id': {
-      id: '/dashboard/rooms/$id'
-      path: '/rooms/$id'
-      fullPath: '/dashboard/rooms/$id'
-      preLoaderRoute: typeof DashboardRoomsIdRouteImport
       parentRoute: typeof DashboardRouteRoute
     }
     '/dashboard/guests/$id': {
@@ -754,26 +680,9 @@ const authRouteRouteWithChildren = authRouteRoute._addFileChildren(
   authRouteRouteChildren,
 )
 
-interface DashboardReservationsRouteChildren {
-  DashboardReservationsIndexRoute: typeof DashboardReservationsIndexRoute
-}
-
-const DashboardReservationsRouteChildren: DashboardReservationsRouteChildren = {
-  DashboardReservationsIndexRoute: DashboardReservationsIndexRoute,
-}
-
-const DashboardReservationsRouteWithChildren =
-  DashboardReservationsRoute._addFileChildren(
-    DashboardReservationsRouteChildren,
-  )
-
 interface DashboardRouteRouteChildren {
-  DashboardReservationsRoute: typeof DashboardReservationsRouteWithChildren
-  DashboardReviewsRoute: typeof DashboardReviewsRoute
-  DashboardStatsRoute: typeof DashboardStatsRoute
   DashboardIndexRoute: typeof DashboardIndexRoute
   DashboardGuestsIdRoute: typeof DashboardGuestsIdRoute
-  DashboardRoomsIdRoute: typeof DashboardRoomsIdRoute
   DashboardAmenitiesIndexRoute: typeof DashboardAmenitiesIndexRoute
   DashboardBedsIndexRoute: typeof DashboardBedsIndexRoute
   DashboardCleaningTasksIndexRoute: typeof DashboardCleaningTasksIndexRoute
@@ -781,6 +690,7 @@ interface DashboardRouteRouteChildren {
   DashboardGuestsIndexRoute: typeof DashboardGuestsIndexRoute
   DashboardMealPlansIndexRoute: typeof DashboardMealPlansIndexRoute
   DashboardMyTasksIndexRoute: typeof DashboardMyTasksIndexRoute
+  DashboardReservationsIndexRoute: typeof DashboardReservationsIndexRoute
   DashboardRoomTypesIndexRoute: typeof DashboardRoomTypesIndexRoute
   DashboardRoomsIndexRoute: typeof DashboardRoomsIndexRoute
   DashboardServiceCategoriesIndexRoute: typeof DashboardServiceCategoriesIndexRoute
@@ -789,12 +699,8 @@ interface DashboardRouteRouteChildren {
 }
 
 const DashboardRouteRouteChildren: DashboardRouteRouteChildren = {
-  DashboardReservationsRoute: DashboardReservationsRouteWithChildren,
-  DashboardReviewsRoute: DashboardReviewsRoute,
-  DashboardStatsRoute: DashboardStatsRoute,
   DashboardIndexRoute: DashboardIndexRoute,
   DashboardGuestsIdRoute: DashboardGuestsIdRoute,
-  DashboardRoomsIdRoute: DashboardRoomsIdRoute,
   DashboardAmenitiesIndexRoute: DashboardAmenitiesIndexRoute,
   DashboardBedsIndexRoute: DashboardBedsIndexRoute,
   DashboardCleaningTasksIndexRoute: DashboardCleaningTasksIndexRoute,
@@ -802,6 +708,7 @@ const DashboardRouteRouteChildren: DashboardRouteRouteChildren = {
   DashboardGuestsIndexRoute: DashboardGuestsIndexRoute,
   DashboardMealPlansIndexRoute: DashboardMealPlansIndexRoute,
   DashboardMyTasksIndexRoute: DashboardMyTasksIndexRoute,
+  DashboardReservationsIndexRoute: DashboardReservationsIndexRoute,
   DashboardRoomTypesIndexRoute: DashboardRoomTypesIndexRoute,
   DashboardRoomsIndexRoute: DashboardRoomsIndexRoute,
   DashboardServiceCategoriesIndexRoute: DashboardServiceCategoriesIndexRoute,
