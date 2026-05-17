@@ -793,11 +793,11 @@
             <table class="tbl-light" style="font-size:.72rem">
               <tr><th>Route</th><th>Përshkrimi</th></tr>
               <tr><td>/</td><td>Landing page — Hero, FAQ, CTA</td></tr>
-              <tr><td>/rooms</td><td>Listë dhomash</td></tr>
-              <tr><td>/rooms/$roomTypeId</td><td>Detaj dhome — Gallery, Booking</td></tr>
-              <tr><td>/restaurant, /spa</td><td>Faqe marketing</td></tr>
-              <tr><td>/login, /signup</td><td>Autentikimi (UI gati)</td></tr>
-              <tr><td>/dashboard</td><td>Panel admin (mock data)</td></tr>
+              <tr><td>/rooms, /rooms/$id</td><td>Listë + detaj dhome</td></tr>
+              <tr><td>/bookings</td><td>Rezervim shumë-hapa (i ri)</td></tr>
+              <tr><td>/profile</td><td>Profil + rezervimet e mysafirit</td></tr>
+              <tr><td>/login, /signup</td><td>Autentikimi (i lidhur me API)</td></tr>
+              <tr><td>/dashboard/*</td><td>13 nën-route admin</td></tr>
             </table>
           </div>
           <div class="card-light">
@@ -815,27 +815,149 @@
         </div>
         <div class="gap">
           <div class="card-light">
-            <p class="kicker" style="color:var(--mocha);margin-bottom:10px">Dashboard Components</p>
-            <ul class="styled dark">
-              <li style="font-size:.78rem"><strong>StatCard</strong> — KPI me trend (↑↓)</li>
-              <li style="font-size:.78rem"><strong>DataTable&lt;T&gt;</strong> — Generic typed table</li>
-              <li style="font-size:.78rem"><strong>OccupancyBar</strong> — Progress bar per kategori</li>
-              <li style="font-size:.78rem"><strong>StatusBadge</strong> — checked-in/out/pending/confirmed</li>
-              <li style="font-size:.78rem"><strong>DashboardSidebar</strong> — Navigim me active state</li>
-            </ul>
+            <p class="kicker" style="color:var(--mocha);margin-bottom:10px">Dashboard — 13 Module</p>
+            <div style="display:flex;flex-wrap:wrap;gap:6px;margin-top:4px">
+              <span class="badge badge-gold" style="font-size:.62rem">reservations</span>
+              <span class="badge badge-blue" style="font-size:.62rem">users</span>
+              <span class="badge badge-blue" style="font-size:.62rem">guests</span>
+              <span class="badge badge-blue" style="font-size:.62rem">staff</span>
+              <span class="badge badge-green" style="font-size:.62rem">rooms</span>
+              <span class="badge badge-green" style="font-size:.62rem">room-types</span>
+              <span class="badge badge-green" style="font-size:.62rem">amenities</span>
+              <span class="badge badge-green" style="font-size:.62rem">beds</span>
+              <span class="badge badge-cream" style="font-size:.62rem">meal-plans</span>
+              <span class="badge badge-cream" style="font-size:.62rem">extra-services</span>
+              <span class="badge badge-cream" style="font-size:.62rem">service-categories</span>
+              <span class="badge badge-red" style="font-size:.62rem">cleaning-tasks</span>
+              <span class="badge badge-red" style="font-size:.62rem">my-tasks</span>
+            </div>
           </div>
-          <div class="card-light" style="border-left:4px solid #e8a83a">
-            <p class="kicker" style="color:#7a5c1a;margin-bottom:8px">Gjendja Aktuale Frontend</p>
+          <div class="card-light" style="border-left:4px solid #4a7c59">
+            <p class="kicker" style="color:#4a7c59;margin-bottom:8px">Gjendja Aktuale Frontend</p>
             <ul style="list-style:none;font-size:.78rem;color:var(--ink);line-height:1.8">
-              <li>✅ UI marketing komplet (8 faqe)</li>
-              <li>✅ Dashboard layout + komponente</li>
-              <li>✅ Room detail page</li>
-              <li>⏳ Login/Signup nuk janë lidhur me API</li>
-              <li>⏳ Dashboard përdor mock data</li>
-              <li>⏳ Rezervimet — stub i vetëm</li>
+              <li>✅ UI marketing komplet (8+ faqe)</li>
+              <li>✅ Login/Signup i lidhur me API (JWT)</li>
+              <li>✅ Booking flow shumë-hapa (i ri)</li>
+              <li>✅ Profil mysafiri + modal rezervimesh</li>
+              <li>✅ Dashboard me 13 nën-module</li>
+              <li>⏳ Disa module dashboard — mock data</li>
             </ul>
           </div>
         </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══════════════════════════════════════════════════════ SLIDE 11b — BOOKING FLOW -->
+  <div class="slide bg-espresso">
+    <div class="full-width">
+      <p class="kicker gold mb">09b — Booking Flow</p>
+      <h2 class="light">Rezervimi Shumë-Hapa — Multi-Step Wizard</h2>
+      <div class="sep-left"></div>
+      <div class="pipeline mt" style="margin-bottom:28px">
+        <div class="pipe-step" style="border-color:#7db3e8;color:#7db3e8">Hapi 1<br><span style="font-size:.65rem;color:var(--taupe)">BookingDetails</span></div>
+        <span class="pipe-arrow">→</span>
+        <div class="pipe-step" style="border-color:var(--gold);color:var(--gold)">Hapi 2<br><span style="font-size:.65rem;color:var(--taupe)">BookingSummary</span></div>
+        <span class="pipe-arrow">→</span>
+        <div class="pipe-step" style="border-color:#7ec897;color:#7ec897">Hapi 3<br><span style="font-size:.65rem;color:var(--taupe)">BookingPayment</span></div>
+        <span class="pipe-arrow">→</span>
+        <div class="pipe-step" style="border-color:#e88a8a;color:#e88a8a">Sukses<br><span style="font-size:.65rem;color:var(--taupe)">BookingSuccess</span></div>
+      </div>
+      <div class="cols cols-3 mt">
+        <div class="card">
+          <p class="kicker" style="color:#7db3e8;margin-bottom:10px">Hapi 1 — Detajet</p>
+          <ul class="styled">
+            <li style="font-size:.78rem">Zgjidh llojin e dhomës</li>
+            <li style="font-size:.78rem">Data check-in / check-out</li>
+            <li style="font-size:.78rem">Nr. të rriturish dhe fëmijësh</li>
+            <li style="font-size:.78rem">Plan ushqimor (MealPlan)</li>
+            <li style="font-size:.78rem"><strong class="gold">Kontrollo disponueshmërinë</strong> para kalimit → hap 2</li>
+          </ul>
+        </div>
+        <div class="card">
+          <p class="kicker" style="color:var(--gold);margin-bottom:10px">Hapi 2 — Përmbledhja</p>
+          <ul class="styled">
+            <li style="font-size:.78rem">Shfaq dhomën e gjetur</li>
+            <li style="font-size:.78rem">Numër netësh × çmimi bazë</li>
+            <li style="font-size:.78rem">Çmimi i meal plan (×netë)</li>
+            <li style="font-size:.78rem">Totali final i rezervimit</li>
+            <li style="font-size:.78rem">Konfirmo ose kthehu</li>
+          </ul>
+        </div>
+        <div class="gap">
+          <div class="card">
+            <p class="kicker" style="color:#7ec897;margin-bottom:10px">Hapi 3 — Pagesa</p>
+            <ul class="styled">
+              <li style="font-size:.78rem">Forma kartë krediti (UI)</li>
+              <li style="font-size:.78rem">Dërgon <code>createReservation</code></li>
+              <li style="font-size:.78rem">Shfaq <strong style="color:#7ec897">BookingSuccess</strong> me nr. konfirmimi</li>
+            </ul>
+          </div>
+          <div class="card-gold">
+            <p class="kicker gold mb" style="font-size:.68rem">Query param</p>
+            <p class="light" style="font-size:.8rem">Route <code>/bookings?roomTypeId=X</code> — pre-selekton dhomën automatikisht nga faqja e detajeve.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══════════════════════════════════════════════════════ SLIDE 11c — SCHEMA UPDATE -->
+  <div class="slide bg-dark">
+    <div class="full-width">
+      <p class="kicker gold mb">09c — Skema e Zgjeruar</p>
+      <h2 class="light">Modele të Reja — Reservation · Review · Invoice · Services</h2>
+      <div class="sep-left"></div>
+      <div class="erd mt" style="grid-template-columns:repeat(4,1fr)">
+        <div class="erd-node primary">
+          <div class="erd-title">Reservation</div>
+          <div class="erd-field">id <span>Int PK</span></div>
+          <div class="erd-field">guest_id <span>FK→Guest</span></div>
+          <div class="erd-field">room_id <span>FK→Room</span></div>
+          <div class="erd-field">meal_plan_id <span>FK? →MealPlan</span></div>
+          <div class="erd-field">status <span>ReservationStatus</span></div>
+          <div class="erd-field">check_in_date <span>DateTime</span></div>
+          <div class="erd-field">check_out_date <span>DateTime</span></div>
+          <div class="erd-field">adults / children <span>Int</span></div>
+          <div class="erd-field">checked_in_at/by <span>DateTime?/Int?</span></div>
+          <div class="erd-field">→ invoice? <span>1:1</span></div>
+          <div class="erd-field">→ review? <span>1:1</span></div>
+          <div class="erd-field">→ orders[] <span>1:N</span></div>
+        </div>
+        <div class="erd-node">
+          <div class="erd-title">Review</div>
+          <div class="erd-field">id <span>Int PK</span></div>
+          <div class="erd-field">guest_id <span>FK</span></div>
+          <div class="erd-field">reservation_id <span>unique FK</span></div>
+          <div class="erd-field">rating <span>Int (1-5)</span></div>
+          <div class="erd-field">title <span>String?</span></div>
+          <div class="erd-field">comment <span>Text?</span></div>
+          <div class="erd-field">is_approved <span>Boolean</span></div>
+          <div class="erd-field">created_at <span>DateTime</span></div>
+          <div style="margin-top:8px;font-size:.68rem;color:#7ec897">1 review ↔ 1 rezervim</div>
+        </div>
+        <div class="erd-node">
+          <div class="erd-title">MealPlan</div>
+          <div class="erd-field">id <span>Int PK</span></div>
+          <div class="erd-field">name <span>unique</span></div>
+          <div class="erd-field">description <span>Text?</span></div>
+          <div class="erd-field">price_per_night <span>Decimal(10,2)</span></div>
+          <div class="erd-field">is_active <span>Boolean</span></div>
+          <div style="margin-top:8px;font-size:.68rem;color:var(--taupe)">p.sh. BB, HB, AI</div>
+        </div>
+        <div class="erd-node">
+          <div class="erd-title">ServiceOrder + Extra</div>
+          <div class="erd-field">ServiceCategory</div>
+          <div class="erd-field">ExtraService</div>
+          <div class="erd-field">ServiceOrders</div>
+          <div style="margin-top:8px;font-size:.68rem;color:#7db3e8">Shërbime shtesë gjatë qëndrimit (SPA, laundry…)</div>
+          <div style="margin-top:6px" class="erd-field">Invoice <span>1:1 Reservation</span></div>
+          <div style="font-size:.68rem;color:var(--taupe);margin-top:4px">Fatura automatike me total</div>
+        </div>
+      </div>
+      <div style="margin-top:16px;display:flex;gap:12px;flex-wrap:wrap">
+        <span class="badge badge-gold">ReservationStatus: CONFIRMED | CHECKED_IN | CHECKED_OUT | CANCELLED | NO_SHOW</span>
+        <span class="badge badge-green">CleaningTask: dhomë + prioritet + status + assigned staff</span>
       </div>
     </div>
   </div>
@@ -891,7 +1013,7 @@
           <div class="stat-lbl">Modulet Backend</div>
         </div>
         <div class="stat-box card">
-          <div class="stat-num">12</div>
+          <div class="stat-num">17+</div>
           <div class="stat-lbl">Modelet Prisma</div>
         </div>
         <div class="stat-box card">
@@ -899,7 +1021,7 @@
           <div class="stat-lbl">Role RBAC</div>
         </div>
         <div class="stat-box card">
-          <div class="stat-num">30+</div>
+          <div class="stat-num">40+</div>
           <div class="stat-lbl">API Endpoints</div>
         </div>
         <div class="stat-box card">
@@ -907,12 +1029,12 @@
           <div class="stat-lbl">Middleware shtresë</div>
         </div>
         <div class="stat-box card">
-          <div class="stat-num">11</div>
+          <div class="stat-num">20+</div>
           <div class="stat-lbl">Routes Frontend</div>
         </div>
         <div class="stat-box card">
-          <div class="stat-num">20+</div>
-          <div class="stat-lbl">Komponente UI</div>
+          <div class="stat-num">13</div>
+          <div class="stat-lbl">Dashboard Module</div>
         </div>
         <div class="stat-box card">
           <div class="stat-num">100%</div>
@@ -921,9 +1043,9 @@
       </div>
       <div style="margin-top:28px;display:flex;gap:12px;justify-content:center;flex-wrap:wrap">
         <span class="badge badge-green">Backend: Production-Ready</span>
-        <span class="badge badge-gold">Frontend UI: Complete</span>
-        <span class="badge badge-blue">Integration: In Progress</span>
-        <span class="badge badge-red">Reservations: Stub</span>
+        <span class="badge badge-green">Booking Flow: Complete</span>
+        <span class="badge badge-gold">Dashboard: In Progress</span>
+        <span class="badge badge-blue">Integration: Active</span>
       </div>
     </div>
   </div>
@@ -940,27 +1062,27 @@
           <div class="timeline">
             <div class="tl-item">
               <div class="tl-dot tl-done"></div>
-              <p style="font-size:.82rem;color:var(--ink)">Backend API i plotë — Auth, Users, Guests, Staff, Rooms</p>
+              <p style="font-size:.82rem;color:var(--ink)">Backend API i plotë — Auth, Users, Guests, Staff, Rooms, Rezervime</p>
             </div>
             <div class="tl-line"></div>
             <div class="tl-item">
               <div class="tl-dot tl-done"></div>
-              <p style="font-size:.82rem;color:var(--ink)">Skema Prisma me të gjitha relacionet dhe enums</p>
+              <p style="font-size:.82rem;color:var(--ink)">Skema Prisma e zgjeruar — Reservation, Review, Invoice, MealPlan, Services</p>
             </div>
             <div class="tl-line"></div>
             <div class="tl-item">
               <div class="tl-dot tl-done"></div>
-              <p style="font-size:.82rem;color:var(--ink)">RBAC i plotë me 5 role dhe middleware pipeline</p>
+              <p style="font-size:.82rem;color:var(--ink)">RBAC i plotë me 5 role + kontrolle fine-grained në service layer</p>
             </div>
             <div class="tl-line"></div>
             <div class="tl-item">
               <div class="tl-dot tl-done"></div>
-              <p style="font-size:.82rem;color:var(--ink)">JWT Authentication me refresh token rotation + account lockout</p>
+              <p style="font-size:.82rem;color:var(--ink)">Booking Flow shumë-hapa — Details → Summary → Payment → Success</p>
             </div>
             <div class="tl-line"></div>
             <div class="tl-item">
               <div class="tl-dot tl-done"></div>
-              <p style="font-size:.82rem;color:var(--ink)">UI marketing + dashboard layout + room detail page</p>
+              <p style="font-size:.82rem;color:var(--ink)">Login/Signup i lidhur me API + Profil mysafiri me modal rezervimesh</p>
             </div>
           </div>
         </div>
@@ -969,17 +1091,17 @@
           <div class="timeline">
             <div class="tl-item">
               <div class="tl-dot tl-wip"></div>
-              <p style="font-size:.82rem;color:var(--ink)"><strong>Lidhja Login/Signup me API</strong> — FormSection ka TODO comment</p>
+              <p style="font-size:.82rem;color:var(--ink)"><strong>Dashboard me të dhëna reale</strong> — disa module ende me mock data</p>
             </div>
             <div class="tl-line"></div>
             <div class="tl-item">
               <div class="tl-dot tl-wip"></div>
-              <p style="font-size:.82rem;color:var(--ink)"><strong>Dashboard me të dhëna reale</strong> — zëvendëso mock data me API calls</p>
+              <p style="font-size:.82rem;color:var(--ink)"><strong>Review sistem</strong> — modeli ekziston, UI dhe backend routes mungojnë</p>
             </div>
             <div class="tl-line"></div>
             <div class="tl-item">
               <div class="tl-dot tl-todo"></div>
-              <p style="font-size:.82rem;color:var(--ink)">Sistemi i Rezervimeve — modeli ekziston, logjika mungon</p>
+              <p style="font-size:.82rem;color:var(--ink)">Pagesa reale (Stripe) — aktualisht simulohet vetëm UI</p>
             </div>
             <div class="tl-line"></div>
             <div class="tl-item">
@@ -989,7 +1111,7 @@
             <div class="tl-line"></div>
             <div class="tl-item">
               <div class="tl-dot tl-todo"></div>
-              <p style="font-size:.82rem;color:var(--ink)">Email verification flow (modeli ekziston, logjika mungon)</p>
+              <p style="font-size:.82rem;color:var(--ink)">Email verification + notifikime rezervimesh</p>
             </div>
           </div>
         </div>
@@ -1023,7 +1145,7 @@
 <!-- ── NAV ── -->
 <div id="nav">
   <button id="btn-prev" onclick="goTo(current-1)" title="Previous">←</button>
-  <span id="slide-counter">1 / 15</span>
+  <span id="slide-counter">1 / 18</span>
   <button id="btn-next" onclick="goTo(current+1)" title="Next">→</button>
 </div>
 

@@ -8,4 +8,5 @@ export * from './users';
 export * from './extraServices';
 export * from './mealPlan';
 
-export * from './reservation';
+export * from './reservation'
+export * from './review';

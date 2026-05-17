@@ -31,7 +31,7 @@ export function ReservationModal({ reservation, onClose }: Props) {
   const checkout = useCheckout()
   const noShow = useNoShow()
   const [paymentMethod, setPaymentMethod] = useState<'CASH' | 'CARD'>('CASH')
-  // veq ato qe jane checkin munden mu ba confirm
+  // veq ato qe jane confirm munden mu ba checkin ose no show, dhe veq ato qe jane checkin munden mu ba checkout
   const canCheckin = reservation.status === 'CONFIRMED'
   const canNoShow = reservation.status === 'CONFIRMED'
   const canCheckout = reservation.status === 'CHECKED_IN'
