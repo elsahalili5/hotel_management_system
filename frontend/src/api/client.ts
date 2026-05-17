@@ -6,7 +6,7 @@ import axios, {
 } from 'axios'
 
 import { AUTH_STORAGE_KEY } from '#/modules/auth/components/auth-context'
-
+// qekjo oshht Pra është vetëm për TypeScript me dit strukturën e API client-it.
 export type ApiClient = {
   get<TResponse>(url: string, config?: AxiosRequestConfig): Promise<TResponse>
   post<TResponse, TBody = unknown>(
@@ -32,7 +32,7 @@ export type ApiClient = {
     config: AxiosRequestConfig<TBody>,
   ): Promise<TResponse>
 }
-
+//qetu e krijojna një axios custom client qe do perdoret per krejt API requestat.
 export const axiosClient: AxiosInstance = axios.create({
   baseURL: import.meta.env.VITE_API_BASE_URL ?? '/api',
   headers: {

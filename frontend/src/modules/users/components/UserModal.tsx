@@ -78,6 +78,7 @@ export function UserModal({
   const editableRoles = isAdmin
     ? STAFF_EDIT_ROLES
     : STAFF_EDIT_ROLES.filter((r) => r !== ROLES.ADMIN)
+  // nese so admin smunet me editu adminin nese po krijon  staf smunet me kriju admin
   const creatableRoles = isAdmin
     ? STAFF_ROLES
     : STAFF_ROLES.filter((r) => r !== ROLES.ADMIN)

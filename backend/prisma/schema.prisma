@@ -8,6 +8,10 @@ datasource db {
   provider = "mysql"
 }
 
+// ─────────────────────────────────────────
+// ENUMS
+// ─────────────────────────────────────────
+
 enum UserStatus {
   PENDING
   ACTIVE
@@ -32,6 +36,53 @@ enum Shift {
   NIGHT
 }
 
+enum RoomStatus {
+  AVAILABLE
+  OCCUPIED
+  DIRTY
+  CLEANING
+}
+
+enum TaskStatus {
+  PENDING
+  IN_PROGRESS
+  COMPLETED
+}
+
+enum ReservationStatus {
+  CONFIRMED
+  CHECKED_IN
+  CHECKED_OUT
+  CANCELLED
+  NO_SHOW
+}
+
+enum ServiceOrderStatus {
+  PENDING
+  IN_PROGRESS
+  DELIVERED
+  CANCELLED
+}
+
+enum InvoiceStatus {
+  ISSUED
+  PAID
+  CANCELLED
+}
+
+enum PaymentStatus {
+  COMPLETED
+}
+
+enum PaymentMethod {
+  CASH
+  CARD
+}
+
+// ─────────────────────────────────────────
+// USERS & ROLES
+// ─────────────────────────────────────────
+
 model User {
   id                  Int        @id @default(autoincrement())
   first_name          String
@@ -55,7 +106,6 @@ model User {
   assigned_tasks      CleaningTask[]  @relation("ManagerAssignments")
 }
 
-
 model Role {
   id              Int        @id @default(autoincrement())
   name            String     @unique
@@ -72,6 +122,10 @@ model UserRole {
 
   @@id([user_id, role_id])
 }
+
+// ─────────────────────────────────────────
+// STAFF & GUEST PROFILES
+// ─────────────────────────────────────────
 
 model Staff {
   id           Int     @id @default(autoincrement())
@@ -98,105 +152,13 @@ model Guest {
   user            User      @relation(fields: [user_id], references: [id], onDelete: Cascade)
 
   reservations    Reservation[]
+  reviews         Review[]
 }
 
+// ─────────────────────────────────────────
+// TOKEN MANAGEMENT
+// ─────────────────────────────────────────
 
-model RoomType {
-  id            Int               @id @default(autoincrement())
-  name          String            @unique
-  description   String?           @db.Text
-  base_price    Decimal           @db.Decimal(10, 2)
-  max_occupancy Int
-  size_m2       Int?
-  
-  rooms         Room[]
-  amenities     RoomTypeAmenity[]
-  beds          RoomTypeBed[]
-  images        RoomImage[]
-}
-
-model Room {
-  id           Int        @id @default(autoincrement())
-  room_number  String     @unique
-  floor        Int
-  status       RoomStatus @default(AVAILABLE)
-  
-  room_type_id Int
-  room_type    RoomType   @relation(fields: [room_type_id], references: [id], onDelete: Cascade, onUpdate: Cascade)
-  cleaning_tasks CleaningTask[]
-  reservations   Reservation[]
-}
-
-enum RoomStatus {
-  AVAILABLE
-  OCCUPIED
-  DIRTY
-  CLEANING
-}
-model CleaningTask {
-  id             Int        @id @default(autoincrement())
-  room_id        Int
-  staff_id       Int
-  assigned_by_id Int
-  status         TaskStatus @default(PENDING)
-  due_date       DateTime?
-  notes          String?    @db.Text
-  assigned_at    DateTime   @default(now())
-  finished_at    DateTime?
-
-  room        Room  @relation(fields: [room_id], references: [id])
-  staff       Staff @relation("StaffCleaningTasks", fields: [staff_id], references: [id])
-  assigned_by User  @relation("ManagerAssignments", fields: [assigned_by_id], references: [id])
-}
-enum TaskStatus {
-  PENDING      
-  IN_PROGRESS  
-  COMPLETED    
-}
-model RoomImage {
-  id           Int      @id @default(autoincrement())
-  url          String   @db.Text
-  is_primary   Boolean  @default(false)
-  alt_text     String?
-  
-  room_type_id Int
-  room_type    RoomType @relation(fields: [room_type_id], references: [id], onDelete: Cascade)
-}
-
-model Amenity {
-  id         Int               @id @default(autoincrement())
-  name       String            @unique
-  icon       String?
-  room_types RoomTypeAmenity[]
-}
-
-model RoomTypeAmenity {
-  room_type_id Int
-  amenity_id   Int
-  
-  room_type    RoomType @relation(fields: [room_type_id], references: [id], onDelete: Cascade, onUpdate: Cascade)
-  amenity      Amenity  @relation(fields: [amenity_id], references: [id], onDelete: Cascade, onUpdate: Cascade)
-  
-  @@id([room_type_id, amenity_id])
-}
-
-model Bed {
-  id         Int           @id @default(autoincrement())
-  name       String        @unique
-  capacity   Int
-  room_types RoomTypeBed[]
-}
-
-model RoomTypeBed {
-  room_type_id Int
-  bed_id       Int
-  quantity     Int         @default(1)
-  
-  room_type    RoomType @relation(fields: [room_type_id], references: [id], onDelete: Cascade, onUpdate: Cascade)
-  bed          Bed      @relation(fields: [bed_id], references: [id], onDelete: Cascade, onUpdate: Cascade)
-  
-  @@id([room_type_id, bed_id])
-}
 model RefreshTokens {
   id        Int      @id @default(autoincrement())
   user_id   Int
@@ -217,6 +179,101 @@ model UserTokens {
   created_at      DateTime @default(now())
 
   user            User     @relation(fields: [user_id], references: [id], onDelete: Cascade)
+}
+
+// ─────────────────────────────────────────
+// ROOMS
+// ─────────────────────────────────────────
+
+model RoomType {
+  id            Int               @id @default(autoincrement())
+  name          String            @unique
+  description   String?           @db.Text
+  base_price    Decimal           @db.Decimal(10, 2)
+  max_occupancy Int
+  size_m2       Int?
+
+  rooms         Room[]
+  amenities     RoomTypeAmenity[]
+  beds          RoomTypeBed[]
+  images        RoomImage[]
+}
+
+model Room {
+  id           Int        @id @default(autoincrement())
+  room_number  String     @unique
+  floor        Int
+  status       RoomStatus @default(AVAILABLE)
+
+  room_type_id Int
+  room_type    RoomType   @relation(fields: [room_type_id], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  cleaning_tasks CleaningTask[]
+  reservations   Reservation[]
+}
+
+model RoomImage {
+  id           Int      @id @default(autoincrement())
+  url          String   @db.Text
+  is_primary   Boolean  @default(false)
+  alt_text     String?
+
+  room_type_id Int
+  room_type    RoomType @relation(fields: [room_type_id], references: [id], onDelete: Cascade)
+}
+
+model Amenity {
+  id         Int               @id @default(autoincrement())
+  name       String            @unique
+  icon       String?
+  room_types RoomTypeAmenity[]
+}
+
+model RoomTypeAmenity {
+  room_type_id Int
+  amenity_id   Int
+
+  room_type    RoomType @relation(fields: [room_type_id], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  amenity      Amenity  @relation(fields: [amenity_id], references: [id], onDelete: Cascade, onUpdate: Cascade)
+
+  @@id([room_type_id, amenity_id])
+}
+
+model Bed {
+  id         Int           @id @default(autoincrement())
+  name       String        @unique
+  capacity   Int
+  room_types RoomTypeBed[]
+}
+
+model RoomTypeBed {
+  room_type_id Int
+  bed_id       Int
+  quantity     Int      @default(1)
+
+  room_type    RoomType @relation(fields: [room_type_id], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  bed          Bed      @relation(fields: [bed_id], references: [id], onDelete: Cascade, onUpdate: Cascade)
+
+  @@id([room_type_id, bed_id])
+}
+
+// ─────────────────────────────────────────
+// CLEANING
+// ─────────────────────────────────────────
+
+model CleaningTask {
+  id             Int        @id @default(autoincrement())
+  room_id        Int
+  staff_id       Int
+  assigned_by_id Int
+  status         TaskStatus @default(PENDING)
+  due_date       DateTime?
+  notes          String?    @db.Text
+  assigned_at    DateTime   @default(now())
+  finished_at    DateTime?
+
+  room        Room  @relation(fields: [room_id], references: [id])
+  staff       Staff @relation("StaffCleaningTasks", fields: [staff_id], references: [id])
+  assigned_by User  @relation("ManagerAssignments", fields: [assigned_by_id], references: [id])
 }
 
 // ─────────────────────────────────────────
@@ -244,10 +301,10 @@ model ExtraService {
   available_until  String?
   category_id      Int
 
-  category         ServiceCategory      @relation(fields: [category_id], references: [id], onDelete: Cascade)
+  category         ServiceCategory @relation(fields: [category_id], references: [id], onDelete: Cascade)
   orders           ServiceOrders[]
- 
 }
+
 // ─────────────────────────────────────────
 // MEAL PLANS
 // ─────────────────────────────────────────
@@ -261,17 +318,11 @@ model MealPlan {
 
   reservations    Reservation[]
 }
+
 // ─────────────────────────────────────────
 // RESERVATION
 // ─────────────────────────────────────────
 
-enum ReservationStatus {
-  CONFIRMED
-  CHECKED_IN
-  CHECKED_OUT
-  CANCELLED
-  NO_SHOW
-}
 model Reservation {
   id               Int               @id @default(autoincrement())
   guest_id         Int
@@ -293,23 +344,17 @@ model Reservation {
 
   created_at       DateTime          @default(now())
 
-  guest            Guest                @relation(fields: [guest_id], references: [id], onDelete: Cascade)
-  room             Room                 @relation(fields: [room_id], references: [id])
-  meal_plan        MealPlan?            @relation(fields: [meal_plan_id], references: [id], onDelete: SetNull)
-  orders         ServiceOrders[]
+  guest            Guest         @relation(fields: [guest_id], references: [id], onDelete: Cascade)
+  room             Room          @relation(fields: [room_id], references: [id])
+  meal_plan        MealPlan?     @relation(fields: [meal_plan_id], references: [id], onDelete: SetNull)
+  orders           ServiceOrders[]
   invoice          Invoice?
-
+  review           Review?
 }
+
 // ─────────────────────────────────────────
 // SERVICE ORDERS
 // ─────────────────────────────────────────
-enum ServiceOrderStatus {
-  PENDING
-  IN_PROGRESS
-  DELIVERED
-  CANCELLED
-}
-
 
 model ServiceOrders {
   id               Int                @id @default(autoincrement())
@@ -329,15 +374,10 @@ model ServiceOrders {
   staff            Staff?       @relation(fields: [staff_id], references: [id])
   invoice_item     InvoiceItem?
 }
+
 // ─────────────────────────────────────────
 // INVOICE & PAYMENT
 // ─────────────────────────────────────────
-
-enum InvoiceStatus {
-  ISSUED
-  PAID
-  CANCELLED
-}
 
 model Invoice {
   id             Int           @id @default(autoincrement())
@@ -354,26 +394,16 @@ model Invoice {
 }
 
 model InvoiceItem {
-  id                     Int      @id @default(autoincrement())
-  invoice_id             Int
-  description            String
-  quantity               Int      @default(1)
-  unit_price             Decimal  @db.Decimal(10, 2)
-  total                  Decimal  @db.Decimal(10, 2)
-  order_id Int?     @unique
+  id          Int      @id @default(autoincrement())
+  invoice_id  Int
+  description String
+  quantity    Int      @default(1)
+  unit_price  Decimal  @db.Decimal(10, 2)
+  total       Decimal  @db.Decimal(10, 2)
+  order_id    Int?     @unique
 
-  invoice              Invoice             @relation(fields: [invoice_id], references: [id])
-  orders  ServiceOrders? @relation(fields: [order_id], references: [id])
-}
-
-
-enum PaymentStatus {
-  COMPLETED
-}
-
-enum PaymentMethod {
-  CASH
-  CARD
+  invoice     Invoice        @relation(fields: [invoice_id], references: [id])
+  orders      ServiceOrders? @relation(fields: [order_id], references: [id])
 }
 
 model Payment {
@@ -386,4 +416,22 @@ model Payment {
   paid_at    DateTime      @default(now())
 
   invoice    Invoice       @relation(fields: [invoice_id], references: [id])
+}
+
+// ─────────────────────────────────────────
+// REVIEWS
+// ─────────────────────────────────────────
+
+model Review {
+  id             Int      @id @default(autoincrement())
+  guest_id       Int
+  reservation_id Int      @unique
+  rating         Int
+  title          String?
+  comment        String?  @db.Text
+  is_approved    Boolean  @default(false)
+  created_at     DateTime @default(now())
+
+  guest          Guest       @relation(fields: [guest_id], references: [id], onDelete: Cascade)
+  reservation    Reservation @relation(fields: [reservation_id], references: [id], onDelete: Cascade)
 }

@@ -8,7 +8,11 @@ import {
 } from '@mansio/shared'
 import { authApi } from '../api/auth-api'
 import LoadingUser from './loading-user'
-
+// // a është useri logged in
+// kush është useri
+// çfarë role ka
+// me bo login/logout
+// me ruaj tokenin
 export const AUTH_STORAGE_KEY = 'mansio-auth'
 
 type StoredAuth = {
