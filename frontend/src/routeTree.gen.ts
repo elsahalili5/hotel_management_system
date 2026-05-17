@@ -21,7 +21,6 @@ import { Route as appServicesRouteImport } from './routes/(app)/services'
 import { Route as appRoomsRouteImport } from './routes/(app)/rooms'
 import { Route as appRestaurantRouteImport } from './routes/(app)/restaurant'
 import { Route as appContactRouteImport } from './routes/(app)/contact'
-import { Route as appBookingsRouteImport } from './routes/(app)/bookings'
 import { Route as appAboutRouteImport } from './routes/(app)/about'
 import { Route as appprivateRouteRouteImport } from './routes/(app)/(private)/route'
 import { Route as DashboardUsersIndexRouteImport } from './routes/dashboard/users/index'
@@ -40,6 +39,7 @@ import { Route as DashboardAmenitiesIndexRouteImport } from './routes/dashboard/
 import { Route as DashboardGuestsIdRouteImport } from './routes/dashboard/guests/$id'
 import { Route as appRoomsRoomTypeIdRouteImport } from './routes/(app)/rooms.$roomTypeId'
 import { Route as appprivateProfileRouteImport } from './routes/(app)/(private)/profile'
+import { Route as appprivateBookingsRouteImport } from './routes/(app)/(private)/bookings'
 
 const DashboardRouteRoute = DashboardRouteRouteImport.update({
   id: '/dashboard',
@@ -97,11 +97,6 @@ const appRestaurantRoute = appRestaurantRouteImport.update({
 const appContactRoute = appContactRouteImport.update({
   id: '/contact',
   path: '/contact',
-  getParentRoute: () => appRouteRoute,
-} as any)
-const appBookingsRoute = appBookingsRouteImport.update({
-  id: '/bookings',
-  path: '/bookings',
   getParentRoute: () => appRouteRoute,
 } as any)
 const appAboutRoute = appAboutRouteImport.update({
@@ -197,11 +192,15 @@ const appprivateProfileRoute = appprivateProfileRouteImport.update({
   path: '/profile',
   getParentRoute: () => appprivateRouteRoute,
 } as any)
+const appprivateBookingsRoute = appprivateBookingsRouteImport.update({
+  id: '/bookings',
+  path: '/bookings',
+  getParentRoute: () => appprivateRouteRoute,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/dashboard': typeof DashboardRouteRouteWithChildren
   '/about': typeof appAboutRoute
-  '/bookings': typeof appBookingsRoute
   '/contact': typeof appContactRoute
   '/restaurant': typeof appRestaurantRoute
   '/rooms': typeof appRoomsRouteWithChildren
@@ -211,6 +210,7 @@ export interface FileRoutesByFullPath {
   '/signup': typeof authSignupRoute
   '/': typeof appIndexRoute
   '/dashboard/': typeof DashboardIndexRoute
+  '/bookings': typeof appprivateBookingsRoute
   '/profile': typeof appprivateProfileRoute
   '/rooms/$roomTypeId': typeof appRoomsRoomTypeIdRoute
   '/dashboard/guests/$id': typeof DashboardGuestsIdRoute
@@ -230,7 +230,6 @@ export interface FileRoutesByFullPath {
 }
 export interface FileRoutesByTo {
   '/about': typeof appAboutRoute
-  '/bookings': typeof appBookingsRoute
   '/contact': typeof appContactRoute
   '/restaurant': typeof appRestaurantRoute
   '/rooms': typeof appRoomsRouteWithChildren
@@ -240,6 +239,7 @@ export interface FileRoutesByTo {
   '/signup': typeof authSignupRoute
   '/': typeof appIndexRoute
   '/dashboard': typeof DashboardIndexRoute
+  '/bookings': typeof appprivateBookingsRoute
   '/profile': typeof appprivateProfileRoute
   '/rooms/$roomTypeId': typeof appRoomsRoomTypeIdRoute
   '/dashboard/guests/$id': typeof DashboardGuestsIdRoute
@@ -264,7 +264,6 @@ export interface FileRoutesById {
   '/dashboard': typeof DashboardRouteRouteWithChildren
   '/(app)/(private)': typeof appprivateRouteRouteWithChildren
   '/(app)/about': typeof appAboutRoute
-  '/(app)/bookings': typeof appBookingsRoute
   '/(app)/contact': typeof appContactRoute
   '/(app)/restaurant': typeof appRestaurantRoute
   '/(app)/rooms': typeof appRoomsRouteWithChildren
@@ -274,6 +273,7 @@ export interface FileRoutesById {
   '/(auth)/signup': typeof authSignupRoute
   '/(app)/': typeof appIndexRoute
   '/dashboard/': typeof DashboardIndexRoute
+  '/(app)/(private)/bookings': typeof appprivateBookingsRoute
   '/(app)/(private)/profile': typeof appprivateProfileRoute
   '/(app)/rooms/$roomTypeId': typeof appRoomsRoomTypeIdRoute
   '/dashboard/guests/$id': typeof DashboardGuestsIdRoute
@@ -296,7 +296,6 @@ export interface FileRouteTypes {
   fullPaths:
     | '/dashboard'
     | '/about'
-    | '/bookings'
     | '/contact'
     | '/restaurant'
     | '/rooms'
@@ -306,6 +305,7 @@ export interface FileRouteTypes {
     | '/signup'
     | '/'
     | '/dashboard/'
+    | '/bookings'
     | '/profile'
     | '/rooms/$roomTypeId'
     | '/dashboard/guests/$id'
@@ -325,7 +325,6 @@ export interface FileRouteTypes {
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/about'
-    | '/bookings'
     | '/contact'
     | '/restaurant'
     | '/rooms'
@@ -335,6 +334,7 @@ export interface FileRouteTypes {
     | '/signup'
     | '/'
     | '/dashboard'
+    | '/bookings'
     | '/profile'
     | '/rooms/$roomTypeId'
     | '/dashboard/guests/$id'
@@ -358,7 +358,6 @@ export interface FileRouteTypes {
     | '/dashboard'
     | '/(app)/(private)'
     | '/(app)/about'
-    | '/(app)/bookings'
     | '/(app)/contact'
     | '/(app)/restaurant'
     | '/(app)/rooms'
@@ -368,6 +367,7 @@ export interface FileRouteTypes {
     | '/(auth)/signup'
     | '/(app)/'
     | '/dashboard/'
+    | '/(app)/(private)/bookings'
     | '/(app)/(private)/profile'
     | '/(app)/rooms/$roomTypeId'
     | '/dashboard/guests/$id'
@@ -476,13 +476,6 @@ declare module '@tanstack/react-router' {
       path: '/contact'
       fullPath: '/contact'
       preLoaderRoute: typeof appContactRouteImport
-      parentRoute: typeof appRouteRoute
-    }
-    '/(app)/bookings': {
-      id: '/(app)/bookings'
-      path: '/bookings'
-      fullPath: '/bookings'
-      preLoaderRoute: typeof appBookingsRouteImport
       parentRoute: typeof appRouteRoute
     }
     '/(app)/about': {
@@ -611,14 +604,23 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof appprivateProfileRouteImport
       parentRoute: typeof appprivateRouteRoute
     }
+    '/(app)/(private)/bookings': {
+      id: '/(app)/(private)/bookings'
+      path: '/bookings'
+      fullPath: '/bookings'
+      preLoaderRoute: typeof appprivateBookingsRouteImport
+      parentRoute: typeof appprivateRouteRoute
+    }
   }
 }
 
 interface appprivateRouteRouteChildren {
+  appprivateBookingsRoute: typeof appprivateBookingsRoute
   appprivateProfileRoute: typeof appprivateProfileRoute
 }
 
 const appprivateRouteRouteChildren: appprivateRouteRouteChildren = {
+  appprivateBookingsRoute: appprivateBookingsRoute,
   appprivateProfileRoute: appprivateProfileRoute,
 }
 
@@ -641,7 +643,6 @@ const appRoomsRouteWithChildren = appRoomsRoute._addFileChildren(
 interface appRouteRouteChildren {
   appprivateRouteRoute: typeof appprivateRouteRouteWithChildren
   appAboutRoute: typeof appAboutRoute
-  appBookingsRoute: typeof appBookingsRoute
   appContactRoute: typeof appContactRoute
   appRestaurantRoute: typeof appRestaurantRoute
   appRoomsRoute: typeof appRoomsRouteWithChildren
@@ -653,7 +654,6 @@ interface appRouteRouteChildren {
 const appRouteRouteChildren: appRouteRouteChildren = {
   appprivateRouteRoute: appprivateRouteRouteWithChildren,
   appAboutRoute: appAboutRoute,
-  appBookingsRoute: appBookingsRoute,
   appContactRoute: appContactRoute,
   appRestaurantRoute: appRestaurantRoute,
   appRoomsRoute: appRoomsRouteWithChildren,
